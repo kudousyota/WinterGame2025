@@ -116,7 +116,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>Dxlib_h</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>DxLib_h</AdditionalLibraryDirectories>
       <PreventDllBinding>
       </PreventDllBinding>
     </Link>
@@ -135,9 +135,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
-      <PreventDllBinding>Dxlib_h</PreventDllBinding>
+      <AdditionalLibraryDirectories>DxLib_h</AdditionalLibraryDirectories>
+      <PreventDllBinding>
+      </PreventDllBinding>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

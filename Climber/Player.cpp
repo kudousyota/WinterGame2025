@@ -122,7 +122,7 @@ void Player::Draw(const Camera& camera)
 		m_Handle,                                          // ‰æ‘œ
 		true
 	);
-
+	
 	
 }
 
