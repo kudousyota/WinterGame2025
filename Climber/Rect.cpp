@@ -1,0 +1,137 @@
+#include "Rect.h"
+
+#include <Dxlib.h>
+#include <cmath>
+
+Rect::Rect():
+m_x(0),
+m_y(0),
+m_z(0),
+m_w(0),
+m_h(0)
+
+{
+}
+
+Rect::~Rect()
+{
+}
+void Rect::Init(float x, float y, float w, float h)
+{
+	m_x = x;
+	m_y = y;
+	m_w = w;
+	m_h = h;
+}
+
+void Rect::Update()
+{
+}
+
+void Rect::Draw()
+{
+	DrawBox(m_x, m_y, m_w, m_h, GetColor(255, 0, 0), true);
+}
+
+bool Rect::IsHit(const Rect& other) const
+{
+	//Xの差分を取得
+	float disX = other.GetX() - m_x;
+
+	//Yの差分を取得
+	float disY = other.GetY() - m_y;
+
+	//絶対値化
+	disX = std::fabs(disX);
+	disY = std::fabs(disY);
+	
+	//幅(W)の確認するための値取得
+	//幅を出す為に割る
+	float checkW = (m_x + other.GetW()) / 2;
+	//高さの確認するための値を取得
+	float checkH = (m_y + other.GetH()) / 2;
+
+	//Ｘ軸で重なっているか
+	bool isHitX = disX < checkW;
+	//Y軸で重なっているか
+	bool isHItY = disY < checkH;
+
+	//両方重なっていたら正解
+	//重なっていなったら間違い
+	return isHitX && isHItY;
+}
+
+void Rect::FixPos(const Rect& other)
+{
+	//Xの差分を取得
+	float disX = other.GetX() - m_x;
+	//Ｙの差分を取得
+	float disY = other.GetY() - m_y;
+	//絶対値化
+	disY = std::fabs(disY);
+	disX = std::fabs(disX);
+	//長さを計算
+	float length = std::sqrt(disX * disX + disY * disY);
+
+	//W上のでの位置を確認
+	float rateX = disX / length;
+
+	//H上での位置を確認
+	float rateY = disY / length;
+
+	// Xの方が大きい場合
+	if (rateX > rateY)
+	{
+		//幅の合計の半分を取得
+
+		float halfW = (m_w + other.GetW()) / 2.0f;
+
+		//押し出し量を計算
+		float moveX = halfW - disX;
+
+		//押し出し側が左側にいるか判定
+
+		bool isHItLeft = other.GetX() < m_x;
+
+		if (isHItLeft)
+		{
+			//右側に押す
+			m_x += moveX;
+		}
+		//右側にいる場合
+		else
+		{
+			//左側に押す
+			m_x -= moveX;
+
+		}
+
+
+	}
+	//Yの方が大きい場合
+	else
+	{
+		//高さの合計を取得
+		float halfH = (m_h + other.GetH()) / 2.0f;
+
+		//押し出し量を計算
+		float moveY = halfH - disY;
+
+		//押し出し側が上側にいるか判定
+
+		bool isHitUp = other.GetY() < m_y;
+
+		if (isHitUp)
+		{
+			//上側に押す
+			m_y += moveY;
+		}
+		//上側にいる場合
+		else
+		{
+			//下側に押す
+			m_y -= moveY;
+		}
+	}
+
+}
