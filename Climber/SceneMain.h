@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 class Rect;
-struct Camera;
+class Camera;
 class Bg;
 class Player;
 class SceneMain
@@ -19,6 +19,6 @@ private:
 	std::shared_ptr<Rect> m_pRect;
 	std::shared_ptr<Player> m_pPlayer;
 	std::shared_ptr<Camera> m_pCamera;
-	Bg* m_pBg;
+	std::shared_ptr<Bg> m_pBg;
 };
 

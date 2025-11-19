@@ -1,7 +1,7 @@
 #pragma once
 #include "Vec2.h"
 
-struct Camera;
+class Camera;
 class Player;
 class Bg
 {
@@ -33,7 +33,7 @@ private:
 	//”wŒi‚ÌˆÊ’u
 	Vec2 m_pos;
 	Vec2 m_src;
-
+	
 
 	int m_graphChipNumX;
 	int m_graphChipNumY;

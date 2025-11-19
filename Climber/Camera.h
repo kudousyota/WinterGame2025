@@ -3,19 +3,30 @@
 #include <memory>
 
 class Player;
-struct Camera
+class Camera
 {
-	VECTOR drawOffset;
-	VECTOR pos;
+public:
+	Camera();
+	~Camera();
+	void Init();
+	void Update();
+	void Draw();
+
+	void InitCamera(std::shared_ptr<Camera> camera);
+	void UpdateCamera(std::shared_ptr<Camera> camera, std::shared_ptr<Player> player);
+	
+	Vec2 GetCameraOffset(Vec2 camerapos);
+
+private:
+
+	Vec2 m_drawOffset;
+	Vec2 m_pos;
 	/*float drawOffsetX;
 	float drawOffsetY;
 	float posX;
 	float posY;*/
+	
 };
-
-void InitCamera(Camera& camera);
-void UpdateCamera(Camera& camera, const std::shared_ptr<Player> player);
-
 //Player* m_pPlayer;
 
 

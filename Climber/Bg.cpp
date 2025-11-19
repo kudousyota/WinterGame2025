@@ -10,6 +10,7 @@ namespace
 	constexpr int kChipSize = 16;
 	//マップチップ拡大率
 	constexpr int kChipScale = 1.0f;
+
 	//マップ全体の幅
 	constexpr float kMapWidth = 1280.0f;
 	//マップ全体の高さ
@@ -23,12 +24,12 @@ namespace
 	constexpr int kChipData[kChipNumX][kChipNumY] =
 	{
 		{3,0,0,0,0,0,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0},
+		{3,0,0,0,0,0,0,0,0,0,0,0},
+		{3,0,0,0,0,0,0,0,0,0,0,0},
+		{3,0,0,0,0,0,0,0,0,0,0,0},
+		{3,0,0,0,0,0,0,0,0,0,0,0},
+		{3,0,0,0,0,0,0,0,0,0,0,0},
+		{3,0,0,0,0,0,0,0,0,0,0,0},
 	};
 		
 }
@@ -44,7 +45,7 @@ Bg::Bg():
 	int graphW = 0;
 	int graphH = 0;
 	GetGraphSize(m_mapHandle, &graphW, &graphH);
-
+	
 	m_bgHandle = LoadGraph("data/bg.png");
 
 	//縦のマス数は画面の高さ/マップチップ一つの
@@ -65,7 +66,6 @@ void Bg::Init()
 }
 void Bg::Update()
 {
-
 }
 void Bg::Draw(const Camera& camera)
 {
@@ -82,18 +82,14 @@ void Bg::DrawBg(const Camera& camera)
 
 void Bg::DrawMapChip()
 {
+	/*for (int y = 0; y < kChipNumY; y++)
+	{
+		for (int x = 0; x < kChipNumX; x++)
+		{
+			int posX = static_cast<int>(x *kChipSize * kChipScale - )
+		}
+	}*/
 	
-	DrawGraph(0, 0, m_mapHandle, true);
+	//DrawRectRotaGraph(, 0, m_mapHandle, true);
 }
 
-//int Bg::GetSccrollX()
-//{
-//	//スクロール量の計算
-//	//プレイヤーのGetRectから持ってくる
-//	//int result = static_cast<int>(m_pPlayer->GetRect().GetX() - Game::kScreenWidth * 0.5f);
-//}
-
-//int Bg::GetSccrollY()
-//{
-//	return 0;
-//}

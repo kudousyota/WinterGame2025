@@ -20,11 +20,15 @@ m_CutW(0),
 m_CutH(0),
 m_switchSpeed(0.0f),
 m_pos(0,0),
+m_x(0),
+m_drawOffset(0,0),
 m_frameCount(0)
 
 {
 	//画像の読み込み
 	m_Handle = LoadGraph("data/Player.png");
+	m_pCamera = std::make_shared<Camera>();
+	
 }
 
 Player::~Player()
@@ -108,11 +112,11 @@ void Player::Draw(const Camera& camera)
 	auto rightTop = static_cast<int>(m_rect.GetX() + m_rect.GetW() * 0.5f);
 	auto rightBottom = static_cast<int>(m_rect.GetY() + m_rect.GetH() * 0.5f);
 
-	
+	m_pCamera->GetCameraOffset(m_drawOffset);
 
 	DrawRectGraph(
-		leftTop + static_cast<int>(camera.drawOffset.x),   // 描画位置X
-		leftBottom + static_cast<int>(camera.drawOffset.y),// 描画位置Y
+		leftTop + static_cast<int>(m_drawOffset.x),   // 描画位置X
+		leftBottom + static_cast<int>(m_drawOffset.y),// 描画位置Y
 		m_CutX, m_CutY,                                    // 切り抜き開始位置
 		m_CutW, m_CutH,                                    // 切り抜きサイズ
 		m_Handle,                                          // 画像

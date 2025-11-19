@@ -1,8 +1,9 @@
 #pragma once
 #include "Character.h"
 #include "Vec2.h"
+#include <memory>
 
-struct Camera;
+class Camera;
 class Player : public Character
 {
 public:
@@ -42,6 +43,10 @@ private:
 	//切り替え速度
 	float m_switchSpeed;
 
+
+	std::shared_ptr<Camera> m_pCamera;
+	//カメラのオフセット値
+	Vec2 m_drawOffset;
 	////拡大率
 	//float m_scaleX;
 	//float m_scaleY;
