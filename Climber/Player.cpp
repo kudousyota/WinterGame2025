@@ -112,8 +112,8 @@ void Player::Draw(const Camera& camera)
 	auto rightTop = static_cast<int>(m_rect.GetX() + m_rect.GetW() * 0.5f);
 	auto rightBottom = static_cast<int>(m_rect.GetY() + m_rect.GetH() * 0.5f);
 
-	m_pCamera->GetCameraOffset(m_drawOffset);
-
+	m_drawOffset = m_pCamera->GetCameraOffset() ;
+	
 	DrawRectGraph(
 		leftTop + static_cast<int>(m_drawOffset.x),   // •`‰æˆÊ’uX
 		leftBottom + static_cast<int>(m_drawOffset.y),// •`‰æˆÊ’uY
