@@ -75,9 +75,12 @@ void Bg::Draw(const Camera& camera)
 
 void Bg::DrawBg(const Camera& camera)
 {
-	DrawExtendGraph(m_pos.x, m_pos.y,
+	Vec2 cameraPos = camera.GetCameraOffset();
+
+	/*DrawRectRotaGraph(m_pos.x + camera.GetCameraOffset().x, m_pos.y + camera.GetCameraOffset().y,
 		m_src.x,m_src.y,
-		m_bgHandle, false);
+
+		m_bgHandle, false);*/
 }
 
 void Bg::DrawMapChip()

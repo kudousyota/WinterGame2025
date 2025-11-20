@@ -68,7 +68,7 @@ void Camera::UpdateCamera(std::shared_ptr<Camera> camera,std::shared_ptr<Player>
 	m_drawOffset.y += Game::kScreenHeight / 2;
 }
 
-Vec2 Camera::GetCameraOffset()
+Vec2 Camera::GetCameraOffset()const
 {
 	return {m_drawOffset.x,m_drawOffset.y};
 }
