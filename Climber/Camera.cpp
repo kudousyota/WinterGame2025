@@ -38,8 +38,8 @@ void Camera::Draw()
 }
 void Camera::InitCamera(std::shared_ptr<Camera>camera)
 {
-	m_drawOffset = {0,0};
-	m_pos = {0,0};
+	/*m_drawOffset = {0,0};
+	m_pos = {0,0};*/
 	/*camera.posX;
 	camera.posY;*/
 }
