@@ -34,8 +34,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//ƒV[ƒ“‚Ìì¬
 	std::shared_ptr<SceneMain>pScene = std::make_shared<SceneMain>();
 	pScene->Init();
-	std::shared_ptr<Bg>pBg = std::make_shared<Bg>();
-	pBg->DrawMapChip();
+	/*std::shared_ptr<Bg>pBg = std::make_shared<Bg>();
+	pBg->DrawMapChip();*/
 
 	
 

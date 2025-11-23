@@ -17,7 +17,7 @@ public:
 	void DrawBg(const Camera& camera);
 	
 	//マップを表示
-	void DrawMapChip();
+	void DrawMapChip(const Camera& camera);
 	////縦のスクロール量を取得
 	//int GetSccrollX();
 	////横のスクロール量を取得

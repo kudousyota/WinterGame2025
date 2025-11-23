@@ -51,7 +51,7 @@ Bg::Bg():
 	//縦のマス数は画面の高さ/マップチップ一つの
 	//サイズで求められる
 	m_graphChipNumX = graphW / kChipSize;
-	m_graphChipNumX = graphH / kChipSize;
+	m_graphChipNumY = graphH / kChipSize;
 }
 
 Bg::~Bg()
@@ -70,29 +70,51 @@ void Bg::Update()
 void Bg::Draw(const Camera& camera)
 {
 	DrawBg(camera);
-	DrawMapChip();
+	DrawMapChip(camera);
 }
 
 void Bg::DrawBg(const Camera& camera)
 {
 	Vec2 cameraPos = camera.GetCameraOffset();
 
-	/*DrawRectRotaGraph(m_pos.x + camera.GetCameraOffset().x, m_pos.y + camera.GetCameraOffset().y,
+	/*DrawRectRotaGraph(m_pos.x, m_pos.y ,
 		m_src.x,m_src.y,
-
+		kMapWidth,kMapHeight,
+		0.0f, 1.0f,
 		m_bgHandle, false);*/
+
+		// 背景の描画
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_bgHandle,true);
 }
 
-void Bg::DrawMapChip()
+void Bg::DrawMapChip(const Camera& camera)
 {
-	/*for (int y = 0; y < kChipNumY; y++)
+	// マップチップの描画
+	Vec2 cameraPos = camera.GetCameraOffset();
+
+	for (int y = 0; y < kChipNumY; y++)
 	{
 		for (int x = 0; x < kChipNumX; x++)
 		{
-			int posX = static_cast<int>(x *kChipSize * kChipScale - )
+			// マップチップIDを取得
+			int chipID = kChipData[x][y];
+			if (chipID == 0) continue;
+
+			// マップチップ画像の切り抜き位置を計算
+			int chipSrcX = (chipID % m_graphChipNumX) * kChipSize;
+			int chipSrcY = (chipID / m_graphChipNumX) * kChipSize;
+			// 描画位置を計算
+			int drawX = static_cast<int>(m_pos.x + x * kChipSize * kChipScale - cameraPos.x);
+			int drawY = static_cast<int>(m_pos.y + y * kChipSize * kChipScale - cameraPos.y);
+
+			DrawRectRotaGraph(
+				drawX, drawY,
+				chipSrcX, chipSrcY,
+				kChipSize, kChipSize,
+				kChipScale, 0.0f,
+				m_mapHandle, true);
 		}
-	}*/
-	
-	//DrawRectRotaGraph(, 0, m_mapHandle, true);
+	}
+
 }
 
