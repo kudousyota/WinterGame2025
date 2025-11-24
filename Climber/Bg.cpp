@@ -9,7 +9,7 @@ namespace
 	//マップチップ一つのサイズ
 	constexpr int kChipSize = 16;
 	//マップチップ拡大率
-	constexpr int kChipScale = 1.0f;
+	constexpr int kChipScale = 3.0f;
 
 	//マップ全体の幅
 	constexpr float kMapWidth = 1280.0f;
@@ -19,7 +19,7 @@ namespace
 
 	//チップを置く数
 	constexpr int kChipNumX = 12;
-	constexpr int kChipNumY = Game::kScreenHeight /kChipSize ;
+	constexpr int kChipNumY = kMapHeight /kChipSize ;
 
 	constexpr int kChipData[kChipNumX][kChipNumY] =
 	{
