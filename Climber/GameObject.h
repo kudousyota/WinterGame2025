@@ -1,16 +1,19 @@
 #pragma once
+#include <vector>
+#include "Rect.h"
 
-
-class GameObject
-{
+class Player;
+class GameObject {
 public:
-	GameObject();
-	virtual~GameObject();
+    GameObject();
+    virtual ~GameObject();
 
-	void Init();
-	void Update();
-	void Draw();
+    void Init();
+    void Update(Player& player);
+    void Draw();
 
 private:
+    int m_blocks;
 };
+
 

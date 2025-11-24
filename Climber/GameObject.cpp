@@ -1,5 +1,6 @@
 #include "GameObject.h"
-#include "Rect.h"
+#include <DxLib.h>
+#include <cmath>
 GameObject::GameObject()
 {
 }
@@ -11,7 +12,7 @@ void GameObject::Init()
 {
 	
 }
-void GameObject::Update()
+void GameObject::Update(Player& player)
 {
 
 }

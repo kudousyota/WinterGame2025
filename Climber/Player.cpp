@@ -122,6 +122,8 @@ void Player::Draw(const Camera& camera)
 		m_Handle,                                          // ‰æ‘œ
 		true
 	);
+	
+#ifdef _DEBUG
 	//“–‚½‚è”»’è‚Ì˜g
 	DrawBox(
 		leftTop + static_cast<int>(m_drawOffset.x) ,
@@ -130,6 +132,7 @@ void Player::Draw(const Camera& camera)
 		rightBottom + static_cast<int>(m_drawOffset.y),
 		GetColor(255, 0, 0), false
 	);
+#endif
 	
 }
 
