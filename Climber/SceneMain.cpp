@@ -4,6 +4,7 @@
 #include "Bg.h"
 #include "Camera.h"
 #include "Rect.h"
+#include "GameObject.h"
 
 
 SceneMain::SceneMain():
@@ -38,6 +39,7 @@ void SceneMain::Draw()
 	
 	m_pBg->Draw(*m_pCamera);
 	m_pBg->DrawMapChip(*m_pCamera);
+	m_pRect->Draw();
 	m_pPlayer->Draw(*m_pCamera);
 	DrawFormatString(100, 100, 0xffffff, "%.2f,%.2f", m_pPlayer->GetPos().x, m_pPlayer->GetPos().y);
 

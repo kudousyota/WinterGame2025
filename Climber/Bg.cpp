@@ -109,8 +109,8 @@ void Bg::DrawMapChip(const Camera& camera)
 			int chipSrcX = (chipID % m_graphChipNumX) * kChipSize;
 			int chipSrcY = (chipID / m_graphChipNumX) * kChipSize;
 			// •`‰æˆÊ’u‚ðŒvŽZ
-			int drawX = static_cast<int>(m_pos.x + x * kChipSize * kChipScale - cameraPos.x);
-			int drawY = static_cast<int>(m_pos.y + y * kChipSize * kChipScale - cameraPos.y);
+			int drawX = static_cast<int>(m_pos.x + x * kChipSize * kChipScale);
+			int drawY = static_cast<int>(m_pos.y + y * kChipSize * kChipScale );
 
 			DrawRectRotaGraph(
 				drawX, drawY,

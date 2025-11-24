@@ -9,13 +9,13 @@ m_y(0),
 m_z(0),
 m_w(0),
 m_h(0)
-
 {
 }
 
 Rect::~Rect()
 {
 }
+
 void Rect::Init(float x, float y, float w, float h)
 {
 	m_x = x;

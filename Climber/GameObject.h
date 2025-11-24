@@ -14,6 +14,8 @@ public:
 
 private:
     int m_blocks;
+    Rect m_rect;   // 当たり判定用
+    bool m_isHit;  // プレイヤーと衝突しているか
 };
 
 

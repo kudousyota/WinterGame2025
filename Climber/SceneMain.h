@@ -4,6 +4,7 @@ class Rect;
 class Camera;
 class Bg;
 class Player;
+class GameObject;
 class SceneMain
 {
 public:
@@ -20,5 +21,6 @@ private:
 	std::shared_ptr<Player> m_pPlayer;
 	std::shared_ptr<Camera> m_pCamera;
 	std::shared_ptr<Bg> m_pBg;
+	std::shared_ptr<GameObject> m_pGameObject;
 };
 
