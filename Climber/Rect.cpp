@@ -2,6 +2,7 @@
 
 #include <Dxlib.h>
 #include <cmath>
+#include "Camera.h"
 
 Rect::Rect():
 m_x(0),
@@ -30,7 +31,7 @@ void Rect::Update()
 
 void Rect::Draw()
 {
-	DrawBox(m_x, m_y, m_w, m_h, GetColor(255, 0, 0), true);
+	//DrawBox(m_x, m_y, m_w, m_h, GetColor(255, 0, 0), true);
 }
 
 bool Rect::IsHit(const Rect& other) const

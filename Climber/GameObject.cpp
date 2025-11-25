@@ -34,7 +34,5 @@ void GameObject::Draw()
     int right = static_cast<int>(x + w * 0.5f);
     int bottom = static_cast<int>(y + h * 0.5f);
 
-    // “–‚½‚Á‚Ä‚¢‚é‚Æ‚«‚Í—ÎA‚»‚¤‚Å‚È‚¯‚ê‚ÎÔ‚Å“h‚è‚Â‚Ô‚µ•`‰æ
-    int color = m_isHit ? GetColor(0, 255, 0) : GetColor(255, 0, 0);
-   // DrawBox(left, top, right, bottom, color, true);
+    DrawBox(left, top, right, bottom, GetColor(255,0,0), false);
 }

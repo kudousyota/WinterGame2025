@@ -43,8 +43,6 @@ void Player::Init()
 	//アニメーション初期化
 	m_CutW = 32;
 	m_CutH = 32;
-	
-	
 
 }
 void Player::Update()
@@ -53,7 +51,6 @@ void Player::Update()
 	// アニメーション更新
 	m_frameCount++;
 	// 5フレームごとに切り替え
-	if (m_frameCount >= 5)
 	if (m_frameCount >= 5)
 	{ 
 		m_frameCount = 0;
