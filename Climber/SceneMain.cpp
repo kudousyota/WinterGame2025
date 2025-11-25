@@ -37,6 +37,8 @@ void SceneMain::Update()
 	m_pEnemy->Update();
 	m_pCamera->UpdateCamera(m_pCamera,m_pPlayer);
 	m_pBg->Update();
+
+	
 }
 
 void SceneMain::Draw()

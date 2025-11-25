@@ -85,3 +85,10 @@ void Enemy::Draw(const Camera& camera)
 		true
 	);
 }
+
+bool Enemy::isHit()
+{
+	//‚±‚±‚É“–‚½‚Á‚½‚Ìˆ—
+
+	return false;
+}

@@ -88,8 +88,8 @@ void Bg::DrawBg(const Camera& camera)
 		0.0f, 1.0f,
 		m_bgHandle, false);*/
 
-		// ”wŒi‚Ì•`‰æ
-	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_bgHandle,true);
+	// ”wŒi‚Ì•`‰æ
+	DrawExtendGraph(0 +camera.GetCameraOffset().x, 0 + camera.GetCameraOffset().y, Game::kScreenWidth + camera.GetCameraOffset().x, Game::kScreenHeight + camera.GetCameraOffset().y, m_bgHandle, true);
 }
 
 void Bg::DrawMapChip(const Camera& camera)

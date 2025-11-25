@@ -23,6 +23,8 @@ virtual~Player();
 
 	 Vec2 GetPos() { return m_pos ; }
 
+
+
 private:
 	
 	float m_x;
@@ -42,6 +44,8 @@ private:
 	float m_frameCount;
 	//Ø‚è‘Ö‚¦‘¬“x
 	float m_switchSpeed;
+	//“–‚½‚è”»’è
+	bool isHit();
 
 
 	std::shared_ptr<Camera> m_pCamera;

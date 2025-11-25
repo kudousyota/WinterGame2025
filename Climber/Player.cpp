@@ -132,5 +132,10 @@ void Player::Draw(const Camera& camera)
 #endif
 	
 }
+bool Player::isHit()
+{
+	
+	return false;
+}
 
 

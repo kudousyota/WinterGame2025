@@ -25,6 +25,8 @@ private:
 	float m_frameCount;
 	float m_switchSpeed;
 
+	bool isHit();
+
 	std::shared_ptr<Camera>m_pCamera;
 
 	Vec2 m_drawOffset;
