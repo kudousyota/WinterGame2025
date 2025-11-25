@@ -3,6 +3,7 @@
 #include "Vec2.h"
 #include <memory>
 class Camera;
+class Player;
 class Enemy : public Character
 {
 public:
@@ -25,7 +26,7 @@ private:
 	float m_frameCount;
 	float m_switchSpeed;
 
-	bool isHit();
+	bool isHit(const Player& player);
 
 	std::shared_ptr<Camera>m_pCamera;
 

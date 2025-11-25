@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "DxLib.h"
 #include "Camera.h"
+#include "Enemy.h"
 
 
 namespace
@@ -45,7 +46,7 @@ void Player::Init()
 	m_CutH = 32;
 
 }
-void Player::Update()
+void Player::Update(const Enemy& enemy)
 {
 	m_pos = { m_rect.GetX(), m_rect.GetY() };
 	// アニメーション更新
@@ -100,6 +101,16 @@ void Player::Update()
 	//Y座標の更新
 	m_rect.SetY(m_rect.GetY() + m_vel);
 	
+	//押し出し処理
+	if (m_rect.IsHit(enemy.GetRect()))
+	{
+		m_rect.FixPos(enemy.GetRect());
+
+		if (m_rect.GetY() < enemy.GetRect().GetY())
+		{
+			m_vel = 0;
+		}
+	}
 }
 void Player::Draw(const Camera& camera)
 {
@@ -132,10 +143,10 @@ void Player::Draw(const Camera& camera)
 #endif
 	
 }
-bool Player::isHit()
+bool Player::isHit(const Enemy& enemy)
 {
 	
-	return false;
+	return m_rect.IsHit(enemy.GetRect());
 }
 
 

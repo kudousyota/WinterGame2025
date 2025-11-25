@@ -4,6 +4,7 @@
 #include <memory>
 
 class Camera;
+class Enemy;
 class Player : public Character
 {
 public:
@@ -18,8 +19,9 @@ virtual~Player();
 	/// <param name="w">W : •</param>
 	/// <param name="h">H : ‚‚³</param>
 	 void Init();
-	 void Update();
+	 void Update(const Enemy& enemy);
 	 void Draw(const Camera& camera);
+
 
 	 Vec2 GetPos() { return m_pos ; }
 
@@ -45,7 +47,7 @@ private:
 	//Ø‚è‘Ö‚¦‘¬“x
 	float m_switchSpeed;
 	//“–‚½‚è”»’è
-	bool isHit();
+	bool isHit(const Enemy& enemy);
 
 
 	std::shared_ptr<Camera> m_pCamera;

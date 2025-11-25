@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Dxlib.h"
 #include "Camera.h"
+#include "Player.h"
 namespace
 {
 	constexpr float kGravity = 0.5;
@@ -86,9 +87,9 @@ void Enemy::Draw(const Camera& camera)
 	);
 }
 
-bool Enemy::isHit()
+bool Enemy::isHit(const Player& player)
 {
 	//‚±‚±‚É“–‚½‚Á‚½‚Ìˆ—
 
-	return false;
+	return m_rect.IsHit(player.GetRect());
 }
