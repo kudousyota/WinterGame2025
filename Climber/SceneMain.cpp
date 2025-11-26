@@ -34,7 +34,7 @@ void SceneMain::Update()
 {
 	m_frameCount++;
 	m_pPlayer->Update(*m_pEnemy);
-	m_pEnemy->Update();
+	m_pEnemy->Update(*m_pPlayer);
 	m_pCamera->UpdateCamera(m_pCamera,m_pPlayer);
 	m_pBg->Update();
 

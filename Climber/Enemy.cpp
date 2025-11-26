@@ -37,7 +37,7 @@ void Enemy::Init()
 	m_CutH = 40;
 
 }
-void Enemy::Update()
+void Enemy::Update(const Player& player)
 {
 	m_pos = { m_rect.GetX(),m_rect.GetY() };
 	//アニメーションの更新
@@ -66,6 +66,17 @@ void Enemy::Update()
 		m_rect.SetY(kGroundY);
 	}
 	m_rect.SetY(m_rect.GetY() + m_vel);
+
+	//押し出し処理
+	if (m_rect.IsHit(player.GetRect()))
+	{
+		m_rect.FixPos(player.GetRect());
+
+		if (m_rect.GetY() < player.GetRect().GetY())
+		{
+			m_vel = 0;
+		}
+	}
 
 }
 void Enemy::Draw(const Camera& camera)

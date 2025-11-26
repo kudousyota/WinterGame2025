@@ -10,7 +10,7 @@ public:
 	Enemy();
 	virtual~Enemy();
 	void Init();
-	void Update();
+	void Update(const Player& player);
 	void Draw(const Camera& camera);
 
 private:
