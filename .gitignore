@@ -24,12 +24,13 @@
 *.lai
 *.la
 *.a
-*.lib
+# *.lib
 
 # Executables
 *.exe
 *.out
 *.app
+
 /Climber/.vs
 /Climber/Climber
 /Climber/x64
