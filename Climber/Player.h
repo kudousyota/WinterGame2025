@@ -33,6 +33,7 @@ private:
 	Vec2 m_pos;
 
 	float m_vel;
+	float m_speed;
 
 	//アニメーション
 	int m_Handle;
@@ -40,8 +41,8 @@ private:
 	int m_CutX;
 	int m_CutY;
 	//１フレームの高さ
-	int m_CutW;
-	int m_CutH;
+	int m_cutW;
+	int m_cutH;
 	//フレームカウント
 	float m_frameCount;
 	//切り替え速度

@@ -86,6 +86,18 @@ void Enemy::Draw(const Camera& camera)
 		m_Handle,                                          // ‰æ‘œ
 		true
 	);
+
+#ifdef _DEBUG
+	DrawBox(
+		leftTop + static_cast<int>(m_drawOffset.x),
+		leftBottom + static_cast<int>(m_drawOffset.y),
+		rightTop + static_cast<int>(m_drawOffset.x),
+		rightBottom + static_cast<int>(m_drawOffset.y),
+		GetColor(0, 255, 0),
+		false
+		);
+#endif
+
 }
 
 bool Enemy::isHit(const Player& player)

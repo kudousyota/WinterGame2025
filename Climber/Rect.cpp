@@ -48,9 +48,9 @@ bool Rect::IsHit(const Rect& other) const
 	
 	//幅(W)の確認するための値取得
 	//幅を出す為に割る
-	float checkW = (m_x + other.GetW()) / 2;
+	float checkW = (m_x + other.GetW()) / 2.0f;
 	//高さの確認するための値を取得
-	float checkH = (m_y + other.GetH()) / 2;
+	float checkH = (m_y + other.GetH()) / 2.0f;
 
 	//Ｘ軸で重なっているか
 	bool isHitX = disX < checkW;
