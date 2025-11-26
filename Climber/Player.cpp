@@ -106,10 +106,6 @@ void Player::Update(const Enemy& enemy)
 	{
 		m_rect.FixPos(enemy.GetRect());
 
-		if (m_rect.GetY() < enemy.GetRect().GetY())
-		{
-			m_vel = 0;
-		}
 	}
 }
 void Player::Draw(const Camera& camera)

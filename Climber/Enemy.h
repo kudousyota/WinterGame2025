@@ -19,10 +19,10 @@ private:
 	float m_vel;
 	int m_Handle;
 
-	int m_CutX;
-	int m_CutY;
-	int m_CutW;
-	int m_CutH;
+	int m_cutX;
+	int m_cutY;
+	int m_cutW;
+	int m_cutH;
 	float m_frameCount;
 	float m_switchSpeed;
 
