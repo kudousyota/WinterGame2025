@@ -5,6 +5,7 @@
 
 class Camera;
 class Enemy;
+class CollisionManager;
 class Player : public Character
 {
 public:
@@ -19,7 +20,7 @@ virtual~Player();
 	/// <param name="w">W : 幅</param>
 	/// <param name="h">H : 高さ</param>
 	 void Init();
-	 void Update(const Enemy& enemy);
+	 void Update(const Enemy& enemy, Rect& other);
 	 void Draw(const Camera& camera);
 
 
@@ -52,6 +53,7 @@ private:
 
 
 	std::shared_ptr<Camera> m_pCamera;
+	std::shared_ptr<CollisionManager> m_pCollision;
 	//カメラのオフセット値
 	Vec2 m_drawOffset;
 	////拡大率

@@ -47,7 +47,7 @@ void Player::Init()
 	m_speed = 2.0f;
 
 }
-void Player::Update(const Enemy& enemy)
+void Player::Update(const Enemy& enemy, Rect& other)
 {
 	m_pos = { m_rect.GetX(), m_rect.GetY() };
 	// アニメーション更新
@@ -106,7 +106,6 @@ void Player::Update(const Enemy& enemy)
 	if (m_rect.IsHit(enemy.GetRect()))
 	{
 		m_rect.FixPos(enemy.GetRect());
-		
 	}
 }
 void Player::Draw(const Camera& camera)
