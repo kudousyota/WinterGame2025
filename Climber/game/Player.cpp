@@ -15,8 +15,8 @@ Player::Player():
 m_speed(0.0f),
 m_vel(0.0f),
 m_Handle(-1),
-m_CutX(0),
-m_CutY(0),
+m_cutX(0),
+m_cutY(0),
 m_cutW(0),
 m_cutH(0),
 m_switchSpeed(0.0f),
@@ -62,8 +62,8 @@ void Player::Update(const Enemy& enemy)
 		{  
 			m_switchSpeed = 0;
 		}
-		m_CutX = m_switchSpeed * m_cutW; // 横方向の切り抜き位置
-		m_CutY = 0;                     // 縦方向は固定
+		m_cutX = m_switchSpeed * m_cutW; // 横方向の切り抜き位置
+		m_cutY = 0;                     // 縦方向は固定
 	}
 
 
@@ -122,7 +122,7 @@ void Player::Draw(const Camera& camera)
 	DrawRectGraph(
 		leftTop + static_cast<int>(m_drawOffset.x),   // 描画位置X
 		leftBottom + static_cast<int>(m_drawOffset.y),// 描画位置Y
-		m_CutX, m_CutY,                                    // 切り抜き開始位置
+		m_cutX, m_cutY,                                    // 切り抜き開始位置
 		m_cutW, m_cutH,                                    // 切り抜きサイズ
 		m_Handle,                                          // 画像
 		true

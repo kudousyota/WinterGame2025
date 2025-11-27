@@ -76,7 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Dxlib_h</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Dxlib_h;$(ProjectDir)game;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -109,7 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Dxlib_h</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Dxlib_h;$(ProjectDir)game;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -141,29 +141,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bg.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Character.cpp" />
-    <ClCompile Include="CollisionManager.cpp" />
-    <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="System\Bg.cpp" />
+    <ClCompile Include="System\Camera.cpp" />
+    <ClCompile Include="game\Character.cpp" />
+    <ClCompile Include="System\CollisionManager.cpp" />
+    <ClCompile Include="game\Enemy.cpp" />
+    <ClCompile Include="game\GameObject.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Rect.cpp" />
-    <ClCompile Include="SceneMain.cpp" />
+    <ClCompile Include="game\Player.cpp" />
+    <ClCompile Include="System\Rect.cpp" />
+    <ClCompile Include="Scene\SceneMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bg.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Character.h" />
-    <ClInclude Include="CollisionManager.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="Rect.h" />
-    <ClInclude Include="SceneMain.h" />
-    <ClInclude Include="Vec2.h" />
+    <ClInclude Include="System\Bg.h" />
+    <ClInclude Include="System\Camera.h" />
+    <ClInclude Include="game\Character.h" />
+    <ClInclude Include="System\CollisionManager.h" />
+    <ClInclude Include="game\Enemy.h" />
+    <ClInclude Include="System\Game.h" />
+    <ClInclude Include="game\GameObject.h" />
+    <ClInclude Include="game\Player.h" />
+    <ClInclude Include="System\Rect.h" />
+    <ClInclude Include="Scene\SceneMain.h" />
+    <ClInclude Include="System\Vec2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

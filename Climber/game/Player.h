@@ -38,8 +38,8 @@ private:
 	//アニメーション
 	int m_Handle;
 	//カット位置
-	int m_CutX;
-	int m_CutY;
+	int m_cutX;
+	int m_cutY;
 	//１フレームの高さ
 	int m_cutW;
 	int m_cutH;
