@@ -1,4 +1,5 @@
 #pragma once
+#include "Vec2.h"
 class Rect
 {
 public:
@@ -22,8 +23,8 @@ public:
 	void Draw();
 
 	bool IsHit(const Rect& other) const;
-
-	void FixPos(const Rect& other);
+	//‰Ÿ‚µo‚µ‚½—Ê‚ğ•Ô‚·
+	Vec2 FixPos(const Rect& other);
 
 	private:
 		float m_x;

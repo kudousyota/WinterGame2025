@@ -12,7 +12,7 @@ public:
 	void Draw();
 
 	bool IsHit(const Character& other) const;
-	void FixPos(const Character& other);
+	Vec2 FixPos(const Character& other);
 
 	Rect GetRect() const;
 	const Vec2& GetPos()const { return m_pos; }

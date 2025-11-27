@@ -22,9 +22,9 @@ bool Character::IsHit(const Character& other) const
 	return m_rect.IsHit(other.m_rect);
 }
 
-void Character::FixPos(const Character& other)
+Vec2 Character::FixPos(const Character& other)
 {
-	m_rect.FixPos(other.m_rect);
+	return m_rect.FixPos(other.m_rect);
 }
 
 Rect Character::GetRect() const

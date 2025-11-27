@@ -1,5 +1,5 @@
 #include "Rect.h"
-
+#include "Vec2.h"
 #include <Dxlib.h>
 #include <cmath>
 #include "Camera.h"
@@ -48,9 +48,9 @@ bool Rect::IsHit(const Rect& other) const
 	
 	//幅(W)の確認するための値取得
 	//幅を出す為に割る
-	float checkW = (m_x + other.GetW()) / 2.0f;
+	float checkW = (m_w + other.GetW()) / 2.0f;
 	//高さの確認するための値を取得
-	float checkH = (m_y + other.GetH()) / 2.0f;
+	float checkH = (m_h + other.GetH()) / 2.0f;
 
 	//Ｘ軸で重なっているか
 	bool isHitX = disX < checkW;
@@ -62,8 +62,12 @@ bool Rect::IsHit(const Rect& other) const
 	return isHitX && isHItY;
 }
 
-void Rect::FixPos(const Rect& other)
+Vec2 Rect::FixPos(const Rect& other)
 {
+	//元の位置を保持しておく
+	float prevposX = m_x;
+	float prevposY = m_y;
+
 	//Xの差分を取得
 	float disX = other.GetX() - m_x;
 	//Ｙの差分を取得
@@ -73,6 +77,12 @@ void Rect::FixPos(const Rect& other)
 	disX = std::fabs(disX);
 	//長さを計算
 	float length = std::sqrt(disX * disX + disY * disY);
+	
+
+	float overlapX = (m_w + other.GetW()) / 2.0f - std::fabs(disX);
+	float overlapY = (m_h + other.GetH()) / 2.0f - std::fabs(disY);
+	// 最大押し出し量
+	const float maxPush = 5.0f;
 
 	//W上のでの位置を確認
 	float rateX = disX / length;
@@ -134,5 +144,5 @@ void Rect::FixPos(const Rect& other)
 			m_y -= moveY;
 		}
 	}
-
+	return Vec2(m_x - prevposX, m_y - prevposY);
 }

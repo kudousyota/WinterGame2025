@@ -105,8 +105,13 @@ void Player::Update(const Enemy& enemy, Rect& other)
 	//押し出し処理
 	if (m_rect.IsHit(enemy.GetRect()))
 	{
+		//押し出し量を取得//FixPosが押し出し量を返すようにしたい
+		Vec2 receive = m_rect.FixPos(enemy.GetRect());
+		//Y方向の押し出し量を反映
 		m_rect.FixPos(enemy.GetRect());
+		
 	}
+
 }
 void Player::Draw(const Camera& camera)
 {
