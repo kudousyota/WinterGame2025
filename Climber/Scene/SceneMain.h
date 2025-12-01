@@ -1,5 +1,7 @@
 #pragma once
 #include <memory>
+
+class Stage;
 class Rect;
 class Camera;
 class Bg;
@@ -17,7 +19,12 @@ public:
 	virtual void Draw();
 
 private:
+	bool isStageEnd = false;//ステージの最後に到達しているかどうか
 	int m_frameCount;
+	//各種オブジェクトのポインタ
+	
+	//ステージデータ
+	std::shared_ptr<Stage>  m_pStage;
 	std::shared_ptr<Rect>   m_pRect;
 	std::shared_ptr<Player> m_pPlayer;
 	std::shared_ptr<Enemy>  m_pEnemy;

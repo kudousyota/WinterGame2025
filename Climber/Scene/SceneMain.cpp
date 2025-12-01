@@ -6,7 +6,7 @@
 #include "Rect.h"
 #include "Player.h"
 #include "Enemy.h"
-
+#include "Stage.h"
 
 
 SceneMain::SceneMain():
@@ -17,6 +17,9 @@ m_frameCount(0)
 	m_pCamera	= std::make_shared<Camera>();
 	m_pRect		= std::make_shared<Rect>();
 	m_pBg		= std::make_shared<Bg>();
+	m_pStage	= std::make_shared<Stage>();
+
+	m_pStage->Load(1);//ステージ1をロード
 
 }
 
@@ -49,6 +52,11 @@ void SceneMain::Draw()
 	m_pRect->Draw();
 	m_pPlayer->Draw(*m_pCamera);
 	m_pEnemy->Draw(*m_pCamera);
+
+	//ロードしたステージデータの描画
+	auto mapSize = m_pStage->MapSize();
+	const auto& mapData = m_pStage->GetAllData();
+
 	DrawFormatString(100, 100, 0xffffff, "%.2f,%.2f", m_pPlayer->GetPos().x, m_pPlayer->GetPos().y);
 
 	//仮地面の描画
