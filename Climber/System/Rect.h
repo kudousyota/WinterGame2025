@@ -1,5 +1,11 @@
 #pragma once
 #include "Vec2.h"
+
+struct Size
+{
+	int w;
+	int h;
+};
 class Rect
 {
 public:
@@ -25,6 +31,8 @@ public:
 	bool IsHit(const Rect& other) const;
 	//‰Ÿ‚µo‚µ‚½—Ê‚ğ•Ô‚·
 	Vec2 FixPos(const Rect& other);
+
+	
 
 	private:
 		float m_x;

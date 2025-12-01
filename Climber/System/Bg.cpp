@@ -20,7 +20,6 @@ namespace
 	//チップを置く数
 	constexpr int kChipNumX = 12;
 	constexpr int kChipNumY = kMapHeight /kChipSize ;
-
 	constexpr int kChipData[kChipNumX][kChipNumY] =
 	{
 		{3,0,0,0,0,0,0,0,0,0,0,0},
