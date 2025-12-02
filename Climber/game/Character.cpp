@@ -31,3 +31,8 @@ Rect Character::GetRect() const
 {
 	return m_rect;
 }
+
+void Character::CheckHitMap(Rect chipRect)
+{
+	
+}

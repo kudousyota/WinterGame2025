@@ -9,12 +9,24 @@ m_x(0),
 m_y(0),
 m_z(0),
 m_w(0),
-m_h(0)
+m_h(0),
+m_left(0),
+m_top(0),
+m_right(0),
+m_bottom(0)
 {
 }
 
 Rect::~Rect()
 {
+}
+
+void Rect::Set(float left, float top, float right, float bottom)
+{
+	m_left = left;
+	m_top = top;
+	m_right = right;
+	m_bottom = bottom;
 }
 
 void Rect::Init(float x, float y, float w, float h)

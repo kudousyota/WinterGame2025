@@ -20,26 +20,26 @@ namespace
 	//チップを置く数
 	constexpr int kChipNumX = 12;
 	constexpr int kChipNumY = kMapHeight /kChipSize ;
-	constexpr int kChipData[kChipNumX][kChipNumY] =
+	constexpr int kChipData[kChipNumY][kChipNumX] =
 	{
-		{3,0,0,0,0,0,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0,0,0,0,0,0},
-		{3,0,0,0,0,0,0,0,0,0,0,0},
+		{1,0,0,0,0,0,0,0,0,0,0,0,},
+		{1,0,0,0,0,0,0,0,0,0,0,0,},
+		{1,0,0,0,0,0,0,0,0,0,0,0,},
+		{1,0,0,0,0,0,0,0,0,0,0,0,},
+		{1,0,0,0,0,0,0,0,0,0,0,0,},
+		{1,0,0,0,0,0,0,0,0,0,0,0,},
+		{1,0,0,0,0,0,0,0,0,0,0,0,},
+		{1,0,0,0,0,0,0,0,0,0,0,0,},
+		{1,0,0,0,0,0,0,0,0,0,0,0,},
+		{1,0,0,0,0,0,0,0,0,0,0,0,},
+		{1,2,2,3,0,0,0,0,0,0,0,0,},
+		{1,0,0,0,0,0,0,0,0,0,0,0,},
 	};
 		
 }
 
 Bg::Bg():
-	m_pos{0,0},
+	m_pos{0,600},
 	m_src{1280,720},
 	m_graphChipNumX(0),
 	m_graphChipNumY(0)
@@ -94,6 +94,7 @@ void Bg::DrawBg(const Camera& camera)
 void Bg::DrawMapChip(const Camera& camera)
 {
 	// マップチップの描画
+
 	Vec2 cameraPos = camera.GetCameraOffset();
 
 	for (int y = 0; y < kChipNumY; y++)
@@ -101,24 +102,64 @@ void Bg::DrawMapChip(const Camera& camera)
 		for (int x = 0; x < kChipNumX; x++)
 		{
 			// マップチップIDを取得
-			int chipID = kChipData[x][y];
+			int chipID = kChipData[y][x];
 			if (chipID == 0) continue;
 
 			// マップチップ画像の切り抜き位置を計算
 			int chipSrcX = (chipID % m_graphChipNumX) * kChipSize;
 			int chipSrcY = (chipID / m_graphChipNumX) * kChipSize;
 			// 描画位置を計算
+			int drawY = static_cast<int>(m_pos.y + y * kChipSize * kChipScale);
 			int drawX = static_cast<int>(m_pos.x + x * kChipSize * kChipScale);
-			int drawY = static_cast<int>(m_pos.y + y * kChipSize * kChipScale );
-
-			DrawRectRotaGraph(
-				drawX, drawY,
+			//画面外は描画しない
+			if (drawX < 0 - kChipSize)continue;
+			if (drawX > kMapWidth)continue;
+			if (drawY < 0 - kChipScale)continue;
+			if (drawY > kMapHeight)continue;
+		DrawRectRotaGraph(
+				drawX + cameraPos.x, drawY + cameraPos.y,
 				chipSrcX, chipSrcY,
 				kChipSize, kChipSize,
 				kChipScale, 0.0f,
 				m_mapHandle, true);
+#ifdef DEBUG
+			// 当たり判定
+			//DrawBoxAA(drawX, drawY, drawX + kChipSize * kChipScale, drawY + kChipSize * kChipScale, 0x00xxff, true);
+
+#endif 
+
 		}
+		
 	}
 
+}
+
+bool Bg::IsCollision(Rect rect, Rect& chipRect)
+{
+	for (int y = 0; y < kChipNumY; y++)
+	{
+		for (int x = 0; x < kChipNumX; x++)
+		{
+			int chipLeft = static_cast<int>(x * kChipSize * kChipScale);
+			int chipRight = static_cast<int>(chipLeft + kChipSize * kChipScale);
+			int chipTop = static_cast<int>(y * kChipSize * kChipScale);
+			int chipBottom = static_cast<int>(chipTop + kChipSize * kChipScale);
+
+			//空チップはスキップ
+			if (kChipData[y][x] == 0)continue;
+
+			//絶対に当たらない場合
+			if (chipLeft > rect.GetX())continue;
+			if (chipTop > rect.GetY())continue;
+			if (chipRight < rect.GetX())continue;
+			if (chipBottom< rect.GetY())continue;
+
+			//ぶつかったマップチップの矩形を設定する
+			chipRect.Set(chipLeft,chipTop,chipRight,chipBottom);
+
+			return true;
+		}
+	}
+	return false;
 }
 

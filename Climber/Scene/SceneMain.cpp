@@ -36,7 +36,7 @@ void SceneMain::Init()
 void SceneMain::Update()
 {
 	m_frameCount++;
-	m_pPlayer->Update(*m_pEnemy,*m_pRect);
+	m_pPlayer->Update(*m_pEnemy,*m_pRect,*m_pBg);
 	m_pEnemy->Update(*m_pPlayer);
 	m_pCamera->UpdateCamera(m_pCamera,m_pPlayer);
 	m_pBg->Update();
@@ -56,6 +56,7 @@ void SceneMain::Draw()
 	//ロードしたステージデータの描画
 	auto mapSize = m_pStage->MapSize();
 	const auto& mapData = m_pStage->GetAllData();
+
 
 	DrawFormatString(100, 100, 0xffffff, "%.2f,%.2f", m_pPlayer->GetPos().x, m_pPlayer->GetPos().y);
 

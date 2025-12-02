@@ -1,6 +1,7 @@
 #pragma once
 #include "Vec2.h"
 
+class Rect;
 class Camera;
 class Player;
 class Bg
@@ -18,11 +19,12 @@ public:
 	
 	//マップを表示
 	void DrawMapChip(const Camera& camera);
-	////縦のスクロール量を取得
-	//int GetSccrollX();
-	////横のスクロール量を取得
-	//int GetSccrollY();
-	//
+
+/// <summary>
+/// 指定した矩形とあったっているか
+/// </summary>
+	bool IsCollision(Rect rect, Rect& chipRect);
+
 private:
 
 	//マップチップ画像

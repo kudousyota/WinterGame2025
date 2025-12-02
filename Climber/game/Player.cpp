@@ -47,7 +47,7 @@ void Player::Init()
 	m_speed = 2.0f;
 
 }
-void Player::Update(const Enemy& enemy, Rect& other)
+void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 {
 	m_pos = { m_rect.GetX(), m_rect.GetY() };
 	// アニメーション更新
@@ -69,24 +69,25 @@ void Player::Update(const Enemy& enemy, Rect& other)
 
 
 	//移動
-	if (CheckHitKey(KEY_INPUT_A))
+	if (CheckHitKey(KEY_INPUT_LEFT))
 	{
 		m_rect.SetX(m_rect.GetX() - m_speed);
 	}
-	if (CheckHitKey(KEY_INPUT_D))
+	if (CheckHitKey(KEY_INPUT_RIGHT))
 	{
 		m_rect.SetX(m_rect.GetX() + m_speed);
 	}
 
 	//重力
 	m_vel += kGravity;
-	
+	//衝突判定
+	Rect chipRect;
 	//地面にいるか
 	bool isHitGround = (m_rect.GetY() >= kGroundY);
 	if (isHitGround)
 	{
 		m_vel = 0;
-		//地面にいる
+		//地面にいる//ここに床の上に乗せる処理
 		m_rect.SetY(kGroundY) ;
 	}
 	//地面にいる時ジャンプできる
@@ -94,7 +95,7 @@ void Player::Update(const Enemy& enemy, Rect& other)
 	{
 		m_vel -= kJumpPower;
 	}
-
+	//ハイジャンプ
 	else if (CheckHitKey(KEY_INPUT_Z)&&isHitGround)
 	{
 		m_vel -= kHighJumpPower;

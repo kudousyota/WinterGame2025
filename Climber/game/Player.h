@@ -3,6 +3,7 @@
 #include "Vec2.h"
 #include <memory>
 
+class Bg;
 class Camera;
 class Enemy;
 class CollisionManager;
@@ -20,7 +21,7 @@ virtual~Player();
 	/// <param name="w">W : ïù</param>
 	/// <param name="h">H : çÇÇ≥</param>
 	 void Init();
-	 void Update(const Enemy& enemy, Rect& other);
+	 void Update(const Enemy& enemy, Rect& other, const Bg& bg);
 	 void Draw(const Camera& camera);
 
 

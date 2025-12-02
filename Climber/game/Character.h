@@ -2,6 +2,7 @@
 #include "Rect.h"
 #include "Vec2.h"
 
+class Rect;
 class Character
 {
 public:
@@ -20,6 +21,10 @@ public:
 protected:
 	Rect m_rect; //当たり判定用
 	Vec2 m_pos;
+	/// <summary>
+	/// マップチップとの当たり判定
+	/// </summary>
+	void CheckHitMap(Rect chipRect);
 
 private:
 	

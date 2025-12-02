@@ -20,6 +20,7 @@ public:
 	float GetH() const { return m_h; }
 	
 	//setter
+	void Set(float left, float top, float right, float bottom);
 	void SetX(float x) { m_x = x; }
 	void SetY(float y) { m_y = y; }
 
@@ -40,5 +41,11 @@ public:
 		float m_z;
 		float m_w;
 		float m_h;
+
+		float m_left;
+		float m_top;
+		float m_right;
+		float m_bottom;
+
 };
 
