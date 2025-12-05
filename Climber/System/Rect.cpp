@@ -9,11 +9,7 @@ m_x(0),
 m_y(0),
 m_z(0),
 m_w(0),
-m_h(0),
-m_left(0),
-m_top(0),
-m_right(0),
-m_bottom(0)
+m_h(0)
 {
 }
 
@@ -23,10 +19,10 @@ Rect::~Rect()
 
 void Rect::Set(float left, float top, float right, float bottom)
 {
-	m_left = left;
-	m_top = top;
-	m_right = right;
-	m_bottom = bottom;
+	m_w = right - left;
+	m_h = bottom - top;
+	m_x = left + m_w * 0.5f;
+	m_y = top + m_h * 0.5f;
 }
 
 //void Rect::SetLeft(float left)
@@ -91,8 +87,26 @@ bool Rect::IsHit(const Rect& other) const
 	return isHitX && isHItY;
 }
 
+bool Rect::Intersects(const Rect& other) const
+{
+	if (GetRight() <= other.GetLeft()) return false;
+	if (GetLeft() >= other.GetRight()) return false;
+	if (GetBottom() <= other.GetTop()) return false;
+	if (GetTop() >= other.GetBottom()) return false;
+		return true;
+}
+
 Vec2 Rect::FixPos(const Rect& other)
 {
+	//ç∑
+	Vec2 dif(0.0f,0.0f);
+
+	//ìñÇΩÇ¡ÇƒÇ¢Ç»Ç©Ç¡ÇΩÇÁÇªÇÃÇ‹Ç‹ï‘Ç∑
+	if (!IsHit(other))
+	{
+		return dif;
+	}
+
 	//å≥ÇÃà íuÇï€éùÇµÇƒÇ®Ç≠
 	float prevposX = m_x;
 	float prevposY = m_y;

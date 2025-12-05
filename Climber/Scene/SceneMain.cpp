@@ -48,7 +48,7 @@ void SceneMain::Draw()
 {
 	
 	m_pBg->Draw(*m_pCamera);
-	m_pBg->DrawMapChip(*m_pCamera);
+	//m_pBg->DrawMapChip(*m_pCamera);
 	m_pRect->Draw();
 	m_pPlayer->Draw(*m_pCamera);
 	m_pEnemy->Draw(*m_pCamera);

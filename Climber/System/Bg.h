@@ -17,13 +17,8 @@ public:
 	//背景表示
 	void DrawBg(const Camera& camera);
 	
-	//マップを表示
-	void DrawMapChip(const Camera& camera);
+	
 
-/// <summary>
-/// 指定した矩形とあったっているか
-/// </summary>
-	bool IsCollision(Rect rect, Rect& chipRect);
 
 private:
 

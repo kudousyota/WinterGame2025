@@ -1,78 +1,82 @@
-#include "Stage.h"
+ï»¿#include "Stage.h"
+#include <algorithm> //listã¨ã‹è‰²ã€…ã‚®ãƒ¥ãƒƒã¨ã—ã¦ã‚ã‚‹
 #include "DxLib.h"
+#include "Camera.h"
+#include "Game.h"
+#include <cmath>
 #include <cassert>
-#include <algorithm>//list‚Æ‚©FXƒMƒ…ƒb‚Æ‚µ‚Ä‚ ‚é
+
 
 namespace
 {
-	//”z’u‚É•K—v‚Èî•ñ
+	//é…ç½®ã«å¿…è¦ãªæƒ…å ±
 	struct DataSetting
 	{
-		//ƒ`ƒbƒv•
+		//ãƒãƒƒãƒ—å¹…
 		uint8_t chipW;
-		//ƒ`ƒbƒv‚‚³
+		//ãƒãƒƒãƒ—é«˜ã•
 		uint8_t chipH;
-		//ƒŒƒCƒ„[”
+		//ãƒ¬ã‚¤ãƒ¤ãƒ¼æ•°
 		uint8_t layerCount;
-		//1ƒ`ƒbƒv‚É‰½ƒrƒbƒgg—p
+		//1ãƒãƒƒãƒ—ã«ä½•ãƒ“ãƒƒãƒˆä½¿ç”¨
 		uint8_t bitCount;
 	};
 	struct DataHeader
 	{
-		//³‚µ‚¯‚ê‚Î'FMF_'‚É‚È‚Á‚Ä‚¢‚é
+		//æ­£ã—ã‘ã‚Œã°'FMF_'ã«ãªã£ã¦ã„ã‚‹
 		char identifier[4];
-		//ƒf[ƒ^ƒTƒCƒY
+		//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º
 		uint32_t size;
-		//ƒf[ƒ^‚Ì•
+		//ãƒ‡ãƒ¼ã‚¿ã®å¹…
 		uint32_t width;
-		//ƒf[ƒ^‚Ì‚‚³
+		//ãƒ‡ãƒ¼ã‚¿ã®é«˜ã•
 		uint32_t height;
-		// ƒf[ƒ^”z’u‚É•K—v‚Èî•ñ
+		// ãƒ‡ãƒ¼ã‚¿é…ç½®ã«å¿…è¦ãªæƒ…å ±
 		DataSetting setting;
 	};
 }
 
 void Stage::Load(int stageNo)
 {
-	//ƒtƒ@ƒCƒ‹–¼‚ğ“ü‚ê‚é•Ï”
+	//ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å…¥ã‚Œã‚‹å¤‰æ•°
 	char filePath[32];
-	//filepath‚É‘æ“ñˆø”‚Åì‚ç‚ê‚½•¶š—ñ‚ğ“ü‚ê‚é
+	//filepathã«ç¬¬äºŒå¼•æ•°ã§ä½œã‚‰ã‚ŒãŸæ–‡å­—åˆ—ã‚’å…¥ã‚Œã‚‹
 	sprintf_s(filePath, "data/stage%d.fmf", stageNo);
-	//filePath‚É•Û‘¶‚³‚ê‚½ƒtƒ@ƒCƒ‹–¼‚Ìƒtƒ@ƒCƒ‹‚ğŠJ‚«A‚»‚Ìƒnƒ“ƒhƒ‹‚Éæ“¾
+	//filePathã«ä¿å­˜ã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«åã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã€ãã®ãƒãƒ³ãƒ‰ãƒ«ã«å–å¾—
 	auto handle = FileRead_open(filePath);
-	//ƒtƒ@ƒCƒ‹‚ªŠJ‚¯‚È‚©‚Á‚½ê‡A‹­§I—¹‚³‚¹‚é
+	//ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ãªã‹ã£ãŸå ´åˆã€å¼·åˆ¶çµ‚äº†ã•ã›ã‚‹
 	assert(handle > 0);
-	//ƒwƒbƒ_î•ñ‚ğ“ü‚ê‚é
+	//ãƒ˜ãƒƒãƒ€æƒ…å ±ã‚’å…¥ã‚Œã‚‹
 	DataHeader header;
 
 	FileRead_read(&header, sizeof(header), handle);
-	//—˜—pÒ‘¤‚©‚çQÆ‚Å‚«‚é‚æ‚¤‚É“à•”•Ï”‚ÉƒRƒs[
+	//åˆ©ç”¨è€…å´ã‹ã‚‰å‚ç…§ã§ãã‚‹ã‚ˆã†ã«å†…éƒ¨å¤‰æ•°ã«ã‚³ãƒ”ãƒ¼
 	m_dataSize.w = header.width;
 	m_dataSize.h = header.height;
 
-	//ƒf[ƒ^‚ğó‚¯æ‚é€”õ‚ğ‚·‚é
-	//ƒwƒbƒ_‚É‚ ‚éƒf[ƒ^‚ÌƒTƒCƒY‚ğæ“¾‚µ‚Ä”z—ñ‚ÌƒTƒCƒY‚ğ•ÏX
+	//ãƒ‡ãƒ¼ã‚¿ã‚’å—ã‘å–ã‚‹æº–å‚™ã‚’ã™ã‚‹
+	//ãƒ˜ãƒƒãƒ€ã«ã‚ã‚‹ãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚ºã‚’å–å¾—ã—ã¦é…åˆ—ã®ã‚µã‚¤ã‚ºã‚’å¤‰æ›´
 	m_data.resize(header.size);
-	//¶ƒf[ƒ^
+	//ç”Ÿãƒ‡ãƒ¼ã‚¿
 	std::vector<uint8_t>rawData;
-	//“ñsã‚Æ“¯‚¶
+	//äºŒè¡Œä¸Šã¨åŒã˜
 	rawData.resize(header.size);
 	FileRead_read(rawData.data(), rawData.size() * sizeof(uint8_t), handle);
-	//ƒf[ƒ^‚Íã‚©‚ç‰º‚É‚È‚Á‚Ä‚¢‚é‚¯‚Ç‚µ‚½‚©‚ç“Ç‚İ‚İ‚½‚¢‚Ì‚Å”½“]‚³‚¹‚é
-	//for•¶‚Åˆês‚²‚Æ‰ñ‚µ‚Ä‚¢‚­
+	//ãƒ‡ãƒ¼ã‚¿ã¯ä¸Šã‹ã‚‰ä¸‹ã«ãªã£ã¦ã„ã‚‹ã‘ã©ã—ãŸã‹ã‚‰èª­ã¿è¾¼ã¿ãŸã„ã®ã§åè»¢ã•ã›ã‚‹
+	//foræ–‡ã§ä¸€è¡Œã”ã¨å›ã—ã¦ã„ã
 	for (int y = 0; y < header.height; y++)
 	{
-		//s‚ğ”½“]‚³‚¹‚é
+		//è¡Œã‚’åè»¢ã•ã›ã‚‹
 		int reverseY = header.height - y - 1;
-		//ˆês‚²‚Æ‚ÉƒRƒs[‚µ‚Ä‚¢‚­
-		//¶ƒf[ƒ^‚Ì‚Ù‚¤‚Í‡”ÔsƒAƒNƒZƒX//ƒRƒs[Œ³‚Ìæ“ªƒAƒhƒŒƒX
+		//ä¸€è¡Œã”ã¨ã«ã‚³ãƒ”ãƒ¼ã—ã¦ã„ã
+		//ç”Ÿãƒ‡ãƒ¼ã‚¿ã®ã»ã†ã¯é †ç•ªè¡Œã‚¢ã‚¯ã‚»ã‚¹//ã‚³ãƒ”ãƒ¼å…ƒã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹
 		std::copy_n(&rawData[y * header.width],
-			//ƒf[ƒ^”(‚»‚Ìs‚É‚¢‚­‚Âƒf[ƒ^‚ª‚ ‚é‚Ì‚©©‰¡ˆê—ñ‚Ìƒf[ƒ^”)//ƒRƒs[‚·‚éŒÂ”
+			//ãƒ‡ãƒ¼ã‚¿æ•°(ãã®è¡Œã«ã„ãã¤ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹ã®ã‹â†æ¨ªä¸€åˆ—ã®ãƒ‡ãƒ¼ã‚¿æ•°)//ã‚³ãƒ”ãƒ¼ã™ã‚‹å€‹æ•°
 			header.width,
-			//ƒRƒs[æ‚Í‹t‡ƒAƒNƒZƒX//ƒRƒs[æ‚Ìæ“ªƒAƒhƒŒƒX
+			//ã‚³ãƒ”ãƒ¼å…ˆã¯é€†é †ã‚¢ã‚¯ã‚»ã‚¹//ã‚³ãƒ”ãƒ¼å…ˆã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹
 			&m_data[reverseY * header.width]);
 	}
-	//“Ç‚İ‚İI‚í‚Á‚½‚çƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
+	//èª­ã¿è¾¼ã¿çµ‚ã‚ã£ãŸã‚‰ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
 	FileRead_close(handle);
 }
 
@@ -86,7 +90,70 @@ uint8_t Stage::GetData(int xidx, int yidx)
 	return m_data[yidx * m_dataSize.w + xidx];
 }
 
+bool Stage::IsCollision(const Rect& other, Rect& hitTileRect) const
+{
+	return false;
+}
+
 const std::vector<uint8_t>& Stage::GetAllData() const
 {
 	return m_data;
+}
+
+void Stage::SetTileSet(int chipHandle, int chipNumW, int chipNumH)
+{
+	m_chipHandle = chipHandle;
+	if (chipNumW > 0) m_chipNumW = chipNumW;   // æ˜ç¤ºå€¤ãŒã‚ã‚Œã°ä¸Šæ›¸ã
+	if (chipNumH > 0) m_chipNumH = chipNumH;
+
+}
+
+
+void Stage::Draw(const Camera& camera, int originX, int originY)const
+{
+
+	if (m_chipHandle == -1 || m_chipNumW <= 0 || m_chipNumH <= 0) return;
+
+	int texW = 0, texH = 0;
+	GetGraphSize(m_chipHandle, &texW, &texH);
+	const int tilesPerRow = (m_chipNumW > 0) ? texW / m_chipNumW : 0;
+	const int tilesPerCol = (m_chipNumH > 0) ? texH / m_chipNumH : 0;
+	const int totalTiles = tilesPerRow * tilesPerCol;
+	if (tilesPerRow <= 0 || tilesPerCol <= 0) return;
+
+	const int w = m_dataSize.w;
+	const int h = m_dataSize.h;
+
+	// æç”»åº§æ¨™ = ãƒ¯ãƒ¼ãƒ«ãƒ‰ âˆ’ ã‚«ãƒ¡ãƒ©
+	const auto camOfs = camera.GetCameraOffset();
+	const int baseX = originX - static_cast<int>(camOfs.x);
+	const int baseY = originY - static_cast<int>(camOfs.y);
+
+	// ç”»é¢ã«è¦‹ãˆã‚‹ç¸¦è¡Œã ã‘æç”»ï¼ˆç¸¦ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«æœ€é©åŒ–ï¼‰
+	const int screenH = Game::kScreenHeight;
+
+	int minRow = (0, (0 - baseY) / m_chipNumH);
+	int maxRow = (h - 1, (screenH - 1 - baseY) / m_chipNumH);
+
+	for (int y = minRow; y <= maxRow; ++y)
+	{
+		for (int x = 0; x < w; ++x)
+		{
+			uint8_t id = m_data[y * w + x];
+	
+		 // â˜… 0=ç©º ã®å‰æï¼ˆFMFãŒ1å§‹ã¾ã‚Šãªã‚‰ tileIndex = id - 1 ã«å¤‰æ›´ï¼‰
+			if (id == 0) continue;
+
+			int tileIndex = static_cast<int>(id);
+			if (tileIndex < 0 || tileIndex >= totalTiles) continue;
+
+			const int srcX = (tileIndex % tilesPerRow) * m_chipNumW;
+			const int srcY = (tileIndex / tilesPerRow) * m_chipNumH;
+			const int dstX = baseX + x * m_chipNumW;
+			const int dstY = baseY + y * m_chipNumH;
+
+			DrawRectGraph(dstX, dstY, srcX, srcY, m_chipNumW, m_chipNumH, m_chipHandle, true);
+
+		}
+	}
 }
