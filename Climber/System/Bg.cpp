@@ -148,11 +148,21 @@ bool Bg::IsCollision(Rect rect, Rect& chipRect)
 			//空チップはスキップ
 			if (kChipData[y][x] == 0)continue;
 
+		/*
+		AABB判定は高速：四則演算と比較だけで判定できる
+		 中心座標＋幅高さでも同じことができる：
+		 左端 = 中心X - 幅 / 2
+		 右端 = 中心X + 幅 / 2
+		 上端 = 中心Y - 高さ / 2
+		 下端 = 中心Y + 高さ / 2
+		 */
+
 			//絶対に当たらない場合
-			if (chipLeft > rect.GetX())continue;
-			if (chipTop > rect.GetY())continue;
-			if (chipRight < rect.GetX())continue;
-			if (chipBottom< rect.GetY())continue;
+			if (chipLeft > rect.GetH())continue;
+			if (chipTop > rect.GetY()) continue;
+			if (chipRight < rect.GetX()) continue;
+			if (chipBottom < rect.GetY()) continue;
+			
 
 			//ぶつかったマップチップの矩形を設定する
 			chipRect.Set(chipLeft,chipTop,chipRight,chipBottom);

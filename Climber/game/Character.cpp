@@ -34,5 +34,5 @@ Rect Character::GetRect() const
 
 void Character::CheckHitMap(Rect chipRect)
 {
-	
+	m_pos.x += m_rect.GetX();
 }

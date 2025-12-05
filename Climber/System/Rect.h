@@ -21,6 +21,11 @@ public:
 	
 	//setter
 	void Set(float left, float top, float right, float bottom);
+	/*void SetLeft(float left) { m_left = left; }
+	void SetTop	(float top)	 { m_top  = top;  }
+	void SetRight(float right) { m_right = right; }
+	void SetBottom(float bottom) { m_bottom = bottom; }*/
+
 	void SetX(float x) { m_x = x; }
 	void SetY(float y) { m_y = y; }
 

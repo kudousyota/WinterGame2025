@@ -29,6 +29,23 @@ void Rect::Set(float left, float top, float right, float bottom)
 	m_bottom = bottom;
 }
 
+//void Rect::SetLeft(float left)
+//{
+//	m_left = left;
+//}
+//void Rect::SetTop(float top)
+//{
+//	m_top = top;
+//}
+//void Rect::SetRight(float right)
+//{
+//	m_right = right;
+//}
+//void Rect::SetBottom(float bottom)
+//{
+//	m_bottom = bottom;
+//}
+
 void Rect::Init(float x, float y, float w, float h)
 {
 	m_x = x;

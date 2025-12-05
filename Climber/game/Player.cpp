@@ -88,7 +88,7 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 	{
 		m_vel = 0;
 		//地面にいる//ここに床の上に乗せる処理
-		m_rect.SetY(kGroundY) ;
+		m_rect.SetY(kGroundY);
 	}
 	//地面にいる時ジャンプできる
 	if (CheckHitKey(KEY_INPUT_SPACE)&&isHitGround)
