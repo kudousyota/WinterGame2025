@@ -31,6 +31,8 @@ void SceneMain::Init()
 {
 	m_pPlayer->Init();
 	m_pEnemy->Init();
+	int chipHandle = LoadGraph("data/stage1.fmf");
+	m_pStage->SetTileSet(chipHandle, 16, 16);//タイルセットの設定
 }
 
 void SceneMain::Update()
@@ -49,6 +51,7 @@ void SceneMain::Draw()
 	
 	m_pBg->Draw(*m_pCamera);
 	//m_pBg->DrawMapChip(*m_pCamera);
+	m_pStage->Draw(*m_pCamera, 0, 0);//ステージデータの描画
 	m_pRect->Draw();
 	m_pPlayer->Draw(*m_pCamera);
 	m_pEnemy->Draw(*m_pCamera);

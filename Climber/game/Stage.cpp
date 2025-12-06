@@ -131,9 +131,9 @@ void Stage::Draw(const Camera& camera, int originX, int originY)const
 
 	// 画面に見える縦行だけ描画（縦スクロール最適化）
 	const int screenH = Game::kScreenHeight;
-
-	int minRow = (0, (0 - baseY) / m_chipNumH);
-	int maxRow = (h - 1, (screenH - 1 - baseY) / m_chipNumH);
+	//スクリーンに映っている行の最小値と最大値を計算
+	int minRow = (0 - baseY) / m_chipNumH;
+	int maxRow = (screenH - 1 - baseY) / m_chipNumH;
 
 	for (int y = minRow; y <= maxRow; ++y)
 	{
@@ -141,7 +141,7 @@ void Stage::Draw(const Camera& camera, int originX, int originY)const
 		{
 			uint8_t id = m_data[y * w + x];
 	
-		 // ★ 0=空 の前提（FMFが1始まりなら tileIndex = id - 1 に変更）
+		 // 0=空 の前提（FMFが1始まりなら tileIndex = id - 1 に変更）
 			if (id == 0) continue;
 
 			int tileIndex = static_cast<int>(id);
