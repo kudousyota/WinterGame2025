@@ -197,7 +197,8 @@ void Stage::Draw(const Camera& camera, int originX, int originY) const
 			const int dstY = baseY + y * m_chipNumH;
 
 			DrawRectGraph(dstX, dstY, srcX, srcY, m_chipNumW, m_chipNumH, m_chipHandle, true);
-		//	DrawFormatString(dstX, dstY,0xffffff, "%d", id);
+			
+			//DrawFormatString(dstX, dstY,0xffffff, "%d", id);
 		}
 	}
 }

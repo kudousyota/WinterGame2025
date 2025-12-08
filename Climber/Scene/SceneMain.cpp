@@ -61,8 +61,8 @@ void SceneMain::Draw()
 	m_pEnemy->Draw(*m_pCamera);
 
 	//ロードしたステージデータの描画
-	/*auto mapSize = m_pStage->MapSize();
-	const auto& mapData = m_pStage->GetAllData();*/
+	auto mapSize = m_pStage->MapSize();
+	const auto& mapData = m_pStage->GetAllData();
 
 
 	DrawFormatString(100, 100, 0xffffff, "%.2f,%.2f", m_pPlayer->GetPos().x, m_pPlayer->GetPos().y);
