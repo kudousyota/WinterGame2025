@@ -9,6 +9,7 @@
 #include "Stage.h"
 
 
+
 SceneMain::SceneMain():
 m_frameCount(0)
 {
@@ -18,8 +19,8 @@ m_frameCount(0)
 	m_pRect		= std::make_shared<Rect>();
 	m_pBg		= std::make_shared<Bg>();
 	m_pStage	= std::make_shared<Stage>();
-
-	m_pStage->Load(1);//ステージ1をロード
+	//ステージ1をロード
+	m_pStage->Load(1);
 
 }
 
@@ -31,8 +32,9 @@ void SceneMain::Init()
 {
 	m_pPlayer->Init();
 	m_pEnemy->Init();
-	int chipHandle = LoadGraph("data/stage1.fmf");
-	m_pStage->SetTileSet(chipHandle, 16, 16);//タイルセットの設定
+	int chipHandle = LoadGraph("data/mapChip.png");
+	//タイルセットの設定
+	m_pStage->SetTileSet(chipHandle, 16, 16);
 }
 
 void SceneMain::Update()
@@ -57,8 +59,8 @@ void SceneMain::Draw()
 	m_pEnemy->Draw(*m_pCamera);
 
 	//ロードしたステージデータの描画
-	auto mapSize = m_pStage->MapSize();
-	const auto& mapData = m_pStage->GetAllData();
+	/*auto mapSize = m_pStage->MapSize();
+	const auto& mapData = m_pStage->GetAllData();*/
 
 
 	DrawFormatString(100, 100, 0xffffff, "%.2f,%.2f", m_pPlayer->GetPos().x, m_pPlayer->GetPos().y);

@@ -21,7 +21,7 @@ Bg::Bg():
 	m_graphChipNumX(0),
 	m_graphChipNumY(0)
 {
-	m_mapHandle = LoadGraph("data/mapChip.png");
+	//m_mapHandle = LoadGraph("data/mapChip.png");
 	//画像のマップチップ数を数える
 	int graphW = 0;
 	int graphH = 0;
