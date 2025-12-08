@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Stage.h"
+#include <cassert>
 
 
 
@@ -33,6 +34,7 @@ void SceneMain::Init()
 	m_pPlayer->Init();
 	m_pEnemy->Init();
 	int chipHandle = LoadGraph("data/mapChip.png");
+	assert(chipHandle > 0);
 	//タイルセットの設定
 	m_pStage->SetTileSet(chipHandle, 16, 16);
 }

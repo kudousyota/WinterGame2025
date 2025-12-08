@@ -54,10 +54,15 @@ void Stage::Load(int stageNo)
 	DataHeader header;
 	FileRead_read(&header, sizeof(header), handle);
 
+//	printfDx("%c%c%c%c\n", header.identifier[0], header.identifier[1], header.identifier[2], header.identifier[3]);
+//	printfDx("SIZE  :%d\n", header.size);
+//	printfDx("WIDTH :%d\n", header.width);
+//	printfDx("HEIGHT:%d\n", header.height);
+
 	// ヘッダ簡易検査
 	if (header.width == 0 || header.height == 0)
 	{
-		OutputDebugString("Stage::Load - Invalid header width/height\n");
+		
 		FileRead_close(handle);
 		return;
 	}
@@ -77,7 +82,7 @@ void Stage::Load(int stageNo)
 	// 生データのサイズが期待と合わない場合は警告して早期終了
 	if (rawData.size() < expectedCount)
 	{
-		OutputDebugString("Stage::Load - FMF data length mismatch\n");
+		
 		FileRead_close(handle);
 		return;
 	}
@@ -97,7 +102,7 @@ void Stage::Load(int stageNo)
 	}
 
 	FileRead_close(handle);
-	OutputDebugString("Stage::Load - FMF loaded successfully\n");
+	
 }
 
 Size Stage::MapSize() const
@@ -126,7 +131,7 @@ void Stage::SetTileSet(int chipHandle, int chipNumW, int chipNumH)
 	m_chipHandle = chipHandle;
 	if (chipNumW > 0) m_chipNumW = chipNumW;   // 明示値があれば上書き
 	if (chipNumH > 0) m_chipNumH = chipNumH;
-	OutputDebugString("Stage::SetTileSet called\n");
+	
 }
 
 void Stage::Draw(const Camera& camera, int originX, int originY) const
@@ -192,6 +197,7 @@ void Stage::Draw(const Camera& camera, int originX, int originY) const
 			const int dstY = baseY + y * m_chipNumH;
 
 			DrawRectGraph(dstX, dstY, srcX, srcY, m_chipNumW, m_chipNumH, m_chipHandle, true);
+		//	DrawFormatString(dstX, dstY,0xffffff, "%d", id);
 		}
 	}
 }
