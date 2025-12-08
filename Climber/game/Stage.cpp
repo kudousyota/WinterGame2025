@@ -54,15 +54,10 @@ void Stage::Load(int stageNo)
 	DataHeader header;
 	FileRead_read(&header, sizeof(header), handle);
 
-//	printfDx("%c%c%c%c\n", header.identifier[0], header.identifier[1], header.identifier[2], header.identifier[3]);
-//	printfDx("SIZE  :%d\n", header.size);
-//	printfDx("WIDTH :%d\n", header.width);
-//	printfDx("HEIGHT:%d\n", header.height);
-
 	// ヘッダ簡易検査
 	if (header.width == 0 || header.height == 0)
 	{
-		
+		OutputDebugString("Stage::Load - Invalid header width/height\n");
 		FileRead_close(handle);
 		return;
 	}
@@ -82,7 +77,7 @@ void Stage::Load(int stageNo)
 	// 生データのサイズが期待と合わない場合は警告して早期終了
 	if (rawData.size() < expectedCount)
 	{
-		
+		OutputDebugString("Stage::Load - FMF data length mismatch\n");
 		FileRead_close(handle);
 		return;
 	}
@@ -100,11 +95,11 @@ void Stage::Load(int stageNo)
 		uint8_t* dst = m_data.data() + static_cast<size_t>(reverseY) * header.width;
 		std::copy_n(src, header.width, dst);
 	}
-
+	// ファイルを閉じる
 	FileRead_close(handle);
-	
+	OutputDebugString("Stage::Load - FMF loaded successfully\n");
 }
-
+// マップサイズ取得
 Size Stage::MapSize() const
 {
 	return m_dataSize;
@@ -112,46 +107,53 @@ Size Stage::MapSize() const
 
 uint8_t Stage::GetData(int xidx, int yidx)
 {
+	// IDを取得して範囲外なら0を返す
 	if (xidx < 0 || yidx < 0 || xidx >= m_dataSize.w || yidx >= m_dataSize.h) return 0;
 	return m_data[static_cast<size_t>(yidx) * m_dataSize.w + xidx];
 }
 
 bool Stage::IsCollision(const Rect& other, Rect& hitTileRect) const
 {
+	// 衝突判定//未実装
 	return false;
 }
 
 const std::vector<uint8_t>& Stage::GetAllData() const
 {
+	// 全データを返す
 	return m_data;
 }
 
 void Stage::SetTileSet(int chipHandle, int chipNumW, int chipNumH)
 {
+	// 1チップ情報を設定
 	m_chipHandle = chipHandle;
-	if (chipNumW > 0) m_chipNumW = chipNumW;   // 明示値があれば上書き
+	if (chipNumW > 0) m_chipNumW = chipNumW;   
 	if (chipNumH > 0) m_chipNumH = chipNumH;
-	
+	OutputDebugString("Stage::SetTileSet called\n");
 }
 
 void Stage::Draw(const Camera& camera, int originX, int originY) const
 {
+	// マップチップが設定されていない場合は描画しない
 	if (m_chipHandle == -1 || m_chipNumW <= 0 || m_chipNumH <= 0)
 	{
 		// タイルセット未設定
 		return;
 	}
-
+	// チップセット画像のサイズを取得
 	int texW = 0, texH = 0;
 	GetGraphSize(m_chipHandle, &texW, &texH);
+	// 1行・1列あたりのタイル数を計算
 	const int tilesPerRow = (m_chipNumW > 0) ? texW / m_chipNumW : 0;
 	const int tilesPerCol = (m_chipNumH > 0) ? texH / m_chipNumH : 0;
 	const int totalTiles = tilesPerRow * tilesPerCol;
 	if (tilesPerRow <= 0 || tilesPerCol <= 0) return;
-
+	// マップデータサイズ取得
 	const int w = m_dataSize.w;
 	const int h = m_dataSize.h;
 	if (w <= 0 || h <= 0) return;
+	// データサイズと m_data のサイズが一致しない場合は描画しない
 	if (static_cast<size_t>(w) * static_cast<size_t>(h) != m_data.size())
 	{
 		OutputDebugString("Stage::Draw - m_data size mismatch\n");
@@ -160,6 +162,7 @@ void Stage::Draw(const Camera& camera, int originX, int originY) const
 	}
 
 	// 描画座標 = ワールド − カメラ
+	// カメラのオフセットを取得
 	const auto camOfs = camera.GetCameraOffset();
 	const int baseX = originX - static_cast<int>(camOfs.x);
 	const int baseY = originY - static_cast<int>(camOfs.y);
@@ -169,36 +172,36 @@ void Stage::Draw(const Camera& camera, int originX, int originY) const
 	// スクリーンに映っている行の最小値と最大値を計算し、マップ範囲内にクランプ
 	int minRow = (0 - baseY) / m_chipNumH;
 	int maxRow = (screenH - 1 - baseY) / m_chipNumH;
+	//画面が上にずれている場合の補正
 	if (minRow < 0) minRow = 0;
 	if (maxRow < 0) maxRow = -1; // 画面外
 	if (maxRow >= h) maxRow = h - 1;
 	if (minRow > h - 1) return; // 全部画面外
-
+	// 各行をループ
 	for (int y = minRow; y <= maxRow; ++y)
 	{
+		// 各列をループ
 		for (int x = 0; x < w; ++x)
 		{
 			// 安全にインデックスを取得
 			size_t idx = static_cast<size_t>(y) * w + static_cast<size_t>(x);
 			if (idx >= m_data.size()) continue;
-
+			// タイルIDを取得
 			uint8_t id = m_data[idx];
 
 			// 0=空 の前提（FMFが1始まりなら tileIndex = id - 1 に変更）
 			if (id == 0) continue;
-
+			// タイルインデックスを計算
 			int tileIndex = static_cast<int>(id);
 			// tileIndex の変換が必要ならここで行う（例: FMF が 1始まりなら --tileIndex;）
 			if (tileIndex < 0 || tileIndex >= totalTiles) continue;
-
+			// チップセット内の描画位置を計算
 			const int srcX = (tileIndex % tilesPerRow) * m_chipNumW;
 			const int srcY = (tileIndex / tilesPerRow) * m_chipNumH;
 			const int dstX = baseX + x * m_chipNumW;
 			const int dstY = baseY + y * m_chipNumH;
 
 			DrawRectGraph(dstX, dstY, srcX, srcY, m_chipNumW, m_chipNumH, m_chipHandle, true);
-			
-			//DrawFormatString(dstX, dstY,0xffffff, "%d", id);
 		}
 	}
 }
