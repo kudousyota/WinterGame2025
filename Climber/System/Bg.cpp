@@ -26,7 +26,7 @@ Bg::Bg():
 	int graphW = 0;
 	int graphH = 0;
 	GetGraphSize(m_mapHandle, &graphW, &graphH);
-	
+	//背景の読み込み
 	m_bgHandle = LoadGraph("data/bg.png");
 
 	//縦のマス数は画面の高さ/マップチップ一つの

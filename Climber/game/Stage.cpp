@@ -115,6 +115,7 @@ uint8_t Stage::GetData(int xidx, int yidx)
 bool Stage::IsCollision(const Rect& other, Rect& hitTileRect) const
 {
 	// 衝突判定//未実装
+	other.Intersects(hitTileRect);
 	return false;
 }
 
@@ -164,8 +165,8 @@ void Stage::Draw(const Camera& camera, int originX, int originY) const
 	// 描画座標 = ワールド − カメラ
 	// カメラのオフセットを取得
 	const auto camOfs = camera.GetCameraOffset();
-	const int baseX = originX - static_cast<int>(camOfs.x);
-	const int baseY = originY - static_cast<int>(camOfs.y);
+	const int baseX = originX + static_cast<int>(camOfs.x);
+	const int baseY = originY + static_cast<int>(camOfs.y);
 
 	// 画面に見える縦行だけ描画（縦スクロール最適化）
 	const int screenH = Game::kScreenHeight;
@@ -202,6 +203,7 @@ void Stage::Draw(const Camera& camera, int originX, int originY) const
 			const int dstY = baseY + y * m_chipNumH;
 
 			DrawRectGraph(dstX, dstY, srcX, srcY, m_chipNumW, m_chipNumH, m_chipHandle, true);
+			DrawBox(dstX, dstY, dstX + m_chipNumW, dstY + m_chipNumH, GetColor(255, 0, 0), false);
 		}
 	}
 }
