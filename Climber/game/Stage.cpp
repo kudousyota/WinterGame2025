@@ -115,7 +115,7 @@ uint8_t Stage::GetData(int xidx, int yidx)
 bool Stage::IsCollision(const Rect& other, Rect& hitTileRect) const
 {
 	// 衝突判定//未実装
-	other.Intersects(hitTileRect);
+	
 	return false;
 }
 
