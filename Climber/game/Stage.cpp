@@ -62,6 +62,9 @@ void Stage::Load(int stageNo)
 		return;
 	}
 
+	const uint32_t width = header.width;
+	const uint32_t height = header.height;
+
 	//利用者側から参照できるように内部変数にコピー
 	m_dataSize.w = static_cast<int>(header.width);
 	m_dataSize.h = static_cast<int>(header.height);
@@ -87,12 +90,13 @@ void Stage::Load(int stageNo)
 	m_data.resize(expectedCount);
 
 	// データは上から下になっているが、描画のために反転して格納（下→上）
-	for (uint32_t y = 0; y < header.height; ++y)
+	for (int y = 0; y < header.height; ++y)
 	{
-		uint32_t reverseY = header.height - y - 1;
+		int reverseY = header.height - y - 1;
 		// コピー元とコピー先のポインタを計算してコピー
 		const uint8_t* src = rawData.data() + static_cast<size_t>(y) * header.width;
-		uint8_t* dst = m_data.data() + static_cast<size_t>(reverseY) * header.width;
+		//yにするとすっごい下にいる
+		uint8_t* dst = m_data.data() + static_cast<size_t>(y) * header.width;
 		std::copy_n(src, header.width, dst);
 	}
 	// ファイルを閉じる
@@ -145,65 +149,68 @@ void Stage::Draw(const Camera& camera, int originX, int originY) const
 	// チップセット画像のサイズを取得
 	int texW = 0, texH = 0;
 	GetGraphSize(m_chipHandle, &texW, &texH);
+	//1マスの大きさ分
+	int chipW = texW / 16;
+	int chipH = texH / 16;
 	// 1行・1列あたりのタイル数を計算
-	const int tilesPerRow = (m_chipNumW > 0) ? texW / m_chipNumW : 0;
-	const int tilesPerCol = (m_chipNumH > 0) ? texH / m_chipNumH : 0;
-	const int totalTiles = tilesPerRow * tilesPerCol;
-	if (tilesPerRow <= 0 || tilesPerCol <= 0) return;
-	// マップデータサイズ取得
 	const int w = m_dataSize.w;
 	const int h = m_dataSize.h;
+	const int totalTiles = w * h;
+	// マップデータサイズ取得
+	
 	if (w <= 0 || h <= 0) return;
-	// データサイズと m_data のサイズが一致しない場合は描画しない
-	if (static_cast<size_t>(w) * static_cast<size_t>(h) != m_data.size())
-	{
-		OutputDebugString("Stage::Draw - m_data size mismatch\n");
-		// 続行しない
-		return;
-	}
 
 	// 描画座標 = ワールド − カメラ
 	// カメラのオフセットを取得
-	const auto camOfs = camera.GetCameraOffset();
-	const int baseX = originX + static_cast<int>(camOfs.x);
-	const int baseY = originY + static_cast<int>(camOfs.y);
+	
 
 	// 画面に見える縦行だけ描画（縦スクロール最適化）
 	const int screenH = Game::kScreenHeight;
 	// スクリーンに映っている行の最小値と最大値を計算し、マップ範囲内にクランプ
-	int minRow = (0 - baseY) / m_chipNumH;
-	int maxRow = (screenH - 1 - baseY) / m_chipNumH;
+	/*int minRow = (0 - baseY) / m_chipNumH;
+	int maxRow = (screenH - 1 - baseY) / m_chipNumH;*/
 	//画面が上にずれている場合の補正
-	if (minRow < 0) minRow = 0;
-	if (maxRow < 0) maxRow = -1; // 画面外
-	if (maxRow >= h) maxRow = h - 1;
-	if (minRow > h - 1) return; // 全部画面外
+	//if (minRow < 0) minRow = 0;
+	//if (maxRow < 0) maxRow = -1; // 画面外
+	//if (maxRow >= h) maxRow = h - 1;
+	//if (minRow > h - 1) return; // 全部画面外
 	// 各行をループ
-	for (int y = minRow; y <= maxRow; ++y)
+	//for (int y = minRow; y <= maxRow; ++y)
+	//{
+	//	// 各列をループ
+	//	for (int x = 0; x < w; ++x)
+	//	{
+	//		// 安全にインデックスを取得
+	//		size_t idx = static_cast<size_t>(y) * w + static_cast<size_t>(x);
+	//		if (idx >= m_data.size()) continue;
+	//		// タイルIDを取得
+	//		uint8_t id = m_data[idx];
+
+	//		// 0=空 の前提（FMFが1始まりなら tileIndex = id - 1 に変更）
+	//		if (id == 0) continue;
+	//		// タイルインデックスを計算
+	//		int tileIndex = static_cast<int>(id);
+	//		// tileIndex の変換が必要ならここで行う（例: FMF が 1始まりなら --tileIndex;）
+	//		if (tileIndex < 0 || tileIndex >= totalTiles) continue;
+	//		// チップセット内の描画位置を計算
+	//		const int srcX = (tileIndex % tilesPerRow) * m_chipNumW;
+	//		const int srcY = (tileIndex / tilesPerRow) * m_chipNumH;
+	//		const int dstX = baseX + x * m_chipNumW;
+	//		const int dstY = baseY + y * m_chipNumH;
+	for (int x = 0; x < w; x++)
 	{
-		// 各列をループ
-		for (int x = 0; x < w; ++x)
+		for (int y = 0; y < h; y++)
 		{
-			// 安全にインデックスを取得
-			size_t idx = static_cast<size_t>(y) * w + static_cast<size_t>(x);
-			if (idx >= m_data.size()) continue;
-			// タイルIDを取得
-			uint8_t id = m_data[idx];
-
-			// 0=空 の前提（FMFが1始まりなら tileIndex = id - 1 に変更）
-			if (id == 0) continue;
-			// タイルインデックスを計算
-			int tileIndex = static_cast<int>(id);
-			// tileIndex の変換が必要ならここで行う（例: FMF が 1始まりなら --tileIndex;）
-			if (tileIndex < 0 || tileIndex >= totalTiles) continue;
-			// チップセット内の描画位置を計算
-			const int srcX = (tileIndex % tilesPerRow) * m_chipNumW;
-			const int srcY = (tileIndex / tilesPerRow) * m_chipNumH;
-			const int dstX = baseX + x * m_chipNumW;
-			const int dstY = baseY + y * m_chipNumH;
-
-			DrawRectGraph(dstX, dstY, srcX, srcY, m_chipNumW, m_chipNumH, m_chipHandle, true);
-			DrawBox(dstX, dstY, dstX + m_chipNumW, dstY + m_chipNumH, GetColor(255, 0, 0), false);
+			const int srcX = 16 * (m_data[x + w * y]% chipW);
+			const int srcY = 16 * (m_data[x +w *y]/ chipW);
+			const int dstX = x * m_chipNumW;
+			const int dstY = m_data[y * w + x];
+			//DrawRectGraph(dstX, dstY, srcX, srcY, m_chipNumW, m_chipNumH, m_chipHandle, true);
+			//DrawBox(dstX, dstY, dstX + m_chipNumW, dstY + m_chipNumH, GetColor(255, 0, 0), false);
+			DrawRectRotaGraph(x * 16, y * 16, srcX, srcY, 16, 16, 1.0f, 0, m_chipHandle, true);
 		}
 	}
+			
+		//}
+	//}
 }

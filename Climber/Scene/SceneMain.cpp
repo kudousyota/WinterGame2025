@@ -21,7 +21,7 @@ m_frameCount(0)
 	m_pBg		= std::make_shared<Bg>();
 	m_pStage	= std::make_shared<Stage>();
 	//ステージ1をロード
-	m_pStage->Load(1);
+	m_pStage->Load(2);
 
 }
 
@@ -33,7 +33,7 @@ void SceneMain::Init()
 {
 	m_pPlayer->Init();
 	m_pEnemy->Init();
-	int chipHandle = LoadGraph("data/mapChip.png");
+	int chipHandle = LoadGraph("data/mapChip1.png");
 	assert(chipHandle > 0);
 	//タイルセットの設定
 	m_pStage->SetTileSet(chipHandle, 16, 16);
