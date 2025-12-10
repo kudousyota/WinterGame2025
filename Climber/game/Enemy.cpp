@@ -5,7 +5,7 @@
 namespace
 {
 	constexpr float kGravity = 0.5;
-	constexpr float kGroundY = 640.0f;
+	constexpr float kGroundY = 1520.0f;
 }
 
 Enemy::Enemy():
@@ -34,7 +34,7 @@ void Enemy::Init()
 	m_vel = 0.0f;
 	//アニメーション
 	m_cutW = 34;
-	m_cutH = 40;
+	m_cutH = 45;
 
 }
 void Enemy::Update(const Player& player)

@@ -64,7 +64,7 @@ void Bg::DrawBg(const Camera& camera)
 		m_bgHandle, false);*/
 
 	// ”wŒi‚Ì•`‰æ
-	DrawExtendGraph(0 +camera.GetCameraOffset().x, 0 + camera.GetCameraOffset().y, Game::kScreenWidth + camera.GetCameraOffset().x, Game::kScreenHeight + camera.GetCameraOffset().y, m_bgHandle, true);
+	DrawExtendGraph(0 /*+camera.GetCameraOffset().x*/, 0 /*+ camera.GetCameraOffset().y*/, Game::kScreenWidth /*+ camera.GetCameraOffset().x*/, Game::kScreenHeight /*+ camera.GetCameraOffset().y*/, m_bgHandle, true);
 }
 
 

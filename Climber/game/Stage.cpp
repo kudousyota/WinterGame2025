@@ -162,7 +162,6 @@ void Stage::Draw(const Camera& camera, int originX, int originY) const
 
 	// 描画座標 = ワールド − カメラ
 	// カメラのオフセットを取得
-	
 
 	// 画面に見える縦行だけ描画（縦スクロール最適化）
 	const int screenH = Game::kScreenHeight;
@@ -201,16 +200,13 @@ void Stage::Draw(const Camera& camera, int originX, int originY) const
 	{
 		for (int y = 0; y < h; y++)
 		{
-			const int srcX = 16 * (m_data[x + w * y]% chipW);
-			const int srcY = 16 * (m_data[x +w *y]/ chipW);
+			const int srcX = 16 * (m_data[x + w * y] % chipW);
+			const int srcY = 16 * (m_data[x + w * y] / chipW);
 			const int dstX = x * m_chipNumW;
 			const int dstY = m_data[y * w + x];
 			//DrawRectGraph(dstX, dstY, srcX, srcY, m_chipNumW, m_chipNumH, m_chipHandle, true);
-			//DrawBox(dstX, dstY, dstX + m_chipNumW, dstY + m_chipNumH, GetColor(255, 0, 0), false);
-			DrawRectRotaGraph(x * 16, y * 16, srcX, srcY, 16, 16, 1.0f, 0, m_chipHandle, true);
+			DrawRectRotaGraph(x * 16 + camera.GetCameraOffset().x, y * 16 +camera.GetCameraOffset().y, srcX,srcY, 16, 16, 1.0f, 0, m_chipHandle, true);
+			//DrawBox(srcX, srcY , dstX, dstY, m_chipNumH, GetColor(255, 0, 0), false);
 		}
 	}
-			
-		//}
-	//}
 }

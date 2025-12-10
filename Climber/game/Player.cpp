@@ -7,9 +7,9 @@
 namespace
 {
 	constexpr float  kJumpPower = 10.0f;
-	constexpr float  kHighJumpPower = 30.0f;
+	constexpr float  kHighJumpPower = 20.0f;
 	constexpr float  kGravity = 0.5f;
-	constexpr float  kGroundY = 640.0f;
+	constexpr float  kGroundY = 1520.0f;
 }
 Player::Player():
 m_speed(0.0f),
