@@ -173,11 +173,16 @@ void Stage::Draw(const Camera& camera, int originX, int originY) const
 			const int srcX = m_chipPixelSize * (m_data[x + w * y] % chipW);
 			const int srcY = m_chipPixelSize * (m_data[x + w * y] / chipW);
 			const int dstX = x * m_chipNumW + cameraOffset.x;
-			const int dstY = originX + cameraOffset.y + y * m_chipNumH;
+			const int dstY = y * m_chipNumH + cameraOffset.y;
+
+			const int centerX = dstX + m_chipNumW / 2;
+			const int centerY = dstY + m_chipNumH / 2;
 			
 
-			DrawRectRotaGraph(x * m_chipPixelSize+ camera.GetCameraOffset().x, y * m_chipPixelSize +camera.GetCameraOffset().y, srcX,srcY, 16, 16, 1.0f, 0, m_chipHandle, true);
-			DrawBox(dstX , dstY, dstX + m_chipNumW, dstY + m_chipNumH, GetColor(255, 0, 0), false);
+			DrawRectRotaGraph(centerX, centerY, srcX,srcY, 16, 16, 1.0f, 0, m_chipHandle, true);
+#ifdef _DEBUG
+			DrawBox(dstX , dstY, dstX + m_chipNumW, dstY + m_chipNumH, GetColor(0, 255, 0), false);
+#endif
 		}
 	}
 }

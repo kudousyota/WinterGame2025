@@ -55,8 +55,6 @@ private:
 
 	std::shared_ptr<Camera> m_pCamera;
 	std::shared_ptr<CollisionManager> m_pCollision;
-	//カメラのオフセット値
-	Vec2 m_drawOffset;
 	////拡大率
 	//float m_scaleX;
 	//float m_scaleY;

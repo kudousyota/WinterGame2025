@@ -22,7 +22,6 @@ m_cutH(0),
 m_switchSpeed(0.0f),
 m_pos(0,0),
 m_x(0),
-m_drawOffset(0,0),
 m_frameCount(0)
 
 {
@@ -116,30 +115,39 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 }
 void Player::Draw(const Camera& camera)
 {
+	const Vec2 cameraOffset = camera.GetCameraOffset();
 
-	auto leftTop = static_cast<int>(m_rect.GetX() - m_rect.GetW() * 0.5f);
-	auto leftBottom = static_cast<int>(m_rect.GetY() - m_rect.GetH() * 0.5f);
-	auto rightTop = static_cast<int>(m_rect.GetX() + m_rect.GetW() * 0.5f);
-	auto rightBottom = static_cast<int>(m_rect.GetY() + m_rect.GetH() * 0.5f);
+	//中心座標
+	const int centerX = static_cast<int>(m_rect.GetX() + cameraOffset.x);
+	const int centerY = static_cast<int>(m_rect.GetY() + cameraOffset.y);
 
-	m_drawOffset = camera.GetCameraOffset() ;
+	//左上、右上、左下、右下の座標計算
+	const int halfW = static_cast<int>(m_rect.GetW() * 0.5f);
+	const int halfH = static_cast<int>(m_rect.GetH() * 0.5f);
+
+	const int left   = centerX - halfW;
+	const int right  = centerX + halfW;
+	const int Top    = centerY - halfH;
+	const int Bottom = centerY + halfH;
+
 	
-	DrawRectGraph(
-		leftTop + static_cast<int>(m_drawOffset.x),   // 描画位置X
-		leftBottom + static_cast<int>(m_drawOffset.y),// 描画位置Y
-		m_cutX, m_cutY,                                    // 切り抜き開始位置
-		m_cutW, m_cutH,                                    // 切り抜きサイズ
-		m_Handle,                                          // 画像
-		true
+
+	DrawRectRotaGraph(
+		centerX, centerY,            // 画面の中心位置
+		m_cutX, m_cutY,              // 切り抜き開始位置
+		m_cutW, m_cutH,              // 切り抜きサイズ（例：32×32）
+		1.0f,                        // 拡大率
+		0.0f,                        // 回転角度
+		m_Handle,                    // 画像ハンドル
+		TRUE                         // 透過あり
 	);
+
 	
 #ifdef _DEBUG
 	//当たり判定の枠
 	DrawBox(
-		leftTop + static_cast<int>(m_drawOffset.x) ,
-		leftBottom + static_cast<int>(m_drawOffset.y) ,
-		rightTop + static_cast<int>(m_drawOffset.x) ,
-		rightBottom + static_cast<int>(m_drawOffset.y) ,
+		left,Top,
+		right,Bottom,
 		GetColor(255, 0, 0),
 		false
 	);

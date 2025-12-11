@@ -30,6 +30,5 @@ private:
 
 	std::shared_ptr<Camera>m_pCamera;
 
-	Vec2 m_drawOffset;
 };
 
