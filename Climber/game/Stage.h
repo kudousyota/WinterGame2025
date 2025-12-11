@@ -48,5 +48,6 @@ private:
 	int m_chipHandle = -1;
 	int m_chipNumW = 0;
 	int m_chipNumH = 0;
+	int m_chipPixelSize = 16;
 };
 
