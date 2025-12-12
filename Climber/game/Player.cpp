@@ -48,6 +48,14 @@ void Player::Init()
 }
 void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 {
+	//中心座標から上下左右の座標を計算
+	const float halfW = m_rect.GetW() * 0.5f;
+	const float halfH = m_rect.GetH() * 0.5f;
+	//真ん中
+	float centerY = m_rect.GetY();
+	//下端Y座標
+	float bottomY = centerY + halfH;
+
 	m_pos = { m_rect.GetX(), m_rect.GetY() };
 	// アニメーション更新
 	m_frameCount++;
@@ -82,12 +90,12 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 	//衝突判定
 	Rect chipRect;
 	//地面にいるか
-	bool isHitGround = (m_rect.GetY() >= kGroundY);
+	bool isHitGround = (bottomY >= kGroundY);
 	if (isHitGround)
 	{
-		m_vel = 0;
+		m_vel = 0.0f;
 		//地面にいる//ここに床の上に乗せる処理
-		m_rect.SetY(kGroundY);
+		m_rect.SetY(kGroundY - halfH);
 	}
 	//地面にいる時ジャンプできる
 	if (CheckHitKey(KEY_INPUT_SPACE)&&isHitGround)
@@ -105,11 +113,22 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 	//押し出し処理
 	if (m_rect.IsHit(enemy.GetRect()))
 	{
-		//押し出し量を取得//FixPosが押し出し量を返すようにしたい
-		Vec2 receive = m_rect.FixPos(enemy.GetRect());
-		//Y方向の押し出し量を反映
-		m_rect.FixPos(enemy.GetRect());
-		
+
+		Vec2 push = m_rect.FixPos(enemy.GetRect()); // 最小分離ベクトル
+		m_rect.SetX(m_rect.GetX() + push.x);
+		m_rect.SetY(m_rect.GetY() + push.y);
+
+		// 押し戻し方向の速度をクリア（震え防止）
+		if (std::abs(push.x) > std::abs(push.y)) 
+		{
+			// 横が優勢
+			m_rect.SetX(m_rect.GetX() + push.x);
+		}
+		else {
+			// 縦が優勢
+			m_vel = 0.0f;
+		}
+
 	}
 
 }

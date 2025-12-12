@@ -16,4 +16,20 @@ void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::s
 		m_pPlayer->GetRect().SetY(m_pPlayer->GetRect().GetY() + push.y);
 	}
 	// プレイヤーとステージの当たり判定をチェック
+	Rect hitTileRect;
+	if (m_pStage->IsCollision(m_pPlayer->GetRect(), hitTileRect))
+	{
+		// マップチップと衝突した場合、プレイヤーを押し出す
+		Vec2 push = m_pPlayer->GetRect().FixPos(hitTileRect);
+		m_pPlayer->GetRect().SetX(m_pPlayer->GetRect().GetX() + push.x);
+		m_pPlayer->GetRect().SetY(m_pPlayer->GetRect().GetY() + push.y);
+	}
+	// 敵とステージの当たり判定をチェック
+	if (m_pStage->IsCollision(m_pEnemy->GetRect(), hitTileRect))
+	{
+		// マップチップと衝突した場合、敵を押し出す
+		Vec2 push = m_pEnemy->GetRect().FixPos(hitTileRect);
+		m_pEnemy->GetRect().SetX(m_pEnemy->GetRect().GetX() + push.x);
+		m_pEnemy->GetRect().SetY(m_pEnemy->GetRect().GetY() + push.y);
+	}
 }

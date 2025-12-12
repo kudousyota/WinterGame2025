@@ -20,11 +20,12 @@ public:
 	void Load(int stageNo);
 	Size MapSize()const;
 	//ゲッター
-	uint8_t GetData(int xidx, int yidx);
+	uint8_t GetData(int xidx, int yidx)const;
 	//マップサイズ取得
 	Size GetMapSize()const { return m_dataSize; }
 	int GetWidth()const { return m_dataSize.w; }
 	int GetHeight()const { return m_dataSize.h; }
+
 	//チップサイズ取得
 	int GetChipW()const { return m_chipNumW; }
 	int GetChipH()const { return m_chipNumH; }
