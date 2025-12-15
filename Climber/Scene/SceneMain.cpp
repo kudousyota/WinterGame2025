@@ -7,9 +7,8 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Stage.h"
+#include "CollisionManager.h"
 #include <cassert>
-
-
 
 SceneMain::SceneMain():
 m_frameCount(0)
@@ -42,12 +41,16 @@ void SceneMain::Init()
 void SceneMain::Update()
 {
 	m_frameCount++;
+	//  キャラの更新（移動・重力など）
 	m_pPlayer->Update(*m_pEnemy,*m_pRect,*m_pBg);
 	m_pEnemy->Update(*m_pPlayer);
+
+	//  衝突チェックを呼ぶ（ここで着地判定・押し出し・タイル破壊を行う）
+	CollisionManager::CheckCollisions(m_pPlayer, m_pEnemy, m_pStage);
+
+	// カメラ・背景更新（衝突後の位置でカメラを更新するため衝突チェックの後に呼ぶ）
 	m_pCamera->UpdateCamera(m_pCamera,m_pPlayer);
 	m_pBg->Update();
-
-	
 }
 
 void SceneMain::Draw()

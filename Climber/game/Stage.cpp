@@ -159,6 +159,13 @@ bool Stage::IsCollision(const Rect& other, Rect& hitTileRect) const
 	return false;
 }
 
+void Stage::SetTile(int xidx, int yidx, uint8_t id)
+{
+	if (xidx < 0 || yidx < 0 || xidx >= m_dataSize.w || yidx >= m_dataSize.h) return;
+	m_data[static_cast<size_t>(yidx) * m_dataSize.w + xidx] = id;
+}
+
+
 const std::vector<uint8_t>& Stage::GetAllData() const
 {
 	// 全データを返す

@@ -15,7 +15,8 @@ public:
 	bool IsHit(const Character& other) const;
 	Vec2 FixPos(const Character& other);
 
-	Rect GetRect() const;
+	Rect& GetRect();
+	const Rect& GetRect() const;
 	const Vec2& GetPos()const { return m_pos; }
 
 protected:
@@ -27,7 +28,6 @@ protected:
 	void CheckHitMap(Rect chipRect);
 
 private:
-	
+
 
 };
-

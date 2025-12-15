@@ -27,6 +27,13 @@ virtual~Player();
 
 	 Vec2 GetPos() { return m_pos ; }
 
+	 //縦速度の取得
+	 float GetVelY() const{ return m_vel; }
+	 void SetVelY(float vel) { m_vel = vel; }
+
+	 // 地面フラグ操作
+	 bool IsOnGround() const { return m_onGround; }
+	 void SetOnGround(bool onGround) { m_onGround = onGround; }
 
 
 private:
@@ -55,6 +62,9 @@ private:
 
 	std::shared_ptr<Camera> m_pCamera;
 	std::shared_ptr<CollisionManager> m_pCollision;
+
+	bool m_onGround = false;
+
 	////拡大率
 	//float m_scaleX;
 	//float m_scaleY;

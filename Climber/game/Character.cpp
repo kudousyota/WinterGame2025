@@ -27,12 +27,19 @@ Vec2 Character::FixPos(const Character& other)
 	return m_rect.FixPos(other.m_rect);
 }
 
-Rect Character::GetRect() const
+Rect& Character::GetRect()
+{
+	return m_rect;
+}
+
+const Rect& Character::GetRect() const
 {
 	return m_rect;
 }
 
 void Character::CheckHitMap(Rect chipRect)
 {
+	// TODO: 現状の実装は意味が不明（m_pos.x += m_rect.GetX();）
+	// 必要ならここでマップチップ押し出し等の処理を実装してください。
 	m_pos.x += m_rect.GetX();
 }

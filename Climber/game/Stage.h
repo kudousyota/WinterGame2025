@@ -31,10 +31,12 @@ public:
 	int GetChipH()const { return m_chipNumH; }
 
 
+	void SetTileSet(int chipHandle, int chipNumW, int chipNumH);
+	//w’è‚³‚ê‚½°‚ğ‘‚«Š·‚¦‚é
+	void SetTile(int xidx, int yidx, uint8_t id);
 	bool IsCollision(const Rect& other,Rect& hitTileRect)const;
-
 	const std::vector<uint8_t>& GetAllData() const;
-	void SetTileSet(int chipHandle, int chipNumW,int chipNumH);
+	
 	void Draw(const Camera& camera, int originX, int originY)const;
 
 private:

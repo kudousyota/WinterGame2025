@@ -9,7 +9,7 @@ namespace
 	constexpr float  kJumpPower = 10.0f;
 	constexpr float  kHighJumpPower = 20.0f;
 	constexpr float  kGravity = 0.5f;
-	constexpr float  kGroundY = 1520.0f;
+	//constexpr float  kGroundY = 1520.0f;
 }
 Player::Player():
 m_speed(0.0f),
@@ -22,6 +22,7 @@ m_cutH(0),
 m_switchSpeed(0.0f),
 m_pos(0,0),
 m_x(0),
+m_onGround(false),
 m_frameCount(0)
 
 {
@@ -44,6 +45,7 @@ void Player::Init()
 	m_cutW = 32;
 	m_cutH = 32;
 	m_speed = 2.0f;
+	m_onGround = false;
 
 }
 void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
@@ -75,7 +77,7 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 
 
 
-	//移動
+	//左右移動
 	if (CheckHitKey(KEY_INPUT_LEFT))
 	{
 		m_rect.SetX(m_rect.GetX() - m_speed);
@@ -89,23 +91,16 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 	m_vel += kGravity;
 	//衝突判定
 	Rect chipRect;
-	//地面にいるか
-	bool isHitGround = (bottomY >= kGroundY);
-	if (isHitGround)
+	// ジャンプ：地面にいるときだけ
+	if (CheckHitKey(KEY_INPUT_SPACE) && m_onGround)
 	{
-		m_vel = 0.0f;
-		//地面にいる//ここに床の上に乗せる処理
-		m_rect.SetY(kGroundY - halfH);
+		m_vel = -kJumpPower;
+		m_onGround = false;
 	}
-	//地面にいる時ジャンプできる
-	if (CheckHitKey(KEY_INPUT_SPACE)&&isHitGround)
+	else if (CheckHitKey(KEY_INPUT_Z) && m_onGround)
 	{
-		m_vel -= kJumpPower;
-	}
-	//ハイジャンプ
-	else if (CheckHitKey(KEY_INPUT_Z)&&isHitGround)
-	{
-		m_vel -= kHighJumpPower;
+		m_vel = -kHighJumpPower;
+		m_onGround = false;
 	}
 	//Y座標の更新
 	m_rect.SetY(m_rect.GetY() + m_vel);
@@ -124,7 +119,8 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 			// 横が優勢
 			m_rect.SetX(m_rect.GetX() + push.x);
 		}
-		else {
+		else 
+		{
 			// 縦が優勢
 			m_vel = 0.0f;
 		}
