@@ -6,10 +6,9 @@
 
 namespace
 {
-	constexpr float  kJumpPower = 10.0f;
+	constexpr float  kJumpPower		= 10.0f;
 	constexpr float  kHighJumpPower = 20.0f;
-	constexpr float  kGravity = 0.5f;
-	//constexpr float  kGroundY = 1520.0f;
+	//constexpr float  kGravity       = 0.5f;
 }
 Player::Player():
 m_speed(0.0f),
@@ -22,6 +21,7 @@ m_cutH(0),
 m_switchSpeed(0.0f),
 m_pos(0,0),
 m_x(0),
+m_Gravity(0),
 m_onGround(false),
 m_frameCount(0)
 
@@ -45,6 +45,7 @@ void Player::Init()
 	m_cutW = 32;
 	m_cutH = 32;
 	m_speed = 2.0f;
+	m_Gravity = 0.5f;
 	m_onGround = false;
 
 }
@@ -88,7 +89,7 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 	}
 
 	//重力
-	m_vel += kGravity;
+	m_vel += m_Gravity;
 	//衝突判定
 	Rect chipRect;
 	// ジャンプ：地面にいるときだけ
@@ -113,7 +114,7 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 		m_rect.SetX(m_rect.GetX() + push.x);
 		m_rect.SetY(m_rect.GetY() + push.y);
 
-		// 押し戻し方向の速度をクリア（震え防止）
+		//押し戻し方向の速度をクリア（震え防止）
 		if (std::abs(push.x) > std::abs(push.y)) 
 		{
 			// 横が優勢

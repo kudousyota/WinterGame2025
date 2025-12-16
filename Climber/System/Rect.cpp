@@ -25,22 +25,7 @@ void Rect::Set(float left, float top, float right, float bottom)
 	m_y = top + m_h * 0.5f;
 }
 
-//void Rect::SetLeft(float left)
-//{
-//	m_left = left;
-//}
-//void Rect::SetTop(float top)
-//{
-//	m_top = top;
-//}
-//void Rect::SetRight(float right)
-//{
-//	m_right = right;
-//}
-//void Rect::SetBottom(float bottom)
-//{
-//	m_bottom = bottom;
-//}
+
 
 void Rect::Init(float x, float y, float w, float h)
 {
@@ -56,7 +41,7 @@ void Rect::Update()
 
 void Rect::Draw()
 {
-	//DrawBox(m_x, m_y, m_w, m_h, GetColor(255, 0, 0), true);
+	
 }
 
 bool Rect::IsHit(const Rect& other) const

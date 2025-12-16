@@ -5,7 +5,7 @@
 namespace
 {
 	constexpr float kGravity = 0.5;
-	constexpr float kGroundY = 1520.0f;
+	//constexpr float kGroundY = 1520.0f;
 }
 
 Enemy::Enemy():
@@ -57,14 +57,14 @@ void Enemy::Update(const Player& player)
 	m_vel += kGravity;
 
 	//’n–Ê‚É‚¢‚é‚©
-	bool isHitGround = (m_rect.GetY() >= kGroundY);
-	if (isHitGround)
-	{
-		m_vel = 0;
-		//’n–Ê‚É‚¢‚é
-		m_rect.SetY(kGroundY);
-	}
-	m_rect.SetY(m_rect.GetY() + m_vel);
+	//bool isHitGround = (m_rect.GetY() >= kGroundY);
+	//if (isHitGround)
+	//{
+	//	m_vel = 0;
+	//	//’n–Ê‚É‚¢‚é
+	//	m_rect.SetY(kGroundY);
+	//}
+	//m_rect.SetY(m_rect.GetY() + m_vel);
 
 	
 }
