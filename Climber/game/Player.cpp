@@ -8,7 +8,7 @@ namespace
 {
 	constexpr float  kJumpPower		= 10.0f;
 	constexpr float  kHighJumpPower = 20.0f;
-	//constexpr float  kGravity       = 0.5f;
+	constexpr float  kGravity = 0.5f;
 }
 Player::Player():
 m_speed(0.0f),
@@ -21,7 +21,6 @@ m_cutH(0),
 m_switchSpeed(0.0f),
 m_pos(0,0),
 m_x(0),
-m_Gravity(0),
 m_onGround(false),
 m_frameCount(0)
 
@@ -45,7 +44,6 @@ void Player::Init()
 	m_cutW = 32;
 	m_cutH = 32;
 	m_speed = 2.0f;
-	m_Gravity = 0.5f;
 	m_onGround = false;
 
 }
@@ -89,45 +87,31 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 	}
 
 	//重力
-	m_vel += m_Gravity;
+	m_vel += kGravity;
 	//衝突判定
 	Rect chipRect;
 	// ジャンプ：地面にいるときだけ
 	if (CheckHitKey(KEY_INPUT_SPACE) && m_onGround)
 	{
-		m_vel = -kJumpPower;
+		m_vel =- kJumpPower;
 		m_onGround = false;
 	}
 	else if (CheckHitKey(KEY_INPUT_Z) && m_onGround)
 	{
-		m_vel = -kHighJumpPower;
+		m_vel =- kHighJumpPower;
 		m_onGround = false;
 	}
 	//Y座標の更新
 	m_rect.SetY(m_rect.GetY() + m_vel);
 	
-	//押し出し処理
+	// 敵との衝突判定（押し出しのみ、速度は触らない）
 	if (m_rect.IsHit(enemy.GetRect()))
 	{
-
-		Vec2 push = m_rect.FixPos(enemy.GetRect()); // 最小分離ベクトル
+		Vec2 push = m_rect.FixPos(enemy.GetRect());
 		m_rect.SetX(m_rect.GetX() + push.x);
 		m_rect.SetY(m_rect.GetY() + push.y);
-
-		//押し戻し方向の速度をクリア（震え防止）
-		if (std::abs(push.x) > std::abs(push.y)) 
-		{
-			// 横が優勢
-			m_rect.SetX(m_rect.GetX() + push.x);
-		}
-		else 
-		{
-			// 縦が優勢
-			m_vel = 0.0f;
-		}
-
+		// 敵との衝突では速度は変更しない（CollisionManager で地面判定が有効化されるから）
 	}
-
 }
 void Player::Draw(const Camera& camera)
 {

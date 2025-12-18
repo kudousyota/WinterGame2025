@@ -43,8 +43,6 @@ private:
 
 	float m_vel;
 	float m_speed;
-	//重力
-	float m_Gravity;
 
 	//アニメーション
 	int m_Handle;
