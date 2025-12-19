@@ -184,47 +184,59 @@ void Stage::SetTileSet(int chipHandle, int chipNumW, int chipNumH)
 void Stage::Draw(const Camera& camera, int originX, int originY) const
 {
 	// マップチップが設定されていない場合は描画しない
-	if (m_chipHandle == -1 || m_chipNumW <= 0 || m_chipNumH <= 0)
-	{
-		// タイルセット未設定
-		return;
-	}
+		if (m_chipHandle == -1 || m_chipNumW <= 0 || m_chipNumH <= 0)
+		{
+			// タイルセット未設定
+			return;
+		}
 	// チップセット画像のサイズを取得
 	int texW = 0, texH = 0;
 	GetGraphSize(m_chipHandle, &texW, &texH);
-	//1マスの大きさ分
-	int chipW = texW / m_chipPixelSize;
-	int chipH = texH / m_chipPixelSize;
+	if (texW <= 0 || texH <= 0) return;
+
+	// テクスチャ上の 1 チップのピクセルサイズ
+	const int tilePixel = m_chipPixelSize;  // 通常は 16
+	// テクスチャ上の横方向のタイル数
+	const int tilesPerRow = texW / tilePixel;
+
 	// 1行・1列あたりのタイル数を計算
 	const int w = m_dataSize.w;
 	const int h = m_dataSize.h;
-	const int totalTiles = w * h;
-	// マップデータサイズ取得
-	
 	if (w <= 0 || h <= 0) return;
 
-	// 描画座標 = ワールド − カメラ
-	// カメラのオフセットを取得
+	// 描画スケール（画面上の表示サイズ / テクスチャ上のチップサイズ）
+	const float scale = (tilePixel > 0) ? static_cast<float>(m_chipNumW) / static_cast<float>(tilePixel) : 1.0f;
+
+	// カメラオフセット
 	const Vec2 cameraOffset = camera.GetCameraOffset();
-	// 画面に見える縦行だけ描画（縦スクロール最適化）
-	const int screenH = Game::kScreenHeight;
-	
+
 	for (int x = 0; x < w; x++)
 	{
 		for (int y = 0; y < h; y++)
 		{
-			const int srcX = m_chipPixelSize * (m_data[x + w * y] % chipW);
-			const int srcY = m_chipPixelSize * (m_data[x + w * y] / chipW);
+			const uint8_t id = m_data[x + w * y];
+			if (id == 0) continue; // 空タイルは描画しない
+
+			// テクスチャ上の切り出し座標
+			const int srcX = tilePixel * (id % tilesPerRow);
+			const int srcY = tilePixel * (id / tilesPerRow);
+
+			// 描画先（ワールド座標 -> カメラオフセット）
 			const int dstX = x * m_chipNumW + cameraOffset.x;
 			const int dstY = y * m_chipNumH + cameraOffset.y;
 
 			const int centerX = dstX + m_chipNumW / 2;
 			const int centerY = dstY + m_chipNumH / 2;
-			
 
-			DrawRectRotaGraph(centerX, centerY, srcX,srcY, 16, 16, 1.0f, 0, m_chipHandle, true);
+			// 切り出すサイズはテクスチャ上の tilePixel、描画は scale で拡大
+			DrawRectRotaGraph(centerX, centerY, srcX, srcY,
+				tilePixel, tilePixel,
+				scale, 0, m_chipHandle, true);
+
 #ifdef _DEBUG
-			DrawBox(dstX , dstY, dstX + m_chipNumW, dstY + m_chipNumH, GetColor(0, 255, 0), false);
+			DrawBox(dstX, dstY, dstX + m_chipNumW, dstY + m_chipNumH,
+				GetColor(0, 255, 0),
+				false);
 #endif
 		}
 	}

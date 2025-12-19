@@ -9,7 +9,7 @@ void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::s
 	// プレイヤーと敵の当たり判定をチェック
 	if (m_pPlayer->IsHit(*m_pEnemy))
 	{
-		// FixPos は自身の Rect を修正して押し出し量を返す -> ここで位置を二重に加算しない
+		// FixPosは自身のRectを修正して押し出し量を返すここで位置を二重に加算しない
 		Vec2 push = m_pPlayer->FixPos(*m_pEnemy);
 		// 必要なら push を見て速度を調整する（今回は位置だけで十分）
 	}

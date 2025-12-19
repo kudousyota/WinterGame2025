@@ -6,7 +6,7 @@
 
 namespace
 {
-	constexpr float  kJumpPower		= 10.0f;
+	constexpr float  kJumpPower		= 15.0f;
 	constexpr float  kHighJumpPower = 20.0f;
 	constexpr float  kGravity = 0.5f;
 }
@@ -37,8 +37,8 @@ Player::~Player()
 }
 void Player::Init()
 {
-	//当たり判定用の矩形を初期化 //これでも行ける
-	m_rect.Init(250.0f, 500.0f, 50.0f, 50.0f);
+	//当たり判定用の矩形を初期化//位置とサイズを指定
+	m_rect.Init(250.0f, 3000.0f, 40.0f, 40.0f);
 	m_vel = 0.0f;
 	//アニメーション初期化
 	m_cutW = 32;
@@ -71,7 +71,7 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 			m_switchSpeed = 0;
 		}
 		m_cutX = m_switchSpeed * m_cutW; // 横方向の切り抜き位置
-		m_cutY = 0;                     // 縦方向は固定
+		m_cutY = 0;                      // 縦方向は固定
 	}
 
 
@@ -135,7 +135,7 @@ void Player::Draw(const Camera& camera)
 	DrawRectRotaGraph(
 		centerX, centerY,            // 画面の中心位置
 		m_cutX, m_cutY,              // 切り抜き開始位置
-		m_cutW, m_cutH,              // 切り抜きサイズ（例：32×32）
+		m_cutW, m_cutH,              // 切り抜きサイズ
 		1.0f,                        // 拡大率
 		0.0f,                        // 回転角度
 		m_Handle,                    // 画像ハンドル

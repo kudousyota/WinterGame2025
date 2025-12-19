@@ -35,7 +35,8 @@ void SceneMain::Init()
 	int chipHandle = LoadGraph("data/mapChip1.png");
 	assert(chipHandle > 0);
 	//タイルセットの設定
-	m_pStage->SetTileSet(chipHandle, 16, 16);
+	//小さすぎたから1チップ32x32で設定
+	m_pStage->SetTileSet(chipHandle, 32, 32);
 }
 
 void SceneMain::Update()
