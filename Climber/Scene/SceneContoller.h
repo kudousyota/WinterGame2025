@@ -1,0 +1,48 @@
+#pragma once
+#include <memory>
+#include <list>
+
+class Scene;
+class SceneContoller
+{
+public:
+	/// <summary>
+	/// 強制的なシーンの切り替え(ただし、引数で渡らせたシーンのみになる)
+	/// </summary>
+	/// <param name="scene">新しいシーン</param>
+	/// /// <note>引数で渡されたシーンのみになり、積まれてるシーンの数は1つとなる</note>
+	void ResetScene(std::shared_ptr<Scene> scene);
+
+	/// <summary>
+	/// シーンの切り替え
+	/// </summary>
+	/// <param name="scene">新しいシーン</param>
+	/// <note>最後に積んだシーンがChangeされる</note>
+	void ChangeScene(std::shared_ptr<Scene> scene);
+
+	/// <summary>
+	/// シーンを新しく積みます
+	/// </summary>
+	/// <param name="scene">積みたいシーン</param>
+	/// <note>ChangeSceneと違って、もともと積まれてるシーンは残り続ける</note>
+	void PushScene(std::shared_ptr<Scene> scene);
+
+	/// <summary>
+	/// 最後に積んだシーンをリストから外す(自動的に解放される)
+	/// </summary>
+	void PopScene();
+
+	/// <summary>
+	/// 内部に持ってるシーンのUpdateを呼び出す
+	/// </summary>
+	void Update();
+
+	/// <summary>
+	/// 内部に持ってるシーンのDrawを呼び出す
+	/// </summary>
+	void Draw();
+
+private:
+	std::list<std::shared_ptr<Scene>>m_scenes;
+};
+
