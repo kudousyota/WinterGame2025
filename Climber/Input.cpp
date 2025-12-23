@@ -21,11 +21,11 @@ void Input::InitializeInputTable()
 	inputTable_["pause"] = { { PeripheralType::keyboard,KEY_INPUT_P},
 						  { PeripheralType::pad1,PAD_INPUT_R } };	// PADのSTARTボタン
 
-	inputTable_["shot"] = { { PeripheralType::keyboard,KEY_INPUT_Z},
+	inputTable_["Jump"] = { { PeripheralType::keyboard,KEY_INPUT_Z},
 						  { PeripheralType::pad1,PAD_INPUT_C } };	// PADのXボタン
 	inputTable_["slow"] = { { PeripheralType::keyboard,KEY_INPUT_LSHIFT},
 						  { PeripheralType::pad1,PAD_INPUT_A } };	// PADのAボタン
-	inputTable_["bomb"] = { { PeripheralType::keyboard,KEY_INPUT_X},
+	inputTable_["HighJump"] = { { PeripheralType::keyboard,KEY_INPUT_X},
 						  { PeripheralType::pad1,PAD_INPUT_X } };	// PADのYボタン
 
 	inputTable_["up"] = { { PeripheralType::keyboard,KEY_INPUT_UP},
@@ -43,7 +43,7 @@ Input::Input() : inputData_{}, lastInputData_{}, inputTable_{}
 	InitializeInputTable();
 	Load();
 
-	editableEventNames_ = { "ok","pause","shot","slow","bomb" };
+	editableEventNames_ = { "ok","pause","Jump","slow","HighJump" };
 
 	// あらかじめ枠を開けておく
 	// ここで枠を開けておかないと、.at関数でクラッシュする可能性がある

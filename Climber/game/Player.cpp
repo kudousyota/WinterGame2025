@@ -2,7 +2,7 @@
 #include "DxLib.h"
 #include "Camera.h"
 #include "Enemy.h"
-
+#include "Input.h"
 
 namespace
 {
@@ -28,6 +28,7 @@ m_frameCount(0)
 	//画像の読み込み
 	m_Handle = LoadGraph("data/Player.png");
 	m_pCamera = std::make_shared<Camera>();
+	m_pInput = std::make_shared<Input>();
 	
 }
 
@@ -57,6 +58,9 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 	//下端Y座標
 	float bottomY = centerY + halfH;
 
+	// Input を毎フレーム更新
+	m_pInput->Update();
+
 	m_pos = { m_rect.GetX(), m_rect.GetY() };
 	// アニメーション更新
 	m_frameCount++;
@@ -76,12 +80,12 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 
 
 
-	//左右移動
-	if (CheckHitKey(KEY_INPUT_LEFT))
+	// 左右移動（Input を使用）
+	if (m_pInput->IsPressed("left"))
 	{
 		m_rect.SetX(m_rect.GetX() - m_speed);
 	}
-	if (CheckHitKey(KEY_INPUT_RIGHT))
+	if (m_pInput->IsPressed("right"))
 	{
 		m_rect.SetX(m_rect.GetX() + m_speed);
 	}
@@ -90,15 +94,15 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 	m_vel += kGravity;
 	//衝突判定
 	Rect chipRect;
-	// ジャンプ：地面にいるときだけ
-	if (CheckHitKey(KEY_INPUT_SPACE) && m_onGround)
+	// ジャンプ処理（地面にいるときだけ、Input を使用）
+	if (m_pInput->IsTriggered("Jump") && m_onGround)  // "Jump" = Z キー
 	{
-		m_vel =- kJumpPower;
+		m_vel = -kJumpPower;
 		m_onGround = false;
 	}
-	else if (CheckHitKey(KEY_INPUT_Z) && m_onGround)
+	else if (m_pInput->IsTriggered("HighJump") && m_onGround)  // "HighJump" = X キー
 	{
-		m_vel =- kHighJumpPower;
+		m_vel = -kHighJumpPower;
 		m_onGround = false;
 	}
 	//Y座標の更新

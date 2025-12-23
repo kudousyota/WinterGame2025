@@ -7,6 +7,7 @@ class Bg;
 class Camera;
 class Enemy;
 class CollisionManager;
+class Input;
 class Player : public Character
 {
 public:
@@ -62,6 +63,7 @@ private:
 
 	std::shared_ptr<Camera> m_pCamera;
 	std::shared_ptr<CollisionManager> m_pCollision;
+	std::shared_ptr<Input> m_pInput;
 
 	bool m_onGround = false;
 
