@@ -142,8 +142,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="game\Stage.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SceneContoller.cpp" />
+    <ClCompile Include="StringFunctions.cpp" />
     <ClCompile Include="System\Bg.cpp" />
     <ClCompile Include="System\Camera.cpp" />
     <ClCompile Include="game\Character.cpp" />
@@ -158,8 +160,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game\Stage.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneContoller.h" />
+    <ClInclude Include="StringFunctions.h" />
     <ClInclude Include="System\Bg.h" />
     <ClInclude Include="System\Camera.h" />
     <ClInclude Include="game\Character.h" />
