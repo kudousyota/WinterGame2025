@@ -11,14 +11,14 @@ void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::s
 	{
 		// FixPosは自身のRectを修正して押し出し量を返すここで位置を二重に加算しない
 		Vec2 push = m_pPlayer->FixPos(*m_pEnemy);
-		// 必要なら push を見て速度を調整する（今回は位置だけで十分）
+		// 必要なら push を見て速度を調整する
 	}
 
 	// プレイヤーとステージの当たり判定をチェック
 	Rect hitTileRect;
 	if (m_pStage->IsCollision(m_pPlayer->GetRect(), hitTileRect))
 	{
-		// FixPos はプレイヤーの Rect を修正済み、返り値は実際に移動した量
+		// FixPos はプレイヤーのrectを修正返り値は実際に移動した量
 		Vec2 push = m_pPlayer->GetRect().FixPos(hitTileRect);
 
 		// 着地と下から破壊判定
