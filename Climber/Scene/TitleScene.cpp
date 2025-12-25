@@ -7,8 +7,18 @@
 
 constexpr int fade_interval = 60;
 
-void TitleScene::FadeInUpdate(Input&)
+void TitleScene::FadeInUpdate(Input& input)
 {
+	// フェードイン中でもエンター("ok")でフェードアウト（シーン切替）を開始できるようにする
+	if (input.IsTriggered("ok"))
+	{
+		m_update = &TitleScene::FadeOutUpdate;
+		m_draw = &TitleScene::FadeDraw;
+		m_frame = 0;	// フェードアウトの最初
+		return;
+	}
+
+
 	if (m_frame-- <= 0)
 	{
 		m_update = &TitleScene::NormalUpdate;
@@ -66,6 +76,10 @@ TitleScene::TitleScene(SceneContoller& controller) : Scene(controller)
 }
 
 TitleScene::~TitleScene()
+{
+}
+
+void TitleScene::Init()
 {
 }
 

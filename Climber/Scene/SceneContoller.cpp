@@ -6,6 +6,8 @@ void SceneContoller::ResetScene(std::shared_ptr<Scene> scene)
 	// シーンを一つだけにしたいので、いったんシーンをすべてクリアします
 	m_scenes.clear();
 	m_scenes.push_back(scene);
+	//新しくシーンを積む
+	if (scene) scene->Init();
 }
 
 void SceneContoller::ChangeScene(std::shared_ptr<Scene> scene)
@@ -20,6 +22,7 @@ void SceneContoller::ChangeScene(std::shared_ptr<Scene> scene)
 	else
 	{
 		m_scenes.back() = scene;	// この行の時点で元のシーンは自動的に削除されています
+		if (scene) scene->Init();
 	}
 }
 
@@ -27,6 +30,7 @@ void SceneContoller::PushScene(std::shared_ptr<Scene> scene)
 {
 	// 新しいシーンを末尾に積みます
 	m_scenes.push_back(scene);
+	if (scene) scene->Init();
 }
 
 void SceneContoller::PopScene()

@@ -9,6 +9,8 @@ protected:
 	SceneContoller& m_controller;
 public:
 	Scene(SceneContoller& controller);
+	//シーンの初期化
+	virtual void Init() = 0;
 	//シーンの情報更新
 	virtual void Update(Input& input) =0;
 	//シーンの描画(シーンの持ち物描画する)

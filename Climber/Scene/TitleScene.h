@@ -1,10 +1,12 @@
 #pragma once
 #include "Scene.h"
+
 class TitleScene : public Scene //Sceneを継承したTitleSceneクラス
 {
 public:
 	TitleScene(SceneContoller& controller); //コンストラクタ
 	~TitleScene(); //デストラクタ
+	void Init() override;//初期化処理
 	void Update(Input& input) override; //更新処理
 	void Draw() override; //描画処理
 private:
@@ -20,7 +22,7 @@ private:
 	// 切り替えていく
 
 	//フェードインupdate
-	void FadeInUpdate(Input&);
+	void FadeInUpdate(Input& input);
 	//通常update
 	void NormalUpdate(Input&);
 	//フェードアウトupdate

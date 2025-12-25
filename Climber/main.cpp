@@ -5,6 +5,7 @@
 #include <memory> //シェアードポイント
 
 #include "SceneMain.h"
+#include "TitleScene.h"
 #include "SceneContoller.h"
 //定数定義
 namespace
@@ -38,8 +39,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// シーンコントローラを作成（SceneMain のコンストラクタは参照を要求する）
 	SceneContoller controller;
 
-	// SceneMain を controller を渡して生成（ここが重要）
-	auto pScene = std::make_shared<SceneMain>(controller);
+	// SceneMain を controller を渡して生成
+	auto pScene = std::make_shared<TitleScene>(controller);
 	pScene->Init();
 
 	// コントローラに現在のシーンを登録（以後は controller 経由で Update/Draw）
