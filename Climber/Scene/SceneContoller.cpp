@@ -35,10 +35,10 @@ void SceneContoller::PopScene()
 	m_scenes.pop_back();
 }
 
-void SceneContoller::Update()
+void SceneContoller::Update(Input& input)
 {
 	// ––”ö‚Ì—v‘f‚É‘Î‚µ‚Ä‚Ì‚ÝUpdate‚·‚é
-	m_scenes.back()->Update();
+	m_scenes.back()->Update(input);
 }
 
 void SceneContoller::Draw()

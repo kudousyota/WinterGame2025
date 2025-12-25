@@ -8,9 +8,12 @@
 #include "Enemy.h"
 #include "Stage.h"
 #include "CollisionManager.h"
+#include "Input.h"
+#include "TitleScene.h"
 #include <cassert>
 
-SceneMain::SceneMain():
+SceneMain::SceneMain(SceneContoller& controller):
+Scene(controller),
 m_frameCount(0)
 {
 	m_pPlayer	= std::make_shared<Player>();
@@ -19,6 +22,7 @@ m_frameCount(0)
 	m_pRect		= std::make_shared<Rect>();
 	m_pBg		= std::make_shared<Bg>();
 	m_pStage	= std::make_shared<Stage>();
+	m_pTitleScene = std::make_shared<TitleScene>(m_controller);
 	//ステージ1をロード
 	m_pStage->Load(2);
 
@@ -39,7 +43,7 @@ void SceneMain::Init()
 	m_pStage->SetTileSet(chipHandle, 32, 32);
 }
 
-void SceneMain::Update()
+void SceneMain::Update(Input& input)
 {
 	m_frameCount++;
 	//  キャラの更新（移動・重力など）
@@ -58,11 +62,11 @@ void SceneMain::Draw()
 {
 	
 	m_pBg->Draw(*m_pCamera);
-	//m_pBg->DrawMapChip(*m_pCamera);
 	m_pStage->Draw(*m_pCamera, 0, 0);//ステージデータの描画
 	m_pRect->Draw();
 	m_pPlayer->Draw(*m_pCamera);
 	m_pEnemy->Draw(*m_pCamera);
+	m_pTitleScene->Draw();
 
 	//ロードしたステージデータの描画
 	auto mapSize = m_pStage->MapSize();

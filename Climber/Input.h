@@ -31,15 +31,15 @@ class Input
 {
 	friend KeyConfigScene;	// キーコンフィグだけはInputTable等をいじることができる
 private:
-	std::map<std::string, std::vector<InputState>>inputTable_; // イベント名と実際の入力の対応表
+	std::map<std::string, std::vector<InputState>>m_inputTable; // イベント名と実際の入力の対応表
 
 	// 仮の入力テーブル
 	// キーコンフィグが終わったら破棄される
-	std::map<std::string, std::vector<InputState>>tempInputTable_;	// 一時的な入力対応テーブル
+	std::map<std::string, std::vector<InputState>>m_tempInputTable;	// 一時的な入力対応テーブル
 
-	std::map<std::string, bool> inputData_;	// 実際に入力されたかどうかのデータ
-	std::map<std::string, bool> lastInputData_;	// 実際に入力されたかどうかのデータ
-	std::vector<std::string> editableEventNames_;	// キーコンフィグできるイベント名配列
+	std::map<std::string, bool> m_inputData;	// 実際に入力されたかどうかのデータ
+	std::map<std::string, bool> m_lastInputData;	// 実際に入力されたかどうかのデータ
+	std::vector<std::string> m_editableEventNames;	// キーコンフィグできるイベント名配列
 
 	void InitializeInputTable();
 public:

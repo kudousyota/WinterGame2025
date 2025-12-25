@@ -1,10 +1,11 @@
 #include "DxLib.h"
 #include "Game.h"
 #include"Bg.h"
-
+#include "Input.h"
 #include <memory> //シェアードポイント
 
 #include "SceneMain.h"
+#include "SceneContoller.h"
 //定数定義
 namespace
 {
@@ -30,31 +31,34 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//描画対象をバックバッファに変更
 	SetDrawScreen(DX_SCREEN_BACK);
-	
-	//シーンの作成
-	std::shared_ptr<SceneMain>pScene = std::make_shared<SceneMain>();
+
+	// Input 作成（毎フレーム更新してシーンに渡す）
+	Input input;
+
+	// シーンコントローラを作成（SceneMain のコンストラクタは参照を要求する）
+	SceneContoller controller;
+
+	// SceneMain を controller を渡して生成（ここが重要）
+	auto pScene = std::make_shared<SceneMain>(controller);
 	pScene->Init();
-	/*std::shared_ptr<Bg>pBg = std::make_shared<Bg>();
-	pBg->DrawMapChip();*/
 
-	
-
+	// コントローラに現在のシーンを登録（以後は controller 経由で Update/Draw）
+	controller.ResetScene(pScene);
 
 	while (ProcessMessage() != -1)
 	{
 		//このフレームの開始時間を取得
 		LONGLONG start = GetNowHiPerformanceCount();
 
-
 		//前のフレームに描画した内容をクリアする
 		ClearDrawScreen();
 
-		//ここにゲームの処理を書く
-		pScene->Update();
+		// 入力更新（必ずフレーム先頭で更新）
+		input.Update();
 
-		pScene->Draw();
-
-		//pBg->Draw();
+		// シーン処理をコントローラ経由で呼ぶ（直接 pScene->Update を呼ばない）
+		controller.Update(input);
+		controller.Draw();
 
 		//escキーを押すとゲームを強制終了
 		if (CheckHitKey(KEY_INPUT_ESCAPE))
@@ -71,12 +75,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 
 	}
-	
+
 	//メモリの解放
-
-	
-	//shared_ptrはメモリの開放を自動でやってくれる
-
 
 	DxLib_End();				// ＤＸライブラリ使用の終了処理
 

@@ -2,6 +2,7 @@
 #include <memory>
 #include <list>
 
+class Input;
 class Scene;
 class SceneContoller
 {
@@ -35,7 +36,7 @@ public:
 	/// <summary>
 	/// 内部に持ってるシーンのUpdateを呼び出す
 	/// </summary>
-	void Update();
+	void Update(Input& input);
 
 	/// <summary>
 	/// 内部に持ってるシーンのDrawを呼び出す

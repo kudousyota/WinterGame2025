@@ -16,41 +16,41 @@ namespace
 
 void Input::InitializeInputTable()
 {
-	inputTable_["ok"] = { { PeripheralType::keyboard,KEY_INPUT_RETURN},
+	m_inputTable["ok"] = { { PeripheralType::keyboard,KEY_INPUT_RETURN},
 					  { PeripheralType::pad1,PAD_INPUT_L } };	// PADのSELECTボタン
-	inputTable_["pause"] = { { PeripheralType::keyboard,KEY_INPUT_P},
+	m_inputTable["pause"] = { { PeripheralType::keyboard,KEY_INPUT_P},
 						  { PeripheralType::pad1,PAD_INPUT_R } };	// PADのSTARTボタン
 
-	inputTable_["Jump"] = { { PeripheralType::keyboard,KEY_INPUT_Z},
+	m_inputTable["Jump"] = { { PeripheralType::keyboard,KEY_INPUT_Z},
 						  { PeripheralType::pad1,PAD_INPUT_C } };	// PADのXボタン
-	inputTable_["slow"] = { { PeripheralType::keyboard,KEY_INPUT_LSHIFT},
+	m_inputTable["slow"] = { { PeripheralType::keyboard,KEY_INPUT_LSHIFT},
 						  { PeripheralType::pad1,PAD_INPUT_A } };	// PADのAボタン
-	inputTable_["HighJump"] = { { PeripheralType::keyboard,KEY_INPUT_X},
+	m_inputTable["HighJump"] = { { PeripheralType::keyboard,KEY_INPUT_X},
 						  { PeripheralType::pad1,PAD_INPUT_X } };	// PADのYボタン
 
-	inputTable_["up"] = { { PeripheralType::keyboard,KEY_INPUT_UP},
+	m_inputTable["up"] = { { PeripheralType::keyboard,KEY_INPUT_UP},
 						{ PeripheralType::pad1,PAD_INPUT_UP } };
-	inputTable_["down"] = { { PeripheralType::keyboard,KEY_INPUT_DOWN},
+	m_inputTable["down"] = { { PeripheralType::keyboard,KEY_INPUT_DOWN},
 						  { PeripheralType::pad1,PAD_INPUT_DOWN } };
-	inputTable_["left"] = { { PeripheralType::keyboard,KEY_INPUT_LEFT},
+	m_inputTable["left"] = { { PeripheralType::keyboard,KEY_INPUT_LEFT},
 						  { PeripheralType::pad1,PAD_INPUT_LEFT } };
-	inputTable_["right"] = { { PeripheralType::keyboard,KEY_INPUT_RIGHT},
+	m_inputTable["right"] = { { PeripheralType::keyboard,KEY_INPUT_RIGHT},
 						  { PeripheralType::pad1,PAD_INPUT_RIGHT } };
 }
 
-Input::Input() : inputData_{}, lastInputData_{}, inputTable_{}
+Input::Input() : m_inputData{}, m_lastInputData{}, m_inputTable{}
 {
 	InitializeInputTable();
 	Load();
 
-	editableEventNames_ = { "ok","pause","Jump","slow","HighJump" };
+	m_editableEventNames = { "ok","pause","Jump","slow","HighJump" };
 
 	// あらかじめ枠を開けておく
 	// ここで枠を開けておかないと、.at関数でクラッシュする可能性がある
-	for (const auto& inputInfo : inputTable_)
+	for (const auto& inputInfo : m_inputTable)
 	{
-		inputData_[inputInfo.first] = false;
-		lastInputData_[inputInfo.first] = false;
+		m_inputData[inputInfo.first] = false;
+		m_lastInputData[inputInfo.first] = false;
 	}
 }
 
@@ -60,13 +60,13 @@ void Input::Update()
 	char keyState[256];
 	GetHitKeyStateAll(keyState);	// 生のキーボード情報
 	int padState = GetJoypadInputState(DX_INPUT_PAD1);	// 生のPAD1情報
-	lastInputData_ = inputData_;	// 直前のフレームを更新(更新される前のフレーム情報をコピー)
+	m_lastInputData = m_inputData;	// 直前のフレームを更新(更新される前のフレーム情報をコピー)
 	// すべての入力イベントをチェックします
 	// ここでinputData_が更新される
 	// inputTable_を回して各イベントの入力をチェックする
-	for (const auto& inputInfo : inputTable_)
+	for (const auto& inputInfo : m_inputTable)
 	{
-		auto& input = inputData_[inputInfo.first];	// inputInfo.firstには"ok"等が入ってる
+		auto& input = m_inputData[inputInfo.first];	// inputInfo.firstには"ok"等が入ってる
 		// inputを書き換えると、inputData_のそのイベントが押されてるかどうかを着かえることになる
 		// InputStateのvectorを回す
 		for (const auto& state : inputInfo.second)
@@ -95,12 +95,12 @@ void Input::Update()
 bool Input::IsPressed(const char* name) const
 {
 	// もし「ない」イベントを送られるとクラッシュします
-	return inputData_.at(name);	// const関数内部なので[]ではなくatを使用してる
+	return m_inputData.at(name);	// const関数内部なので[]ではなくatを使用してる
 }
 
 bool Input::IsTriggered(const char* name) const
 {
-	return inputData_.at(name) && !lastInputData_.at(name);
+	return m_inputData.at(name) && !m_lastInputData.at(name);
 }
 
 void Input::Save()
@@ -121,12 +121,12 @@ void Input::Save()
 	header.signature[2] = 'n';
 	header.signature[3] = 'f';
 	header.version = 1.0f;
-	header.dataNum = static_cast<int>(inputTable_.size());
+	header.dataNum = static_cast<int>(m_inputTable.size());
 
 	fwrite(&header, sizeof(header), 1, fp);	// 12バイトまるまる書き込んでいる
 
 	// 個別のデータ
-	for (const auto& info : inputTable_)
+	for (const auto& info : m_inputTable)
 	{
 		const auto& name = info.first;
 		unsigned char nameLen = static_cast<unsigned char>(name.size());	// イベント名(文字列数)
@@ -166,10 +166,10 @@ void Input::Load()
 		// 確保した名前領域にセーブされているイベント名をコピーします
 		FileRead_read(name.data(), nameSize, handle);
 		// その名前がinputTable_にあるかどうかをチェック
-		if (inputTable_.contains(name))
+		if (m_inputTable.contains(name))
 		{
 			// もしあったら、そのテーブルデータを取得します
-			auto& info = inputTable_.at(name);
+			auto& info = m_inputTable.at(name);
 			unsigned char dataNum = 0;
 			FileRead_read(&dataNum, sizeof(dataNum), handle);	// データ数を取得
 			// 元のvectorサイズを超えないようにminで小さい方を選ぶようにする

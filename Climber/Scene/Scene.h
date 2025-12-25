@@ -1,13 +1,16 @@
 #pragma once
-class ScemeComtroller;
+
+class SceneContoller;
+class Input;
+
 class Scene
 {
 protected:
-	ScemeComtroller& m_controller;
+	SceneContoller& m_controller;
 public:
-	Scene(ScemeComtroller& controller);
+	Scene(SceneContoller& controller);
 	//シーンの情報更新
-	virtual void Update() =0;
+	virtual void Update(Input& input) =0;
 	//シーンの描画(シーンの持ち物描画する)
 	virtual void Draw() = 0;
 };
