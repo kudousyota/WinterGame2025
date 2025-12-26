@@ -25,7 +25,7 @@ m_frameCount(0)
 	m_pTitleScene = std::make_shared<TitleScene>(m_controller);
 	//ステージ1をロード
 	m_pStage->Load(2);
-
+	//m_pStage->Load(3);
 }
 
 SceneMain::~SceneMain()
@@ -37,6 +37,8 @@ void SceneMain::Init()
 	m_pPlayer->Init();
 	m_pEnemy->Init();
 	int chipHandle = LoadGraph("data/mapChip1.png");
+	assert(chipHandle > 0);
+	int SchipHandle = LoadGraph("data/mapChip1.png");
 	assert(chipHandle > 0);
 	//タイルセットの設定
 	//小さすぎたから1チップ32x32で設定

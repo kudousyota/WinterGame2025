@@ -32,6 +32,10 @@ virtual~Player();
 	 float GetVelY() const{ return m_vel; }
 	 void SetVelY(float vel) { m_vel = vel; }
 
+	 // 横速度の取得
+	 float GetVelX () const { return m_speed; }
+	 void SetVelX(float speed) { m_speed = speed; }
+
 	 // 地面フラグ操作
 	 bool IsOnGround() const { return m_onGround; }
 	 void SetOnGround(bool onGround) { m_onGround = onGround; }
