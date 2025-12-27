@@ -28,6 +28,7 @@ private:
 	//各種オブジェクトのポインタ
 	//ステージデータ
 	std::shared_ptr<Stage>  m_pStage;
+	std::shared_ptr<Stage>  m_pStageTwo;
 	std::shared_ptr<Rect>   m_pRect;
 	std::shared_ptr<Player> m_pPlayer;
 	std::shared_ptr<Enemy>  m_pEnemy;

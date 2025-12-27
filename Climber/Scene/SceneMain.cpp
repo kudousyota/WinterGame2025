@@ -22,10 +22,11 @@ m_frameCount(0)
 	m_pRect		= std::make_shared<Rect>();
 	m_pBg		= std::make_shared<Bg>();
 	m_pStage	= std::make_shared<Stage>();
+	m_pStageTwo = std::make_shared<Stage>();
 	m_pTitleScene = std::make_shared<TitleScene>(m_controller);
-	//ステージ1をロード
+	//ステージをロード
 	m_pStage->Load(2);
-	//m_pStage->Load(3);
+//	m_pStageTwo->Load(3);
 }
 
 SceneMain::~SceneMain()
@@ -39,10 +40,11 @@ void SceneMain::Init()
 	int chipHandle = LoadGraph("data/mapChip1.png");
 	assert(chipHandle > 0);
 	int SchipHandle = LoadGraph("data/mapChip1.png");
-	assert(chipHandle > 0);
+	assert(SchipHandle > 0);
 	//タイルセットの設定
 	//小さすぎたから1チップ32x32で設定
 	m_pStage->SetTileSet(chipHandle, 32, 32);
+	m_pStageTwo->SetTileSet(SchipHandle, 32, 32);
 }
 
 void SceneMain::Update(Input& input)
@@ -65,6 +67,7 @@ void SceneMain::Draw()
 	
 	m_pBg->Draw(*m_pCamera);
 	m_pStage->Draw(*m_pCamera, 0, 0);//ステージデータの描画
+	m_pStageTwo->Draw(*m_pCamera, 0, 0);
 	m_pRect->Draw();
 	m_pPlayer->Draw(*m_pCamera);
 	m_pEnemy->Draw(*m_pCamera);

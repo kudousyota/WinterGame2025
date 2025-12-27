@@ -39,13 +39,16 @@ void Stage::Load(int stageNo)
 {
 	//ファイル名を入れる変数
 	char filePath[32];
+	char filePathTwo[32];
 	//filepathに第二引数で作られた文字列を入れる
 	sprintf_s(filePath, "data/stage%d.fmf", stageNo);
+	sprintf_s(filePathTwo, "data/stage%d.fmf", stageNo);
 	//filePathに保存されたファイル名のファイルを開き、そのハンドルに取得
 	auto handle = FileRead_open(filePath);
+	auto handleTwo = FileRead_open(filePathTwo);
 	if (handle <= 0)
 	{
-		OutputDebugString("Stage::Load - Failed to open FMF file\n");
+		//OutputDebugString("Stage::Load - Failed to open FMF file\n");
 		assert(handle > 0);
 		return;
 	}
