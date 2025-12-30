@@ -29,7 +29,7 @@ Enemy::~Enemy()
 }
 void Enemy::Init()
 {
-	m_rect.Init(500.0f, 500.0f, 50.0f, 50.0f);
+	m_rect.Init(300.0f, 3030.0f, 50.0f, 50.0f);
 	m_vel = 0.0f;
 	//アニメーション
 	m_cutW = 34;

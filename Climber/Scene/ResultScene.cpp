@@ -21,5 +21,5 @@ void ResultScene::Update(Input& input)
 }
 void ResultScene::Draw()
 {
-	DrawString(320, 240, "Game Over Scene", 0xffffff);
+	DrawString(320, 240, "Result Scene", 0xffffff);
 }

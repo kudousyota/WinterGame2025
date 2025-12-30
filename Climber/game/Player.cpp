@@ -66,6 +66,7 @@ void Player::Init()
 	m_JumpFrameMax = 1;
 	m_FallFrameMax = 1;
 
+
 }
 void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 {
@@ -238,7 +239,7 @@ void Player::Draw(const Camera& camera)
 		m_cutW, m_cutH,              // 切り抜きサイズ
 		1.0f,                        // 拡大率
 		0.0f,                        // 回転角度
-		handle,                    // 画像ハンドル
+		handle,                      // 画像ハンドル
 		true,                        // 透過あり
 		m_isLeft                     // 左右反転
 	);

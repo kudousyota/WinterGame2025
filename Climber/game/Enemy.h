@@ -4,6 +4,7 @@
 #include <memory>
 class Camera;
 class Player;
+class CollisionManager;
 class Enemy : public Character
 {
 public:
