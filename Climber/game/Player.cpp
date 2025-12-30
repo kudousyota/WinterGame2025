@@ -13,7 +13,14 @@ namespace
 Player::Player():
 m_speed(0.0f),
 m_vel(0.0f),
-m_Handle(-1),
+m_IdleHandle(-1),
+m_JumpHandle(-1),
+m_FallHandle(-1),
+m_RunHandle(-1),
+m_IdleFrameMax(0),
+m_RunFrameMax(0),
+m_JumpFrameMax(0),
+m_FallFrameMax(0),
 m_cutX(0),
 m_cutY(0),
 m_cutW(0),
@@ -26,7 +33,10 @@ m_frameCount(0)
 
 {
 	//画像の読み込み
-	m_Handle = LoadGraph("data/Player.png");
+	m_IdleHandle = LoadGraph("data/IdlePlayer.png");
+	m_JumpHandle = LoadGraph("data/JumpPlayer.png");
+	m_FallHandle = LoadGraph("data/FallPlayer.png");
+	m_RunHandle = LoadGraph("data/RunPlayer.png");
 	m_pCamera = std::make_shared<Camera>();
 	m_pInput = std::make_shared<Input>();
 	
@@ -46,6 +56,14 @@ void Player::Init()
 	m_cutH = 32;
 	m_speed = 2.0f;
 	m_onGround = false;
+	m_animState = AnimState::Idle;
+	m_switchSpeed = 0;
+	m_frameCount = 0;
+	//アニメーション速度設定
+	m_IdleFrameMax = 11;
+	m_RunFrameMax = 12;
+	m_JumpFrameMax = 1;
+	m_FallFrameMax = 1;
 
 }
 void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
@@ -62,23 +80,7 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 	m_pInput->Update();
 
 	m_pos = { m_rect.GetX(), m_rect.GetY() };
-	// アニメーション更新
-	m_frameCount++;
-	// 5フレームごとに切り替え
-	if (m_frameCount >= 5)
-	{ 
-		m_frameCount = 0;
-		m_switchSpeed++;
-		// 横に11フレーム
-		if (m_switchSpeed >= 11)
-		{  
-			m_switchSpeed = 0;
-		}
-		m_cutX = m_switchSpeed * m_cutW; // 横方向の切り抜き位置
-		m_cutY = 0;                      // 縦方向は固定
-	}
-
-
+	
 
 	// 左右移動（Input を使用）
 	if (m_pInput->IsPressed("left"))
@@ -99,15 +101,96 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 	{
 		m_vel = -kJumpPower;
 		m_onGround = false;
+
+		m_animState = AnimState::Jump; // ここでジャンプ状態へ
+		m_animRow = 2;                 // スプライトのジャンプ行
+		m_frameCount = 0;              // 切り替え直後にフレームをリセット
+
+		m_switchSpeed = 0;
+		m_cutX = 0;
+		m_cutY = 0;
+
+
 	}
 	else if (m_pInput->IsTriggered("HighJump") && m_onGround)  // "HighJump" = X キー
 	{
 		m_vel = -kHighJumpPower;
 		m_onGround = false;
+
+		m_animState = AnimState::Jump; 
+		m_animRow = 2;              
+		m_frameCount = 0;        
+
+		m_switchSpeed = 0;
+		m_cutX = 0;
+		m_cutY = 0;
+
+
 	}
 	//Y座標の更新
 	m_rect.SetY(m_rect.GetY() + m_vel);
 	
+
+	if (!m_onGround) {
+		if (m_vel < 0.0f) {
+			// 上昇中：ジャンプ行
+			m_animState = AnimState::Jump;
+			m_animRow = 2;
+		}
+		else {
+			// 落下中：落下行
+			m_animState = AnimState::Fall;
+			m_animRow = 3;
+		}
+	}
+	else {
+		// 地面にいる
+		if (m_pInput->IsPressed("left") || m_pInput->IsPressed("right")) {
+			m_animState = AnimState::Run;
+			m_animRow = 1;
+		}
+		else {
+			m_animState = AnimState::Idle;
+			m_animRow = 0;
+		}
+	}
+
+
+	m_frameCount++;
+	// 5フレームごとに進める
+	if (m_frameCount >= 5)
+	{
+		m_frameCount = 0;
+		// アニメーションのフレームを進める
+		switch (m_animState) 
+		{
+			//待機
+		case AnimState::Idle:
+			m_switchSpeed++;
+			if (m_switchSpeed >= m_IdleFrameMax) m_switchSpeed = 0;
+			break;
+			//走り
+		case AnimState::Run:
+			m_switchSpeed++;
+			if (m_switchSpeed >= m_RunFrameMax) m_switchSpeed = 0;
+			break;
+			//ジャンプ
+		case AnimState::Jump:
+			// ジャンプが1枚だから常に0
+			m_switchSpeed = 0;
+			break;
+			//落下
+		case AnimState::Fall:
+			// 落下が1枚絵だから常に0
+			m_switchSpeed = 0;
+			break;
+		}
+	}
+
+	//切り抜き座標の決定
+	m_cutY = 0;
+	m_cutX = m_switchSpeed * m_cutW;
+
 	// 敵との衝突判定（押し出しのみ、速度は触らない）
 	if (m_rect.IsHit(enemy.GetRect()))
 	{
@@ -116,6 +199,7 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 		m_rect.SetY(m_rect.GetY() + push.y);
 		// 敵との衝突では速度は変更しない（CollisionManager で地面判定が有効化されるから）
 	}
+
 }
 void Player::Draw(const Camera& camera)
 {
@@ -134,7 +218,16 @@ void Player::Draw(const Camera& camera)
 	const int Top    = centerY - halfH;
 	const int Bottom = centerY + halfH;
 
-	
+	//描画する画像ハンドルを決定
+	int handle = m_IdleHandle;
+	switch (m_animState)
+	{
+	case AnimState::Run:  handle = m_RunHandle;  break;
+	case AnimState::Jump: handle = m_JumpHandle; break;
+	case AnimState::Fall: handle = m_FallHandle; break;
+	case AnimState::Idle: default: handle = m_IdleHandle; break;
+	}
+
 
 	DrawRectRotaGraph(
 		centerX, centerY,            // 画面の中心位置
@@ -142,7 +235,7 @@ void Player::Draw(const Camera& camera)
 		m_cutW, m_cutH,              // 切り抜きサイズ
 		1.0f,                        // 拡大率
 		0.0f,                        // 回転角度
-		m_Handle,                    // 画像ハンドル
+		handle,                    // 画像ハンドル
 		TRUE                         // 透過あり
 	);
 

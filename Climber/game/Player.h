@@ -42,15 +42,19 @@ virtual~Player();
 
 
 private:
-	
-	float m_x;
-	Vec2 m_pos;
+	//アニメーション	
+	enum class AnimState { Idle, Run, Jump, Fall };
 
-	float m_vel;
-	float m_speed;
+	AnimState m_animState = AnimState::Idle; // 現在の状態
+	int       m_animRow = 0;               // 現在のアニメ行（0=Idle,1=Run,2=Jump,3=Fall）
+	int       m_runFrameMax = 11;           // 走りの横コマ数（画像に合わせて調整）
+	int       m_jumpFrameMax = 1;            // ジャンプの横コマ数（複数なら変更）
 
-	//アニメーション
-	int m_Handle;
+	//画像ハンドル
+	int m_IdleHandle;
+	int m_JumpHandle;
+	int m_FallHandle;
+	int m_RunHandle;
 	//カット位置
 	int m_cutX;
 	int m_cutY;
@@ -59,8 +63,23 @@ private:
 	int m_cutH;
 	//フレームカウント
 	float m_frameCount;
+	//アニメ速度
+	int m_IdleFrameMax; // 待機アニメの速度調整用
+	int m_RunFrameMax; // 走りアニメの速度調整用
+	int m_JumpFrameMax; // ジャンプアニメの速度調整用
+	int m_FallFrameMax; // 落下アニメの速度調整用
 	//切り替え速度
-	float m_switchSpeed;
+	int m_switchSpeed;
+
+
+
+	float m_x;
+	Vec2 m_pos;
+
+	float m_vel;
+	float m_speed;
+
+
 	//当たり判定
 	bool isHit(const Enemy& enemy);
 
