@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "Scene.h"
+#include "GameTimer.h"
 //#include "Geometry.h"
 
 class Stage;
@@ -12,6 +13,7 @@ class Enemy;
 class GameObject;
 class Input;
 class TitleScene;
+class ResultScene;
 class SceneMain  : public Scene
 {
 public:
@@ -35,7 +37,7 @@ private:
 	std::shared_ptr<Camera> m_pCamera;
 	std::shared_ptr<Bg>     m_pBg;
 	std::shared_ptr<TitleScene> m_pTitleScene;
-
+	std::shared_ptr<ResultScene>m_pResultScene;
 
 	void FadeInUpdate(Input&);
 	void NormalUpdate(Input& input);
@@ -47,6 +49,14 @@ private:
 	void NormalDraw();
 	using DrawFunc_t = void(SceneMain::*)();
 	DrawFunc_t m_draw;	// Draw系を受け取るメンバ関数ポインタ
+	GameTimer m_timer{ 60.0f };//60秒タイマー
+	float m_limitSeconds = 60.0f;//制限時間
+	int m_score = 0;//スコア
+	int m_killCount = 0;//倒した敵の数
+
+	
+	
+	
 	//bool IsHit(const Circle& a, const Circle& b);
 };
 

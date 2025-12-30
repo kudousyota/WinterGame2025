@@ -71,6 +71,9 @@ private:
 	//Ø‚è‘Ö‚¦‘¬“x
 	int m_switchSpeed;
 
+	//Œü‚«”»’è
+	bool m_isLeft = false;
+
 
 
 	float m_x;

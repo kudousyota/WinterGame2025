@@ -10,6 +10,10 @@
 #include "CollisionManager.h"
 #include "Input.h"
 #include "TitleScene.h"
+#include "ResultScene.h"
+#include "ResultData.h"
+#include "SceneContoller.h"
+#include <memory>
 #include <cassert>
 
 SceneMain::SceneMain(SceneContoller& controller):
@@ -24,6 +28,11 @@ m_frameCount(0)
 	m_pStage	= std::make_shared<Stage>();
 	m_pStageTwo = std::make_shared<Stage>();
 	m_pTitleScene = std::make_shared<TitleScene>(m_controller);
+	m_pResultScene = std::make_shared<ResultScene>(m_controller);
+
+	m_timer.Reset(10.0f);//指定した秒数でリセット
+	m_score = 0;
+	m_killCount = 0;
 	//ステージをロード
 	m_pStage->Load(2);
 //	m_pStageTwo->Load(3);
@@ -60,6 +69,20 @@ void SceneMain::Update(Input& input)
 	// カメラ・背景更新（衝突後の位置でカメラを更新するため衝突チェックの後に呼ぶ）
 	m_pCamera->UpdateCamera(m_pCamera,m_pPlayer);
 	m_pBg->Update();
+
+	m_timer.Update();
+	// 時間切れならリザルトへ
+	if (m_timer.IsTimeUp()) {
+		// 例：静的 ResultData へ保存
+		ResultData::SetScore(m_score);
+
+		auto result = std::make_shared<ResultScene>(m_controller);
+		m_controller.ChangeScene(result);
+		return; // 多重遷移防止
+	}
+
+
+
 }
 
 void SceneMain::Draw()
@@ -67,7 +90,7 @@ void SceneMain::Draw()
 	
 	m_pBg->Draw(*m_pCamera);
 	m_pStage->Draw(*m_pCamera, 0, 0);//ステージデータの描画
-	m_pStageTwo->Draw(*m_pCamera, 0, 0);
+	//m_pStageTwo->Draw(*m_pCamera, 0, 0);
 	m_pRect->Draw();
 	m_pPlayer->Draw(*m_pCamera);
 	m_pEnemy->Draw(*m_pCamera);
@@ -83,4 +106,10 @@ void SceneMain::Draw()
 	//DrawLine(0 + m_pCamera->GetCameraOffset().x, 640 + m_pCamera->GetCameraOffset().y, Game::kScreenWidth + m_pCamera->GetCameraOffset().x, 640 + m_pCamera->GetCameraOffset().y, GetColor(255, 255, 255));
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", m_frameCount);
+
+	const int remainSec = static_cast<int>(std::ceil(m_timer.Remaining()));
+	DrawFormatString(20, 20, GetColor(255, 255, 255), "TIME: %d", remainSec);
+	DrawFormatString(20, 40, GetColor(255, 255, 0), "SCORE: %d", m_score);
+	DrawFormatString(20, 60, GetColor(255, 255, 0), "KILLS: %d", m_killCount);
+
 }

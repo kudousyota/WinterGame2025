@@ -29,6 +29,7 @@ m_switchSpeed(0.0f),
 m_pos(0,0),
 m_x(0),
 m_onGround(false),
+m_isLeft(false),
 m_frameCount(0)
 
 {
@@ -86,10 +87,12 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 	if (m_pInput->IsPressed("left"))
 	{
 		m_rect.SetX(m_rect.GetX() - m_speed);
+		m_isLeft = true;
 	}
 	if (m_pInput->IsPressed("right"))
 	{
 		m_rect.SetX(m_rect.GetX() + m_speed);
+		m_isLeft = false;
 	}
 
 	//d—Í
@@ -236,7 +239,8 @@ void Player::Draw(const Camera& camera)
 		1.0f,                        // Šg‘å—¦
 		0.0f,                        // ‰ñ“]Šp“x
 		handle,                    // ‰æ‘œƒnƒ“ƒhƒ‹
-		TRUE                         // “§‰ß‚ ‚è
+		true,                        // “§‰ß‚ ‚è
+		m_isLeft                     // ¶‰E”½“]
 	);
 
 	

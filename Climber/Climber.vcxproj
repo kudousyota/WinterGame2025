@@ -141,13 +141,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="ResultData.cpp" />
+    <ClCompile Include="Scene\ResultScene.cpp" />
+    <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="game\Stage.cpp" />
-    <ClCompile Include="Geometry.cpp" />
-    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="System\Geometry.cpp" />
+    <ClCompile Include="System\Input.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SceneContoller.cpp" />
-    <ClCompile Include="StringFunctions.cpp" />
+    <ClCompile Include="System\StringFunctions.cpp" />
     <ClCompile Include="System\Bg.cpp" />
     <ClCompile Include="System\Camera.cpp" />
     <ClCompile Include="game\Character.cpp" />
@@ -161,13 +164,16 @@
     <ClCompile Include="Scene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
+    <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="ResultData.h" />
+    <ClInclude Include="Scene\ResultScene.h" />
+    <ClInclude Include="System\Application.h" />
     <ClInclude Include="game\Stage.h" />
-    <ClInclude Include="Geometry.h" />
-    <ClInclude Include="Input.h" />
+    <ClInclude Include="System\Geometry.h" />
+    <ClInclude Include="System\Input.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneContoller.h" />
-    <ClInclude Include="StringFunctions.h" />
+    <ClInclude Include="System\StringFunctions.h" />
     <ClInclude Include="System\Bg.h" />
     <ClInclude Include="System\Camera.h" />
     <ClInclude Include="game\Character.h" />
