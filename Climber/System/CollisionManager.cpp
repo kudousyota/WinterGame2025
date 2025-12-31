@@ -1,4 +1,4 @@
-#include "CollisionManager.h"
+ï»¿#include "CollisionManager.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Stage.h"
@@ -6,37 +6,37 @@
 
 void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::shared_ptr<Enemy> m_pEnemy, std::shared_ptr<Stage> m_pStage)
 {
-	// ƒvƒŒƒCƒ„[‚Æ“G‚Ì“–‚½‚è”»’è‚ğƒ`ƒFƒbƒN
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨æ•µã®å½“ãŸã‚Šåˆ¤å®šã‚’ãƒã‚§ãƒƒã‚¯
 	if (m_pPlayer->IsHit(*m_pEnemy))
 	{
-		// FixPos‚Í©g‚ÌRect‚ğC³‚µ‚Ä‰Ÿ‚µo‚µ—Ê‚ğ•Ô‚·‚±‚±‚ÅˆÊ’u‚ğ“ñd‚É‰ÁZ‚µ‚È‚¢
+		// FixPosã¯è‡ªèº«ã®Rectã‚’ä¿®æ­£ã—ã¦æŠ¼ã—å‡ºã—é‡ã‚’è¿”ã™ã“ã“ã§ä½ç½®ã‚’äºŒé‡ã«åŠ ç®—ã—ãªã„
 		Vec2 push = m_pPlayer->FixPos(*m_pEnemy);
-		// •K—v‚È‚ç push ‚ğŒ©‚Ä‘¬“x‚ğ’²®‚·‚é
+		// å¿…è¦ãªã‚‰ push ã‚’è¦‹ã¦é€Ÿåº¦ã‚’èª¿æ•´ã™ã‚‹
 	}
 
-	// ƒvƒŒƒCƒ„[‚ÆƒXƒe[ƒW‚Ì“–‚½‚è”»’è‚ğƒ`ƒFƒbƒN
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ã‚¹ãƒ†ãƒ¼ã‚¸ã®å½“ãŸã‚Šåˆ¤å®šã‚’ãƒã‚§ãƒƒã‚¯
 	Rect hitTileRect;
 	if (m_pStage->IsCollision(m_pPlayer->GetRect(), hitTileRect))
 	{
-		// FixPos ‚ÍƒvƒŒƒCƒ„[‚Ìrect‚ğC³•Ô‚è’l‚ÍÀÛ‚ÉˆÚ“®‚µ‚½—Ê
+		// FixPos ã¯ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®rectã‚’ä¿®æ­£è¿”ã‚Šå€¤ã¯å®Ÿéš›ã«ç§»å‹•ã—ãŸé‡
 		Vec2 push = m_pPlayer->GetRect().FixPos(hitTileRect);
 
-		// ’…’n‚Æ‰º‚©‚ç”j‰ó”»’è
+		// ç€åœ°ã¨ä¸‹ã‹ã‚‰ç ´å£Šåˆ¤å®š
 		if (push.y < 0.0f)
 		{
-			// ƒ^ƒCƒ‹‚Ìã‚ÉƒXƒiƒbƒv‚µ‚Ä”÷¬‚Èd‚È‚è‚ğc‚³‚È‚¢
+			// ã‚¿ã‚¤ãƒ«ã®ä¸Šã«ã‚¹ãƒŠãƒƒãƒ—ã—ã¦å¾®å°ãªé‡ãªã‚Šã‚’æ®‹ã•ãªã„
 			const float playerHalfH = m_pPlayer->GetRect().GetH() * 0.5f;
-			const float tileTop = hitTileRect.GetTop(); // ƒ[ƒ‹ƒhÀ•W‚Ìƒ^ƒCƒ‹ã’[
+			const float tileTop = hitTileRect.GetTop(); // ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã®ã‚¿ã‚¤ãƒ«ä¸Šç«¯
 			const float snapY = tileTop - playerHalfH;
 			m_pPlayer->GetRect().SetY(snapY);
 
-			// c‘¬“xƒNƒŠƒA‚µ‚Ä’…’nƒtƒ‰ƒO‚ğ—§‚Ä‚é
+			// ç¸¦é€Ÿåº¦ã‚¯ãƒªã‚¢ã—ã¦ç€åœ°ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 			m_pPlayer->SetVelY(0.0f);
 			m_pPlayer->SetOnGround(true);
 		}
 		else if (push.y > 0.0f)
 		{
-			// ‰º‚©‚ç“–‚½‚Á‚½ -> “–ŠYƒ^ƒCƒ‹‚ğ”j‰ó‚·‚é
+			// ä¸‹ã‹ã‚‰å½“ãŸã£ãŸ -> å½“è©²ã‚¿ã‚¤ãƒ«ã‚’ç ´å£Šã™ã‚‹
 			const int tileW = m_pStage->GetChipW();
 			const int tileH = m_pStage->GetChipH();
 			if (tileW > 0 && tileH > 0)
@@ -45,21 +45,54 @@ void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::s
 				int ty = static_cast<int>(hitTileRect.GetY() / tileH);
 				m_pStage->SetTile(tx, ty, 0);
 			}
-			// ‰º‚©‚ç“–‚½‚Á‚½ê‡‚Í’…’n‚É‚Í‚µ‚È‚¢
+			// ä¸‹ã‹ã‚‰å½“ãŸã£ãŸå ´åˆã¯ç€åœ°ã«ã¯ã—ãªã„
 			m_pPlayer->SetOnGround(false);
 		}
 	}
 	else
 	{
-		// ƒ^ƒCƒ‹‚ÉG‚ê‚Ä‚¢‚È‚¯‚ê‚Î’n–Êƒtƒ‰ƒO‚ğ‰ğœ
+		// ã‚¿ã‚¤ãƒ«ã«è§¦ã‚Œã¦ã„ãªã‘ã‚Œã°åœ°é¢ãƒ•ãƒ©ã‚°ã‚’è§£é™¤
 		m_pPlayer->SetOnGround(false);
 	}
 
-	// “G‚ÆƒXƒe[ƒW‚Ì“–‚½‚è”»’èi“G‚É‚Â‚¢‚Ä‚à“¯—l‚É FixPos ‚ğg‚¤j
-	if (m_pStage->IsCollision(m_pEnemy->GetRect(), hitTileRect))
-	{
-		// FixPos ‚ğg‚Á‚Ä“G‚Ì Rect ‚ğ’¼ÚC³‚·‚éi’Ç‰Á‚Ì Set ‚Í•s—vj
-		Vec2 push = m_pEnemy->GetRect().FixPos(hitTileRect);
-		// •K—v‚É‰‚¶‚Ä“G‚Ì‘¬“x‚âs“®‚ğ’²®‚·‚é
-	}
+	// æ•µã¨ã‚¹ãƒ†ãƒ¼ã‚¸ã®å½“ãŸã‚Šåˆ¤å®šï¼ˆæ•µã«ã¤ã„ã¦ã‚‚åŒæ§˜ã« FixPos ã‚’ä½¿ã†ï¼‰
+	
+		Rect& enemyRect = m_pEnemy->GetRect(); 
+
+		m_pEnemy->SetOnGround(false);         // æ¯ãƒ•ãƒ¬ãƒ¼ãƒ æœ€åˆã« false ã«
+
+		int iter = 0;
+		const int kMaxIter = 3;               // é€Ÿåº¦ãŒå¤§ãã„ãªã‚‰ 4ã€œ6 ã§ã‚‚
+
+		while (iter < kMaxIter && m_pStage->IsCollision(enemyRect, hitTileRect))
+		{
+			Vec2 push = enemyRect.FixPos(hitTileRect);  // AABBç´”æŠ¼ã—å‡ºã—
+
+			// æ¨ªå£Xé€Ÿåº¦ã‚’åœæ­¢
+			if (push.x != 0.0f) {
+				m_pEnemy->SetVelX(0);                  // åœæ­¢
+				// å·¡å›AIãªã‚‰åè»¢//m_pEnemy->SetVelX(-m_pEnemy->GetVelX());
+			}
+
+			// åºŠï¼å¤©äº•ï¼šYé€Ÿåº¦ã‚’åœæ­¢ã€æ¥åœ°ãƒ•ãƒ©ã‚°ã€ã‚¹ãƒŠãƒƒãƒ—
+			if (push.y < 0.0f) {
+				// åºŠã«ä¹—ã£ãŸï¼ˆä¸‹æ–¹å‘ã«æŠ¼ã—æˆ»ã•ã‚ŒãŸï¼‰
+				m_pEnemy->SetVelY(0.0f);
+				m_pEnemy->SetOnGround(true);
+
+				// ä¸­å¿ƒåŸç‚¹ã®ã‚¹ãƒŠãƒƒãƒ—ï¼ˆRectä¸­å¿ƒåº§æ¨™å‰æï¼‰
+				const float halfH = enemyRect.GetH() * 0.5f;
+				enemyRect.SetY(hitTileRect.GetTop() - halfH);
+			}
+			else if (push.y > 0.0f) {
+				// å¤©äº•
+				m_pEnemy->SetVelY(0.0f);
+				m_pEnemy->SetOnGround(false);
+			}
+
+			++iter;
+		}
+
 }
+
+	

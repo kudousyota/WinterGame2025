@@ -4,7 +4,7 @@
 #include "Player.h"
 namespace
 {
-	constexpr float kGravity = 0.5;
+	constexpr float kGravity = 0.3f;
 	//constexpr float kGroundY = 1520.0f;
 }
 
@@ -34,6 +34,7 @@ void Enemy::Init()
 	//アニメーション
 	m_cutW = 34;
 	m_cutH = 45;
+	m_speed = -1;
 
 }
 void Enemy::Update(const Player& player)
@@ -56,16 +57,9 @@ void Enemy::Update(const Player& player)
 	//重力
 	m_vel += kGravity;
 
-	//地面にいるか
-	//bool isHitGround = (m_rect.GetY() >= kGroundY);
-	//if (isHitGround)
-	//{
-	//	m_vel = 0;
-	//	//地面にいる
-	//	m_rect.SetY(kGroundY);
-	//}
-	//m_rect.SetY(m_rect.GetY() + m_vel);
-
+	// 速度を位置へ反映
+	m_rect.SetX(m_rect.GetX() + static_cast<float>(m_speed)); // m_speed は int なのでキャスト
+	m_rect.SetY(m_rect.GetY() + m_vel);
 	
 }
 void Enemy::Draw(const Camera& camera)
@@ -94,7 +88,7 @@ void Enemy::Draw(const Camera& camera)
 		1.0f,                        // 拡大率
 		0.0f,                        // 回転角度
 		m_Handle,                    // 画像ハンドル
-		TRUE                         // 透過あり
+		true                         // 透過あり
 	);
 
 
