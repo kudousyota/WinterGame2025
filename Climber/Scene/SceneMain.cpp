@@ -72,13 +72,13 @@ void SceneMain::Update(Input& input)
 
 	m_timer.Update();
 	// 時間切れならリザルトへ
-	if (m_timer.IsTimeUp()) {
-		// 例：静的 ResultData へ保存
+	if (m_timer.IsTimeUp()) 
+	{
 		ResultData::SetScore(m_score);
 
 		auto result = std::make_shared<ResultScene>(m_controller);
 		m_controller.ChangeScene(result);
-		return; // 多重遷移防止
+		return;
 	}
 
 
