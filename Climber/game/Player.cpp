@@ -57,9 +57,12 @@ void Player::Init()
 	m_cutH = 32;
 	m_speed = 2.0f;
 	m_onGround = false;
+	m_highJumpUnlock = false;
+	m_highJumpPoint = 10;
 	m_animState = AnimState::Idle;
 	m_switchSpeed = 0;
 	m_frameCount = 0;
+	m_brokeCount = 0;
 	//アニメーション速度設定
 	m_IdleFrameMax = 11;
 	m_RunFrameMax = 12;
@@ -68,6 +71,17 @@ void Player::Init()
 
 
 }
+
+void Player::TileBroke()
+{
+	m_brokeCount++;
+	if (!m_highJumpUnlock && m_brokeCount >= m_highJumpPoint)
+	{
+		m_highJumpUnlock = true;
+	}
+}
+
+
 void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 {
 	//中心座標から上下左右の座標を計算
@@ -116,19 +130,18 @@ void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
 
 
 	}
-	else if (m_pInput->IsTriggered("HighJump") && m_onGround)  // "HighJump" = X キー
+	// ハイジャンプ 解禁されていた場合のみジャンプ処理
+	if (m_pInput->IsTriggered("HighJump") && m_onGround && m_highJumpUnlock)
 	{
 		m_vel = -kHighJumpPower;
 		m_onGround = false;
 
-		m_animState = AnimState::Jump; 
-		m_animRow = 2;              
-		m_frameCount = 0;        
-
+		m_animState = AnimState::Jump;
+		m_animRow = 2;
+		m_frameCount = 0;
 		m_switchSpeed = 0;
 		m_cutX = 0;
 		m_cutY = 0;
-
 
 	}
 	//Y座標の更新
@@ -256,6 +269,8 @@ void Player::Draw(const Camera& camera)
 #endif
 	
 }
+
+
 bool Player::isHit(const Enemy& enemy)
 {
 	

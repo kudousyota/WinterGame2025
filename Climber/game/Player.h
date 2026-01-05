@@ -39,6 +39,8 @@ virtual~Player();
 	 // 地面フラグ操作
 	 bool IsOnGround() const { return m_onGround; }
 	 void SetOnGround(bool onGround) { m_onGround = onGround; }
+	 // タイル破壊CollisionManagerから呼ぶ
+	 void TileBroke();
 
 
 private:
@@ -73,6 +75,12 @@ private:
 
 	//向き判定
 	bool m_isLeft = false;
+	//ハイジャンプ解禁
+	bool m_highJumpUnlock;
+	//解禁に必要なポイント
+	int m_highJumpPoint;
+	//破壊した数
+	int m_brokeCount;
 
 
 

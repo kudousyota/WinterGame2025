@@ -30,7 +30,7 @@ m_frameCount(0)
 	m_pTitleScene = std::make_shared<TitleScene>(m_controller);
 	m_pResultScene = std::make_shared<ResultScene>(m_controller);
 
-	m_timer.Reset(10.0f);//指定した秒数でリセット
+	m_timer.Reset(100.0f);//指定した秒数でリセット
 	m_score = 0;
 	m_killCount = 0;
 	//ステージをロード

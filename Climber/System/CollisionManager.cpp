@@ -43,7 +43,13 @@ void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::s
 			{
 				int tx = static_cast<int>(hitTileRect.GetX() / tileW);
 				int ty = static_cast<int>(hitTileRect.GetY() / tileH);
-				m_pStage->SetTile(tx, ty, 0);
+
+				uint8_t oldId = m_pStage->GetData(tx, ty);
+				if (oldId != 0) {
+					m_pStage->SetTile(tx, ty, 0);
+					m_pPlayer->TileBroke();   //ここが解禁カウントのトリガ
+				}
+
 			}
 			// 下から当たった場合は着地にはしない
 			m_pPlayer->SetOnGround(false);
@@ -55,7 +61,7 @@ void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::s
 		m_pPlayer->SetOnGround(false);
 	}
 
-	// 敵とステージの当たり判定（敵についても同様に FixPos を使う）
+		// 敵とステージの当たり判定（敵についても同様に FixPos を使う）
 	
 		Rect& enemyRect = m_pEnemy->GetRect(); 
 
@@ -68,14 +74,17 @@ void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::s
 		{
 			Vec2 push = enemyRect.FixPos(hitTileRect);  // AABB純押し出し
 
-			// 横壁X速度を停止
-			if (push.x != 0.0f) {
-				m_pEnemy->SetVelX(0);                  // 停止
-				// 巡回AIなら反転//m_pEnemy->SetVelX(-m_pEnemy->GetVelX());
+			// 横壁
+			if (push.x != 0.0f) 
+			{
+				// 巡回反転
+				float inversion = m_pEnemy->GetVelX();
+				m_pEnemy->SetVelX(-inversion);
 			}
 
-			// 床／天井：Y速度を停止、接地フラグ、スナップ
-			if (push.y < 0.0f) {
+			// 床天井Y速度を停止、接地フラグ、スナップ
+			if (push.y < 0.0f)
+			{
 				// 床に乗った（下方向に押し戻された）
 				m_pEnemy->SetVelY(0.0f);
 				m_pEnemy->SetOnGround(true);

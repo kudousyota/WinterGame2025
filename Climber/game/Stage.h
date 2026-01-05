@@ -30,6 +30,7 @@ public:
 	int GetChipW()const { return m_chipNumW; }
 	int GetChipH()const { return m_chipNumH; }
 
+	
 
 	void SetTileSet(int chipHandle, int chipNumW, int chipNumH);
 	//w’è‚³‚ê‚½°‚ğ‘‚«Š·‚¦‚é

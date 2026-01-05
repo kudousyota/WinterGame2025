@@ -58,7 +58,7 @@ void Enemy::Update(const Player& player)
 	m_vel += kGravity;
 
 	// 速度を位置へ反映
-	m_rect.SetX(m_rect.GetX() + static_cast<float>(m_speed)); // m_speed は int なのでキャスト
+	m_rect.SetX(m_rect.GetX() + static_cast<float>(m_speed));
 	m_rect.SetY(m_rect.GetY() + m_vel);
 	
 }
