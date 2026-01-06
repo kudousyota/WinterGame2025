@@ -5,7 +5,7 @@
 
 class Bg;
 class Camera;
-class Enemy;
+class Rabbit;
 class CollisionManager;
 class Input;
 class Player : public Character
@@ -22,7 +22,7 @@ virtual~Player();
 	/// <param name="w">W : •</param>
 	/// <param name="h">H : ‚‚³</param>
 	 void Init();
-	 void Update(const Enemy& enemy, Rect& other, const Bg& bg);
+	 void Update(const Rabbit& enemy, Rect& other, const Bg& bg);
 	 void Draw(const Camera& camera);
 
 
@@ -92,7 +92,7 @@ private:
 
 
 	//“–‚½‚è”»’è
-	bool isHit(const Enemy& enemy);
+	bool isHit(const Rabbit& enemy);
 
 
 	std::shared_ptr<Camera> m_pCamera;

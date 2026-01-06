@@ -2,6 +2,7 @@
 #include "DxLib.h"
 #include "Camera.h"
 #include "Enemy.h"
+#include "Rabbit.h"
 #include "Input.h"
 
 namespace
@@ -28,8 +29,12 @@ m_cutH(0),
 m_switchSpeed(0.0f),
 m_pos(0,0),
 m_x(0),
+m_brokeCount(0),
+m_highJumpUnlock(false),
+m_highJumpPoint(0),
 m_onGround(false),
 m_isLeft(false),
+m_animRow(0),
 m_frameCount(0)
 
 {
@@ -82,7 +87,7 @@ void Player::TileBroke()
 }
 
 
-void Player::Update(const Enemy& enemy, Rect& other,const Bg& bg)
+void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 {
 	//中心座標から上下左右の座標を計算
 	const float halfW = m_rect.GetW() * 0.5f;
@@ -271,7 +276,7 @@ void Player::Draw(const Camera& camera)
 }
 
 
-bool Player::isHit(const Enemy& enemy)
+bool Player::isHit(const Rabbit& enemy)
 {
 	
 	return m_rect.IsHit(enemy.GetRect());

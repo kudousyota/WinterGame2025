@@ -6,6 +6,8 @@
 #include "Rect.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Rabbit.h"
+#include "Bat.h"
 #include "Stage.h"
 #include "CollisionManager.h"
 #include "Input.h"
@@ -21,7 +23,8 @@ Scene(controller),
 m_frameCount(0)
 {
 	m_pPlayer	= std::make_shared<Player>();
-	m_pEnemy	= std::make_shared<Enemy>();
+	m_pRabbit	= std::make_shared<Rabbit>();
+	m_pBat		= std::make_shared<Bat>();
 	m_pCamera	= std::make_shared<Camera>();
 	m_pRect		= std::make_shared<Rect>();
 	m_pBg		= std::make_shared<Bg>();
@@ -45,7 +48,8 @@ SceneMain::~SceneMain()
 void SceneMain::Init()
 {
 	m_pPlayer->Init();
-	m_pEnemy->Init();
+	m_pRabbit->Init();
+	m_pBat->Init();
 	int chipHandle = LoadGraph("data/mapChip1.png");
 	assert(chipHandle > 0);
 	int SchipHandle = LoadGraph("data/mapChip1.png");
@@ -60,11 +64,12 @@ void SceneMain::Update(Input& input)
 {
 	m_frameCount++;
 	//  キャラの更新（移動・重力など）
-	m_pPlayer->Update(*m_pEnemy,*m_pRect,*m_pBg);
-	m_pEnemy->Update(*m_pPlayer);
+	m_pPlayer->Update(*m_pRabbit,*m_pRect,*m_pBg);
+	m_pRabbit->Update(*m_pPlayer);
+	m_pBat->Update(*m_pPlayer);
 
 	//  衝突チェックを呼ぶ（ここで着地判定・押し出し・タイル破壊を行う）
-	CollisionManager::CheckCollisions(m_pPlayer, m_pEnemy, m_pStage);
+	CollisionManager::CheckCollisions(m_pPlayer, m_pRabbit, m_pStage);
 
 	// カメラ・背景更新（衝突後の位置でカメラを更新するため衝突チェックの後に呼ぶ）
 	m_pCamera->UpdateCamera(m_pCamera,m_pPlayer);
@@ -93,7 +98,8 @@ void SceneMain::Draw()
 	//m_pStageTwo->Draw(*m_pCamera, 0, 0);
 	m_pRect->Draw();
 	m_pPlayer->Draw(*m_pCamera);
-	m_pEnemy->Draw(*m_pCamera);
+	m_pRabbit->Draw(*m_pCamera);
+	m_pBat->Draw(*m_pCamera);
 	//m_pTitleScene->Draw();
 	//ロードしたステージデータの描画
 	auto mapSize = m_pStage->MapSize();

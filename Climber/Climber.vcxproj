@@ -141,8 +141,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GameTimer.cpp" />
-    <ClCompile Include="ResultData.cpp" />
+    <ClCompile Include="System\Actor.cpp" />
+    <ClCompile Include="game\Enemy.cpp" />
+    <ClCompile Include="game\EnemyFactory.cpp" />
+    <ClCompile Include="game\Bat.cpp" />
+    <ClCompile Include="System\GameTimer.cpp" />
+    <ClCompile Include="System\ResultData.cpp" />
     <ClCompile Include="Scene\ResultScene.cpp" />
     <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="game\Stage.cpp" />
@@ -155,7 +159,7 @@
     <ClCompile Include="System\Camera.cpp" />
     <ClCompile Include="game\Character.cpp" />
     <ClCompile Include="System\CollisionManager.cpp" />
-    <ClCompile Include="game\Enemy.cpp" />
+    <ClCompile Include="game\Rabbit.cpp" />
     <ClCompile Include="game\GameObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="game\Player.cpp" />
@@ -164,8 +168,12 @@
     <ClCompile Include="Scene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameTimer.h" />
-    <ClInclude Include="ResultData.h" />
+    <ClInclude Include="System\Actor.h" />
+    <ClInclude Include="game\Enemy.h" />
+    <ClInclude Include="game\EnemyFactory.h" />
+    <ClInclude Include="game\Bat.h" />
+    <ClInclude Include="System\GameTimer.h" />
+    <ClInclude Include="System\ResultData.h" />
     <ClInclude Include="Scene\ResultScene.h" />
     <ClInclude Include="System\Application.h" />
     <ClInclude Include="game\Stage.h" />
@@ -178,7 +186,7 @@
     <ClInclude Include="System\Camera.h" />
     <ClInclude Include="game\Character.h" />
     <ClInclude Include="System\CollisionManager.h" />
-    <ClInclude Include="game\Enemy.h" />
+    <ClInclude Include="game\Rabbit.h" />
     <ClInclude Include="System\Game.h" />
     <ClInclude Include="game\GameObject.h" />
     <ClInclude Include="game\Player.h" />

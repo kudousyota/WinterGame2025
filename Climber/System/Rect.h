@@ -1,11 +1,6 @@
 #pragma once
 #include "Vec2.h"
 
-struct Size
-{
-	int w;
-	int h;
-};
 class Rect
 {
 public:
