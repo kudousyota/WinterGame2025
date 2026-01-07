@@ -75,7 +75,7 @@ void Rabbit::Update(const Player& player)
 		m_frameCount = 0;
 		m_switchSpeed++;
 		//‰¡‚É‚¸‚ç‚·
-		if (m_switchSpeed >= 5)
+		if (m_switchSpeed >= 8)
 		{
 			m_switchSpeed = 0;
 		}

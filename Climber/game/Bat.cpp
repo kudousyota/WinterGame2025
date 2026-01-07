@@ -4,10 +4,6 @@
 #include "Player.h"
 
 
-namespace
-{
-	constexpr float kGravity = 0.3f;
-}
 
 Bat::Bat() :
 	m_vel(0.0f),
@@ -57,9 +53,12 @@ void Bat::Init()
 {
 	m_rect.Init(340.0f, 3030.0f, 50.0f, 50.0f);
 	m_vel = 0.0f;
-	m_cutH = 32;
-	m_cutW = 32;
+	m_cutH = 30;
+	m_cutW = 46;
 	m_speed = -2;
+	m_switchSpeed = 0;
+	m_frameCount = 0;
+
 }
 
 void Bat::Update(const Player& player)
@@ -72,15 +71,14 @@ void Bat::Update(const Player& player)
 		m_frameCount = 0;
 		m_switchSpeed++;
 		//‰¡‚É‚¸‚ç‚·
-		if (m_switchSpeed >= 5)
+		if (m_switchSpeed >= 7)
 		{
 			m_switchSpeed = 0;
 		}
 		m_cutX = m_switchSpeed * m_cutW;//Ø‚èæ‚è‚¢‚¿
 		m_cutY = 0;
 	}
-	//d—Í
-	m_vel += kGravity;
+	
 
 	// ‘¬“x‚ğˆÊ’u‚Ö”½‰f
 	m_rect.SetX(m_rect.GetX() + static_cast<float>(m_speed));
