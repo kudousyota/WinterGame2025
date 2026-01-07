@@ -7,7 +7,7 @@
 
 namespace
 {
-	constexpr float  kJumpPower		= 15.0f;
+	constexpr float  kJumpPower		= 12.0f;
 	constexpr float  kHighJumpPower = 20.0f;
 	constexpr float  kGravity = 0.3f;
 }

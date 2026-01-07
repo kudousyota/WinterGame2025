@@ -7,6 +7,7 @@
 class Camera;
 class Player;
 class CollisionManager;
+class EnemyFactory;
 
 class Bat : public Character
 {

@@ -5,7 +5,6 @@
 
 class Character;
 class Player;
-class EnemyFactory;
 
 enum class EnemyType
 {

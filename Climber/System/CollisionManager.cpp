@@ -5,7 +5,7 @@
 #include "Stage.h"
 #include "GameObject.h"
 
-void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::shared_ptr<Rabbit> m_pEnemy, std::shared_ptr<Stage> m_pStage)
+void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::shared_ptr<Rabbit> m_pEnemy,std::shared_ptr<Stage> m_pStage)
 {
 	// プレイヤーと敵の当たり判定をチェック
 	if (m_pPlayer->IsHit(*m_pEnemy))

@@ -7,16 +7,17 @@
 class Camera;
 class Player;
 class CollisionManager;
+class EnemyFactory;
 class Rabbit : public Character
 {
 public:
 	Rabbit();
-	// EnemyFactory から handle と位置を渡して生成できるようにオーバーロード追加
+	// EnemyFactoryからhandleと位置を渡して生成できるようにオーバーロード追加
 	Rabbit(int handle, const Position2& pos);
 
 	virtual~Rabbit();
 	void Init();
-	// Note: 名前は既存コードに合わせて引数ありの Update/Draw を残します
+	
 	void Update(const Player& player);
 	void Draw(const Camera& camera);
 

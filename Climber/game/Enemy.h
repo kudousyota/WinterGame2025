@@ -9,7 +9,7 @@ public:
 	Enemy(const Position2& pos,	// 敵の初期座標
 		float r);	// 敵の当たり判定の大きさ
 
-	const Circle& GetCollision() const;
+	//const Circle& GetCollision() const;
 	bool IsDead() const;
 
 	// 他のオブジェクトに当たったときに呼び出されます
@@ -28,7 +28,6 @@ public:
 
 	virtual ~Enemy() {};	// 基底クラスのデストラクタはvirtualにしておく
 protected:
-	Circle m_collision;	// 敵の当たり判定
 	bool   m_isDead = false;	// 死亡フラグ
 };
 
