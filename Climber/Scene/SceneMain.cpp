@@ -33,7 +33,8 @@ m_frameCount(0)
 	m_pTitleScene = std::make_shared<TitleScene>(m_controller);
 	m_pResultScene = std::make_shared<ResultScene>(m_controller);
 
-	m_timer.Reset(100.0f);//指定した秒数でリセット
+	//指定した秒数でリセット
+	m_timer.Reset(100.0f);
 	m_score = 0;
 	m_killCount = 0;
 	//ステージをロード
@@ -70,6 +71,14 @@ void SceneMain::Update(Input& input)
 
 	//  衝突チェックを呼ぶ（ここで着地判定・押し出し・タイル破壊を行う）
 	CollisionManager::CheckCollisions(m_pPlayer, m_pRabbit,m_pBat, m_pStage);
+	int brokeNow = m_pPlayer->GetBrokeCount();
+	int delta = brokeNow - m_lastScore;
+	if (delta > 0)
+	{
+		// タイル1つあたりの点数をステージから取得
+		m_score += delta * m_pStage->GetTileBrokePoint();
+		m_lastScore = brokeNow;
+	}
 
 	// カメラ・背景更新（衝突後の位置でカメラを更新するため衝突チェックの後に呼ぶ）
 	m_pCamera->UpdateCamera(m_pCamera,m_pPlayer);
@@ -114,8 +123,8 @@ void SceneMain::Draw()
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", m_frameCount);
 
 	const int remainSec = static_cast<int>(std::ceil(m_timer.Remaining()));
-	DrawFormatString(20, 20, GetColor(255, 255, 255), "TIME: %d", remainSec);
-	DrawFormatString(20, 40, GetColor(255, 255, 0), "SCORE: %d", m_score);
-	DrawFormatString(20, 60, GetColor(255, 255, 0), "KILLS: %d", m_killCount);
+	DrawFormatString(20, 50, GetColor(255, 255, 255), "TIME: %d", remainSec);
+	DrawFormatString(20, 70, GetColor(255, 255, 0), "SCORE: %d", m_score);
+	DrawFormatString(20, 90, GetColor(255, 255, 0), "KILLS: %d", m_killCount);
 
 }

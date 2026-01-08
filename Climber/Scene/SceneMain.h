@@ -54,6 +54,7 @@ private:
 	GameTimer m_timer{ 60.0f };//60秒タイマー
 	float m_limitSeconds = 60.0f;//制限時間
 	int m_score = 0;//スコア
+	int m_lastScore = 0;//前回のスコア
 	int m_killCount = 0;//倒した敵の数
 
 	

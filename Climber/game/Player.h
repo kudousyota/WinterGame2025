@@ -39,6 +39,11 @@ virtual~Player();
 	 // 地面フラグ操作
 	 bool IsOnGround() const { return m_onGround; }
 	 void SetOnGround(bool onGround) { m_onGround = onGround; }
+
+	 // 破壊したタイル数の取得
+	 int GetBrokeCount() const { return m_brokeCount; }
+
+
 	 // タイル破壊CollisionManagerから呼ぶ
 	 void TileBroke();
 

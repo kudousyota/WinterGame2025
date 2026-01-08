@@ -31,7 +31,7 @@ public:
 	int GetChipW()const { return m_chipNumW; }
 	int GetChipH()const { return m_chipNumH; }
 
-	
+	int GetTileBrokePoint()const { return m_tileBrokePoint; }
 
 	void SetTileSet(int chipHandle, int chipNumW, int chipNumH);
 	//指定された床を書き換える
@@ -48,6 +48,8 @@ private:
 
 	//表示用のタイルID
 	//std::vector<uint8_t> m_data;
+	//タイル壊した時のポイント
+	int m_tileBrokePoint = 10;
 
 	//描画に必要な情報
 	int m_chipHandle = -1;
