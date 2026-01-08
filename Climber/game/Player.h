@@ -44,10 +44,17 @@ virtual~Player();
 	 bool IsHighJumpUnlock() const { return m_highJumpUnlock; }
 	 // ハイジャンプで速度を与えられているか
 	 bool IsHighJumpNum() const { return m_vel < -20.0f; }
-
+	 // ハイジャンプ処理フラグ（衝突で速度を消さないか判定するために使用）
+	 bool IsHighJumpActive() const { return m_isHighJumpActive; }
+	 void SetHighJumpActive(bool v) { m_isHighJumpActive = v; }
+	 
+	
+	 // ハイジャンプ中フラグ（true の間は衝突で縦速度を消さない）
+	 bool m_isHighJumpActive = false;
 	 // 破壊したタイル数の取得
 	 int GetBrokeCount() const { return m_brokeCount; }
 
+	 
 
 	 // タイル破壊CollisionManagerから呼ぶ
 	 void TileBroke();

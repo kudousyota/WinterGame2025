@@ -34,6 +34,8 @@ m_highJumpUnlock(false),
 m_highJumpPoint(0),
 m_onGround(false),
 m_isLeft(false),
+m_animState(AnimState::Idle),
+m_isHighJumpActive(false),
 m_animRow(0),
 m_frameCount(0)
 
@@ -61,7 +63,6 @@ void Player::Init()
 	m_cutW = 32;
 	m_cutH = 32;
 	m_speed = 2.0f;
-	m_onGround = false;
 	m_highJumpUnlock = false;
 	m_highJumpPoint = 10;
 	m_animState = AnimState::Idle;
@@ -147,33 +148,44 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 		m_switchSpeed = 0;
 		m_cutX = 0;
 		m_cutY = 0;
-		m_highJumpUnlock = false; // ハイジャンプは一度使うと解除
-
+		// ハイジャンプは一度使うと解除
+		m_highJumpUnlock = false; 
+		// ハイジャンプ処理中フラグを立てる
+		m_isHighJumpActive = true; 
 	}
 	
 	//Y座標の更新
 	m_rect.SetY(m_rect.GetY() + m_vel);
 	
 
-	if (!m_onGround) {
-		if (m_vel < 0.0f) {
+	if (!m_onGround) 
+	{
+		if (m_vel < 0.0f)
+		{
 			// 上昇中：ジャンプ行
 			m_animState = AnimState::Jump;
 			m_animRow = 2;
+			
 		}
-		else {
+		else
+		{
 			// 落下中：落下行
 			m_animState = AnimState::Fall;
 			m_animRow = 3;
+			// 上昇中はハイジャンプ処理終了
+			m_isHighJumpActive = false;
 		}
 	}
-	else {
+	else
+	{
 		// 地面にいる
-		if (m_pInput->IsPressed("left") || m_pInput->IsPressed("right")) {
+		if (m_pInput->IsPressed("left") || m_pInput->IsPressed("right"))
+		{
 			m_animState = AnimState::Run;
 			m_animRow = 1;
 		}
-		else {
+		else
+		{
 			m_animState = AnimState::Idle;
 			m_animRow = 0;
 		}

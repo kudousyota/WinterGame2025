@@ -59,20 +59,19 @@ void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::s
 				int ty = static_cast<int>(hitTileRect.GetY() / tileH);
 
 				uint8_t oldId = m_pStage->GetData(tx, ty);
-				if (oldId != 0) 
+				if (oldId != 0)
 				{
 					m_pStage->SetTile(tx, ty, 0);
-					// 下から当たったので縦速度をクリア
-					m_pPlayer->SetVelY(0.0f);
-					//ハイジャンプの場合
-					if (!m_pPlayer->IsHighJumpNum())
+					// 下から当たった際、ハイジャンプ中は縦速度を消さない
+					if (!m_pPlayer->IsHighJumpActive())
 					{
 						m_pPlayer->SetVelY(0.0f);
 					}
-					m_pPlayer->TileBroke();   //ここが解禁カウントのトリガ
+					//ここが解禁カウントのトリガ
+					m_pPlayer->TileBroke();
 				}
 			}
-			// 下から当たった場合は着地にはしない（上方向の衝突）
+			// 下から当たった場合は着地にはしない(上方向の衝突）
 			m_pPlayer->SetOnGround(false);
 		}
 
