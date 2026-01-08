@@ -147,8 +147,10 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 		m_switchSpeed = 0;
 		m_cutX = 0;
 		m_cutY = 0;
+		m_highJumpUnlock = false; // ハイジャンプは一度使うと解除
 
 	}
+	
 	//Y座標の更新
 	m_rect.SetY(m_rect.GetY() + m_vel);
 	
