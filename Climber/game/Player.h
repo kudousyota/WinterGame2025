@@ -40,6 +40,11 @@ virtual~Player();
 	 bool IsOnGround() const { return m_onGround; }
 	 void SetOnGround(bool onGround) { m_onGround = onGround; }
 
+	 // ハイジャンプのフラグ取得
+	 bool IsHighJumpUnlock() const { return m_highJumpUnlock; }
+	 // ハイジャンプで速度を与えられているか
+	 bool IsHighJumpNum() const { return m_vel < -20.0f; }
+
 	 // 破壊したタイル数の取得
 	 int GetBrokeCount() const { return m_brokeCount; }
 

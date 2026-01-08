@@ -118,7 +118,7 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 	//重力
 	m_vel += kGravity;
 	//衝突判定
-	Rect chipRect;
+	//Rect chipRect;
 	// ジャンプ処理（地面にいるときだけ、Input を使用）
 	if (m_pInput->IsTriggered("Jump") && m_onGround)  // "Jump" = Z キー
 	{

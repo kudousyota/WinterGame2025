@@ -59,8 +59,16 @@ void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::s
 				int ty = static_cast<int>(hitTileRect.GetY() / tileH);
 
 				uint8_t oldId = m_pStage->GetData(tx, ty);
-				if (oldId != 0) {
+				if (oldId != 0) 
+				{
 					m_pStage->SetTile(tx, ty, 0);
+					// 下から当たったので縦速度をクリア
+					m_pPlayer->SetVelY(0.0f);
+					//ハイジャンプの場合
+					if (!m_pPlayer->IsHighJumpNum())
+					{
+						m_pPlayer->SetVelY(0.0f);
+					}
 					m_pPlayer->TileBroke();   //ここが解禁カウントのトリガ
 				}
 			}
