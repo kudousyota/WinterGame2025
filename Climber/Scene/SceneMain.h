@@ -10,12 +10,14 @@ class Camera;
 class Bg;
 class Player;
 class EnemyFactory;
+class Enemy;
 class Rabbit;
 class Bat;
 class GameObject;
 class Input;
 class TitleScene;
 class ResultScene;
+class CollisionManager;
 class SceneMain  : public Scene
 {
 public:

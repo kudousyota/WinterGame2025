@@ -21,6 +21,8 @@
 
 SceneMain::SceneMain(SceneContoller& controller):
 Scene(controller),
+m_draw(0),
+m_update(0),
 m_frameCount(0)
 {
 	m_pPlayer	= std::make_shared<Player>();
@@ -74,7 +76,8 @@ void SceneMain::Update(Input& input)
 
 
 	//  衝突チェックを呼ぶ（ここで着地判定・押し出し・タイル破壊を行う）
-	CollisionManager::CheckCollisions(m_pPlayer, m_pRabbit,m_pBat, m_pStage);
+	int scoreDelta = CollisionManager::CheckCollisions(m_pPlayer, m_pRabbit, m_pBat, m_pStage);
+	m_score += scoreDelta; // scoreDelta は負の値で減点になる想定
 	int brokeNow = m_pPlayer->GetBrokeCount();
 	int delta = brokeNow - m_lastScore;
 	if (delta > 0)
@@ -83,6 +86,7 @@ void SceneMain::Update(Input& input)
 		m_score += delta * m_pStage->GetTileBrokePoint();
 		m_lastScore = brokeNow;
 	}
+	
 
 	// カメラ・背景更新（衝突後の位置でカメラを更新するため衝突チェックの後に呼ぶ）
 	m_pCamera->UpdateCamera(m_pCamera,m_pPlayer);

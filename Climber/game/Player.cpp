@@ -37,6 +37,7 @@ m_isLeft(false),
 m_animState(AnimState::Idle),
 m_isHighJumpActive(false),
 m_animRow(0),
+m_invincibleTime(0),
 m_frameCount(0)
 
 {
@@ -75,8 +76,18 @@ void Player::Init()
 	m_RunFrameMax = 12;
 	m_JumpFrameMax = 1;
 	m_FallFrameMax = 1;
+	m_invincibleTime = 0;
 
 
+}
+
+void Player::StartInvincible(int frame)
+{
+	// 無敵時間をフレーム数でセット
+	if (frame <= 0)return;
+	{
+		m_invincibleTime = frame;
+	}
 }
 
 void Player::TileBroke()
@@ -241,6 +252,11 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 		{
 		
 		}
+	}
+	//無敵時間のカウントダウン
+	if (m_invincibleTime > 0)
+	{
+		--m_invincibleTime;
 	}
 
 }

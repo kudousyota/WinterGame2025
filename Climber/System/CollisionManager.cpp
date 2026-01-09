@@ -5,20 +5,26 @@
 #include "Stage.h"
 #include "GameObject.h"
 
-void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::shared_ptr<Rabbit> m_pRabbit, std::shared_ptr<Bat>m_pBat, std::shared_ptr<Stage> m_pStage)
+int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::shared_ptr<Rabbit> m_pRabbit, std::shared_ptr<Bat>m_pBat, std::shared_ptr<Stage> m_pStage)
 {
+	
+
+	int pointDelta = 0;
+
 	// プレイヤーとうさぎの当たり判定をチェック
 	if (m_pPlayer->IsHit(*m_pRabbit))
 	{
 		// FixPosは自身のRectを修正して押し出し量を返すここで位置を二重に加算しない
 		Vec2 push = m_pPlayer->FixPos(*m_pRabbit);
-		// 必要なら push を見て速度を調整する
+		pointDelta -= 10;
+		
 	}
 	// プレイヤーとコウモリの当たり判定をチェック
 	if (m_pPlayer->IsHit(*m_pBat))
 	{
 		// FixPosは自身のRectを修正して押し出し量を返すここで位置を二重に加算しない
 		Vec2 push = m_pPlayer->FixPos(*m_pBat);
+		pointDelta -= 10;
 	}
 
 	// プレイヤーとステージの当たり判定をチェック
@@ -55,6 +61,7 @@ void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::s
 			const int tileH = m_pStage->GetChipH();
 			if (tileW > 0 && tileH > 0)
 			{
+				// 当たったタイルのタイル座標を計算
 				int tx = static_cast<int>(hitTileRect.GetX() / tileW);
 				int ty = static_cast<int>(hitTileRect.GetY() / tileH);
 
@@ -77,7 +84,6 @@ void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::s
 
 		++iter;
 	}
-	// ここで iter==0 なら当たりなしm_onGround は false のまま
 
 	// 敵とステージの当たり判定
 	Rect& enemyRect = m_pRabbit->GetRect();
@@ -152,4 +158,5 @@ void CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::s
 
 		++iter;
 	}
+	return pointDelta;
 }

@@ -48,7 +48,12 @@ virtual~Player();
 	 bool IsHighJumpActive() const { return m_isHighJumpActive; }
 	 void SetHighJumpActive(bool v) { m_isHighJumpActive = v; }
 	 
-	
+	 //無敵時間関連
+	 // 無敵時間の取得
+	 void StartInvincible(int frame = 60);
+	 bool Isinvincible() const { return m_invincibleTime > 0; }
+	 int GetInvincibleTime() const { return m_invincibleTime; }
+
 	 // ハイジャンプ中フラグ（true の間は衝突で縦速度を消さない）
 	 bool m_isHighJumpActive = false;
 	 // 破壊したタイル数の取得
@@ -99,6 +104,10 @@ private:
 	//破壊した数
 	int m_brokeCount;
 
+	bool m_onGround = false;
+
+	//無敵時間
+	int m_invincibleTime;
 
 
 	float m_x;
@@ -116,8 +125,6 @@ private:
 	std::shared_ptr<CollisionManager> m_pCollision;
 	std::shared_ptr<Input> m_pInput;
 	std::shared_ptr<Rabbit>m_pRabbit;
-
-	bool m_onGround = false;
 
 	////拡大率
 	//float m_scaleX;
