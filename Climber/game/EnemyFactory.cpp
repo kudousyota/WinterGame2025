@@ -12,7 +12,7 @@ EnemyFactory::EnemyFactory(std::shared_ptr<EnemyFactory> ef)
 	:m_pEnemyFactory(ef)
 {
 	m_handles.push_back(LoadGraph("data/Enemy.png"));
-	m_handles.push_back(LoadGraph("data/EnemyTwo.png"));
+	m_handles.push_back(LoadGraph("data/Bat.png"));
 }
 EnemyFactory::~EnemyFactory()
 {
@@ -33,14 +33,19 @@ std::shared_ptr<Character> EnemyFactory::Create(int idxX, int idxY, EnemyType en
 	switch (enemyType)
 	{
 	case EnemyType::usagi:
-		m_enemyList.push_back(std::make_shared<Rabbit>(m_handles[(int)EnemyType::usagi], pos));
+		m_enemyList.push_back(std::make_shared<Rabbit>(
+			m_handles[(int)EnemyType::usagi],
+			pos));
 		return m_enemyList.back();
 	case EnemyType::bat:
-		m_enemyList.push_back(std::make_shared<Bat>(m_handles[(int)EnemyType::bat], pos));
+		m_enemyList.push_back(std::make_shared<Bat>(
+			m_handles[(int)EnemyType::bat],
+			pos));
 		return m_enemyList.back();
 	default:
 		return nullptr;
 	}
+	return nullptr;
 }
 
 std::list<std::shared_ptr<Character>>& EnemyFactory::GetEnemyList()

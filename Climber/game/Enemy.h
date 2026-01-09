@@ -3,7 +3,7 @@
 #include <memory>
 #include"Geometry.h"
 
-class Enemy
+class Enemy:public Actor
 {
 public:
 	Enemy(const Position2& pos,	// “G‚Ì‰ŠúÀ•W

@@ -9,6 +9,7 @@ class Rect;
 class Camera;
 class Bg;
 class Player;
+class EnemyFactory;
 class Rabbit;
 class Bat;
 class GameObject;
@@ -40,6 +41,7 @@ private:
 	std::shared_ptr<Bg>     m_pBg;
 	std::shared_ptr<TitleScene> m_pTitleScene;
 	std::shared_ptr<ResultScene>m_pResultScene;
+	std::shared_ptr<EnemyFactory>m_pEnemyFactory;
 
 	void FadeInUpdate(Input&);
 	void NormalUpdate(Input& input);

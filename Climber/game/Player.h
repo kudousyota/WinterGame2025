@@ -115,6 +115,7 @@ private:
 	std::shared_ptr<Camera> m_pCamera;
 	std::shared_ptr<CollisionManager> m_pCollision;
 	std::shared_ptr<Input> m_pInput;
+	std::shared_ptr<Rabbit>m_pRabbit;
 
 	bool m_onGround = false;
 

@@ -18,7 +18,7 @@ Rabbit::Rabbit() :
 	m_cutH(0),
 	m_switchSpeed(0.0f),
 	m_pos(0, 0),
-	m_isLeft(false),
+	isLeft(false),
 	m_speed(0),
 	m_frameCount(0),
 	m_ownsHandle(true)
@@ -38,10 +38,11 @@ Rabbit::Rabbit(int handle, const Position2& pos) :
 	m_cutH(0),
 	m_switchSpeed(0.0f),
 	m_pos(pos.x, pos.y),
-	m_isLeft(false),
+	isLeft(false),
 	m_speed(0),
 	m_frameCount(0),
-	m_ownsHandle(false)
+	m_ownsHandle(false),
+	IsDead(true)
 {
 	// Factory ‚©‚ç“n‚³‚ê‚½ƒnƒ“ƒhƒ‹‚Í©•ª‚Åíœ‚µ‚È‚¢
 	m_pCamera = std::make_shared<Camera>();
@@ -119,7 +120,7 @@ void Rabbit::Draw(const Camera& camera)
 		0.0f,                        // ‰ñ“]Šp“x
 		m_Handle,                    // ‰æ‘œƒnƒ“ƒhƒ‹
 		true,                         // “§‰ß‚ ‚è
-		m_isLeft					  // ¶‰E”½“]
+		isLeft					  // ¶‰E”½“]
 	);
 
 
@@ -138,6 +139,6 @@ void Rabbit::Draw(const Camera& camera)
 bool Rabbit::isHit(const Player& player)
 {
 	//‚±‚±‚É“–‚½‚Á‚½‚Ìˆ—
-
+	IsDead = false;
 	return m_rect.IsHit(player.GetRect());
 }

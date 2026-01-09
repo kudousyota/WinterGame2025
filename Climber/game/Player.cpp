@@ -47,6 +47,7 @@ m_frameCount(0)
 	m_RunHandle = LoadGraph("data/RunPlayer.png");
 	m_pCamera = std::make_shared<Camera>();
 	m_pInput = std::make_shared<Input>();
+	m_pRabbit = std::make_shared<Rabbit>();
 	
 }
 
@@ -236,10 +237,10 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 		// 敵との衝突では速度は変更しない（CollisionManager で地面判定が有効化されるから）
 		
 		//ジャンプ解放されてるとき敵倒せるようにする
-		/*if (m_highJumpUnlock)
+		if (m_highJumpUnlock)
 		{
-
-		}*/
+		
+		}
 	}
 
 }

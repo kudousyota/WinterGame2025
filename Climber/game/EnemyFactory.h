@@ -28,6 +28,7 @@ public:
 	void Update();
 	void Draw();
 private:
+	//あらかじめ敵の表示に必要な画像ハンドルをロードして保持しておく
 	std::vector<int> m_handles;
 	std::shared_ptr<EnemyFactory>m_pEnemyFactory;
 	std::list<std::shared_ptr<Character>>m_enemyList;

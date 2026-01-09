@@ -6,6 +6,7 @@
 #include "Rect.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "EnemyFactory.h"
 #include "Rabbit.h"
 #include "Bat.h"
 #include "Stage.h"
@@ -32,8 +33,9 @@ m_frameCount(0)
 	m_pStageTwo = std::make_shared<Stage>();
 	m_pTitleScene = std::make_shared<TitleScene>(m_controller);
 	m_pResultScene = std::make_shared<ResultScene>(m_controller);
+	//m_pEnemyFactory = std::make_shared<EnemyFactory>();
 
-	//指定した秒数でリセット
+	//指定した秒数で終了
 	m_timer.Reset(100.0f);
 	m_score = 0;
 	m_killCount = 0;
@@ -53,7 +55,7 @@ void SceneMain::Init()
 	m_pBat->Init();
 	int chipHandle = LoadGraph("data/mapChip1.png");
 	assert(chipHandle > 0);
-	int SchipHandle = LoadGraph("data/mapChip1.png");
+	int SchipHandle = LoadGraph("data/Enemy.png");
 	assert(SchipHandle > 0);
 	//タイルセットの設定
 	//小さすぎたから1チップ32x32で設定
@@ -68,6 +70,8 @@ void SceneMain::Update(Input& input)
 	m_pPlayer->Update(*m_pRabbit,*m_pRect,*m_pBg);
 	m_pRabbit->Update(*m_pPlayer);
 	m_pBat->Update(*m_pPlayer);
+	//m_pEnemyFactory->Update();
+
 
 	//  衝突チェックを呼ぶ（ここで着地判定・押し出し・タイル破壊を行う）
 	CollisionManager::CheckCollisions(m_pPlayer, m_pRabbit,m_pBat, m_pStage);
@@ -109,7 +113,12 @@ void SceneMain::Draw()
 	m_pPlayer->Draw(*m_pCamera);
 	m_pRabbit->Draw(*m_pCamera);
 	m_pBat->Draw(*m_pCamera);
+	//m_pEnemyFactory->Draw();
 	//m_pTitleScene->Draw();
+	
+	constexpr int Rabbit = 1;
+
+
 	//ロードしたステージデータの描画
 	auto mapSize = m_pStage->MapSize();
 	const auto& mapData = m_pStage->GetAllData();

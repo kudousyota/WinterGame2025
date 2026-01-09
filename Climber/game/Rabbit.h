@@ -34,8 +34,8 @@ public:
 	{
 		m_speed = speed;
 		// 速度の符号で向きフラグを更新（0 のときは現状維持）
-		if (speed < 0.0f) m_isLeft = false;
-		else if (speed > 0.0f) m_isLeft = true;
+		if (speed < 0.0f) isLeft = false;
+		else if (speed > 0.0f) isLeft = true;
 	}
 
 	// 地面フラグ操作
@@ -57,11 +57,12 @@ private:
 	int m_speed;
 	float m_frameCount;
 	float m_switchSpeed;
-	bool m_isLeft;
+	bool isLeft;
 	bool IsonGround = false;
 
 
 	bool isHit(const Player& player);
+	bool IsDead;
 
 	std::shared_ptr<Camera>m_pCamera;
 
