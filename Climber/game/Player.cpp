@@ -234,6 +234,12 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 		m_rect.SetX(m_rect.GetX() + push.x);
 		m_rect.SetY(m_rect.GetY() + push.y);
 		// 敵との衝突では速度は変更しない（CollisionManager で地面判定が有効化されるから）
+		
+		//ジャンプ解放されてるとき敵倒せるようにする
+		/*if (m_highJumpUnlock)
+		{
+
+		}*/
 	}
 
 }

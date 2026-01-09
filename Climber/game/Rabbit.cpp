@@ -11,6 +11,7 @@ namespace
 Rabbit::Rabbit() :
 	m_vel(0.0f),
 	m_Handle(-1),
+	m_RunHandle(-1),
 	m_cutX(0),
 	m_cutY(0),
 	m_cutW(0),
@@ -24,6 +25,7 @@ Rabbit::Rabbit() :
 {
 	// 自前で生成する場合は自身でロード・所有
 	m_Handle = LoadGraph("data/Enemy.png");
+	m_RunHandle = LoadGraph("data/EnemyRun.png");
 	m_pCamera = std::make_shared<Camera>();
 }
 

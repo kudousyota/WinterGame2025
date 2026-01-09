@@ -48,6 +48,7 @@ private:
 
 	float m_vel;
 	int m_Handle;
+	int m_RunHandle;
 
 	int m_cutX;
 	int m_cutY;
