@@ -32,6 +32,7 @@ Rabbit::Rabbit() :
 Rabbit::Rabbit(int handle, const Position2& pos) :
 	m_vel(0.0f),
 	m_Handle(handle),
+	m_RunHandle(-1),
 	m_cutX(0),
 	m_cutY(0),
 	m_cutW(0),

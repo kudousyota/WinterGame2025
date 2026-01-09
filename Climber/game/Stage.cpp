@@ -39,16 +39,15 @@ void Stage::Load(int stageNo)
 {
 	//ファイル名を入れる変数
 	char filePath[32];
-	char filePathTwo[32];
+	//char filePathTwo[32];
 	//filepathに第二引数で作られた文字列を入れる
 	sprintf_s(filePath, "data/stage%d.fmf", stageNo);
-	sprintf_s(filePathTwo, "data/stage%d.fmf", stageNo);
+	//sprintf_s(filePathTwo, "data/stage%d.fmf", stageNo);
 	//filePathに保存されたファイル名のファイルを開き、そのハンドルに取得
 	auto handle = FileRead_open(filePath);
-	auto handleTwo = FileRead_open(filePathTwo);
+	//auto handleTwo = FileRead_open(filePathTwo);
 	if (handle <= 0)
 	{
-		//OutputDebugString("Stage::Load - Failed to open FMF file\n");
 		assert(handle > 0);
 		return;
 	}
@@ -60,7 +59,6 @@ void Stage::Load(int stageNo)
 	// ヘッダ簡易検査
 	if (header.width == 0 || header.height == 0)
 	{
-		OutputDebugString("Stage::Load - Invalid header width/height\n");
 		FileRead_close(handle);
 		return;
 	}
@@ -83,7 +81,7 @@ void Stage::Load(int stageNo)
 	// 生データのサイズが期待と合わない場合は警告して早期終了
 	if (rawData.size() < expectedCount)
 	{
-		OutputDebugString("Stage::Load - FMF data length mismatch\n");
+	
 		FileRead_close(handle);
 		return;
 	}
@@ -104,7 +102,6 @@ void Stage::Load(int stageNo)
 	}
 	// ファイルを閉じる
 	FileRead_close(handle);
-	OutputDebugString("Stage::Load - FMF loaded successfully\n");
 }
 // マップサイズ取得
 Size Stage::MapSize() const
@@ -181,7 +178,6 @@ void Stage::SetTileSet(int chipHandle, int chipNumW, int chipNumH)
 	m_chipHandle = chipHandle;
 	if (chipNumW > 0) m_chipNumW = chipNumW;   
 	if (chipNumH > 0) m_chipNumH = chipNumH;
-	OutputDebugString("Stage::SetTileSet called\n");
 }
 
 void Stage::Draw(const Camera& camera, int originX, int originY) const

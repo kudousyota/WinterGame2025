@@ -103,7 +103,7 @@ private:
 	int m_highJumpPoint;
 	//”j‰ó‚µ‚½”
 	int m_brokeCount;
-
+	//’n–Ê‚É‚¢‚é‚©‚Ç‚¤‚©
 	bool m_onGround = false;
 
 	//–³“GŠÔ

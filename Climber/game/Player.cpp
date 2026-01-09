@@ -59,7 +59,7 @@ Player::~Player()
 void Player::Init()
 {
 	//当たり判定用の矩形を初期化//位置とサイズを指定
-	m_rect.Init(250.0f, 3000.0f, 30.0f, 30.0f);
+	m_rect.Init(250.0f, 159800.0f, 30.0f, 30.0f);
 	m_vel = 0.0f;
 	//アニメーション初期化
 	m_cutW = 32;

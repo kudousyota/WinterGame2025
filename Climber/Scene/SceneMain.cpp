@@ -38,7 +38,7 @@ m_frameCount(0)
 	//m_pEnemyFactory = std::make_shared<EnemyFactory>();
 
 	//指定した秒数で終了
-	m_timer.Reset(100.0f);
+	m_timer.Reset(10.0f);
 	m_score = 0;
 	m_killCount = 0;
 	//ステージをロード
@@ -86,7 +86,10 @@ void SceneMain::Update(Input& input)
 		m_score += delta * m_pStage->GetTileBrokePoint();
 		m_lastScore = brokeNow;
 	}
-	
+	if (m_score < 0)
+	{
+		m_score = 0;
+	}
 
 	// カメラ・背景更新（衝突後の位置でカメラを更新するため衝突チェックの後に呼ぶ）
 	m_pCamera->UpdateCamera(m_pCamera,m_pPlayer);

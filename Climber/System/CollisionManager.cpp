@@ -8,23 +8,29 @@
 int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::shared_ptr<Rabbit> m_pRabbit, std::shared_ptr<Bat>m_pBat, std::shared_ptr<Stage> m_pStage)
 {
 	
-
 	int pointDelta = 0;
 
 	// プレイヤーとうさぎの当たり判定をチェック
 	if (m_pPlayer->IsHit(*m_pRabbit))
 	{
-		// FixPosは自身のRectを修正して押し出し量を返すここで位置を二重に加算しない
+		// 押し出し
 		Vec2 push = m_pPlayer->FixPos(*m_pRabbit);
-		pointDelta -= 10;
-		
+		// 無敵でなければ減点して無敵時間を開始
+		if (!m_pPlayer->Isinvincible())
+		{
+			pointDelta -= 10;
+			m_pPlayer->StartInvincible(60); // 60フレーム無敵
+		}
 	}
 	// プレイヤーとコウモリの当たり判定をチェック
 	if (m_pPlayer->IsHit(*m_pBat))
 	{
-		// FixPosは自身のRectを修正して押し出し量を返すここで位置を二重に加算しない
 		Vec2 push = m_pPlayer->FixPos(*m_pBat);
-		pointDelta -= 10;
+		if (!m_pPlayer->Isinvincible())
+		{
+			pointDelta -= 10;
+			m_pPlayer->StartInvincible(60);
+		}
 	}
 
 	// プレイヤーとステージの当たり判定をチェック
