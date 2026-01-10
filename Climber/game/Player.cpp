@@ -49,6 +49,7 @@ m_frameCount(0)
 	m_pCamera = std::make_shared<Camera>();
 	m_pInput = std::make_shared<Input>();
 	m_pRabbit = std::make_shared<Rabbit>();
+	m_pEnemy = nullptr;
 	
 }
 
@@ -250,7 +251,7 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 		//ジャンプ解放されてるとき敵倒せるようにする
 		if (m_highJumpUnlock)
 		{
-		
+			m_pEnemy->OnDead();
 		}
 	}
 	//無敵時間のカウントダウン

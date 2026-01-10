@@ -6,6 +6,7 @@
 class Bg;
 class Camera;
 class Rabbit;
+class Enemy;
 class CollisionManager;
 class Input;
 class Player : public Character
@@ -125,6 +126,7 @@ private:
 	std::shared_ptr<CollisionManager> m_pCollision;
 	std::shared_ptr<Input> m_pInput;
 	std::shared_ptr<Rabbit>m_pRabbit;
+	std::shared_ptr<Enemy>m_pEnemy;
 
 	////Šg‘å—¦
 	//float m_scaleX;

@@ -43,6 +43,8 @@ public:
 	bool IsOnGround() const { return IsonGround; }
 	void SetOnGround(bool onGround) { IsonGround = onGround; }
 
+	void OnDead() { IsDead = true; }
+	bool IsDead;
 private:
 	Vec2 m_pos;
 

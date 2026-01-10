@@ -7,29 +7,56 @@
 
 int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::shared_ptr<Rabbit> m_pRabbit, std::shared_ptr<Bat>m_pBat, std::shared_ptr<Stage> m_pStage)
 {
-	
 	int pointDelta = 0;
 
-	// プレイヤーとうさぎの当たり判定をチェック
-	if (m_pPlayer->IsHit(*m_pRabbit))
+	// プレイヤーとうさぎの当たり判定
+	if (m_pRabbit && m_pPlayer->IsHit(*m_pRabbit))
 	{
 		// 押し出し
 		Vec2 push = m_pPlayer->FixPos(*m_pRabbit);
-		// 無敵でなければ減点して無敵時間を開始
-		if (!m_pPlayer->Isinvincible())
+
+		// 敵がまだ生きているなら処理
+		if (!m_pRabbit->IsDead)
 		{
-			pointDelta -= 10;
-			m_pPlayer->StartInvincible(60); // 60フレーム無敵
+			// ハイジャンプが解放されているときのみ敵を倒す
+			if (m_pPlayer->IsHighJumpUnlock())
+			{
+				m_pRabbit->OnDead();
+				// 倒したときの加点（必要なら値を変更）
+				pointDelta += 50;
+			}
+			else
+			{
+				// ハイジャンプ未解放 -> 被弾扱い（無敵でなければ減点して無敵を開始）
+				if (!m_pPlayer->Isinvincible())
+				{
+					pointDelta -= 10;
+					m_pPlayer->StartInvincible(60); // 60フレーム無敵
+				}
+			}
 		}
 	}
+
 	// プレイヤーとコウモリの当たり判定をチェック
-	if (m_pPlayer->IsHit(*m_pBat))
+	if (m_pBat && m_pPlayer->IsHit(*m_pBat))
 	{
 		Vec2 push = m_pPlayer->FixPos(*m_pBat);
-		if (!m_pPlayer->Isinvincible())
+
+		if (!m_pBat->IsDead)
 		{
-			pointDelta -= 10;
-			m_pPlayer->StartInvincible(60);
+			if (m_pPlayer->IsHighJumpUnlock())
+			{
+				m_pBat->OnDead();
+				pointDelta += 50;
+			}
+			else
+			{
+				if (!m_pPlayer->Isinvincible())
+				{
+					pointDelta -= 10;
+					m_pPlayer->StartInvincible(60);
+				}
+			}
 		}
 	}
 
