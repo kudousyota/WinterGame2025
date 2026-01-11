@@ -18,9 +18,10 @@ Rabbit::Rabbit() :
 	m_cutH(0),
 	m_switchSpeed(0.0f),
 	m_pos(0, 0),
-	isLeft(false),
 	m_speed(0),
 	m_frameCount(0),
+	IsDead(false),
+	isLeft(false),
 	m_ownsHandle(true)
 {
 	// 自前で生成する場合は自身でロード・所有
@@ -43,7 +44,7 @@ Rabbit::Rabbit(int handle, const Position2& pos) :
 	m_speed(0),
 	m_frameCount(0),
 	m_ownsHandle(false),
-	IsDead(true)
+	IsDead(false)
 {
 	// Factory から渡されたハンドルは自分で削除しない
 	m_pCamera = std::make_shared<Camera>();

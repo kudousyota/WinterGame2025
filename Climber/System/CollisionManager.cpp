@@ -12,7 +12,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::sh
 	// プレイヤーとうさぎの当たり判定
 	if (m_pRabbit && m_pPlayer->IsHit(*m_pRabbit))
 	{
-		// 押し出し
+		// 押し出し（AABB 補正）
 		Vec2 push = m_pPlayer->FixPos(*m_pRabbit);
 
 		// 敵がまだ生きているなら処理
@@ -31,7 +31,32 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::sh
 				if (!m_pPlayer->Isinvincible())
 				{
 					pointDelta -= 10;
+					// 無敵開始
 					m_pPlayer->StartInvincible(60); // 60フレーム無敵
+
+					// ノックバック処理
+					// 方向はプレイヤーと敵の相対位置で決定（プレイヤーが左なら左へ押し戻す）
+					const float knockbackX = 32.0f; // 水平方向の瞬間押し戻し量（ピクセル）
+					const float knockbackY = -8.0f; // 上向きの速度
+					Rect& playerRect = m_pPlayer->GetRect();
+					Rect& enemyRect = m_pRabbit->GetRect();
+
+					if (playerRect.GetX() < enemyRect.GetX())
+					{
+						// プレイヤーが敵の左側 -> 左へ押す
+						playerRect.SetX(playerRect.GetX() - knockbackX);
+					}
+					else
+					{
+						// 右側 -> 右へ押す
+						playerRect.SetX(playerRect.GetX() + knockbackX);
+					}
+
+					// 上向きの速度を与える（ジャンプ方向）
+					m_pPlayer->SetVelY(knockbackY);
+
+					// 接地フラグ解除
+					m_pPlayer->SetOnGround(false);
 				}
 			}
 		}
@@ -55,6 +80,24 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::sh
 				{
 					pointDelta -= 10;
 					m_pPlayer->StartInvincible(60);
+
+					// ノックバック（Bat）
+					const float knockbackX = 32.0f;
+					const float knockbackY = -8.0f;
+					Rect& playerRect = m_pPlayer->GetRect();
+					Rect& batRect = m_pBat->GetRect();
+
+					if (playerRect.GetX() < batRect.GetX())
+					{
+						playerRect.SetX(playerRect.GetX() - knockbackX);
+					}
+					else
+					{
+						playerRect.SetX(playerRect.GetX() + knockbackX);
+					}
+
+					m_pPlayer->SetVelY(knockbackY);
+					m_pPlayer->SetOnGround(false);
 				}
 			}
 		}

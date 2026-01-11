@@ -240,20 +240,20 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 	m_cutY = 0;
 	m_cutX = m_switchSpeed * m_cutW;
 
-	// 敵との衝突判定（押し出しのみ、速度は触らない）
-	if (m_rect.IsHit(enemy.GetRect()))
-	{
-		Vec2 push = m_rect.FixPos(enemy.GetRect());
-		m_rect.SetX(m_rect.GetX() + push.x);
-		m_rect.SetY(m_rect.GetY() + push.y);
-		// 敵との衝突では速度は変更しない（CollisionManager で地面判定が有効化されるから）
-		
-		//ジャンプ解放されてるとき敵倒せるようにする
-		if (m_highJumpUnlock)
-		{
-			m_pEnemy->OnDead();
-		}
-	}
+	//// 敵との衝突判定（押し出しのみ、速度は触らない）
+	//if (m_rect.IsHit(enemy.GetRect()))
+	//{
+	//	Vec2 push = m_rect.FixPos(enemy.GetRect());
+	//	m_rect.SetX(m_rect.GetX() + push.x);
+	//	m_rect.SetY(m_rect.GetY() + push.y);
+	//	// 敵との衝突では速度は変更しない（CollisionManager で地面判定が有効化されるから）
+	//	
+	//	//ジャンプ解放されてるとき敵倒せるようにする
+	//	if (m_highJumpUnlock)
+	//	{
+	//		m_pEnemy->OnDead();
+	//	}
+	//}
 	//無敵時間のカウントダウン
 	if (m_invincibleTime > 0)
 	{

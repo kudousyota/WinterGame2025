@@ -35,6 +35,7 @@ Bat::Bat(int handle, const Position2& pos) :
 	m_isLeft(false),
 	m_speed(0),
 	m_frameCount(0),
+	IsDead(false),
 	m_ownsHandle(false)
 {
 	m_pCamera = std::make_shared<Camera>();
