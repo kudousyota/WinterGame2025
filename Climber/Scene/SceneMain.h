@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include "Scene.h"
-#include "GameTimer.h"
+#include "../System/GameTimer.h"
 //#include "Geometry.h"
 
 class Stage;

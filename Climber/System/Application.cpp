@@ -5,8 +5,8 @@
 #include "SceneContoller.h"
 #include "TitleScene.h"
 
-constexpr int default_window_width = 640;	// デフォルトウィンドウ幅
-constexpr int default_window_height = 480;	// デフォルトウィンドウ高
+constexpr int default_window_width = 1280;	// デフォルトウィンドウ幅
+constexpr int default_window_height = 720;	// デフォルトウィンドウ高
 constexpr int default_color_bit = 32;	// デフォルトカラービット
 
 Application::Application() :

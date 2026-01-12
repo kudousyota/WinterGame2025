@@ -1,8 +1,8 @@
 #pragma once
 #include "Character.h"
-#include "Vec2.h"
+#include "../System/Vec2.h"
 #include <memory>
-#include "Geometry.h"
+#include "../System/Geometry.h"
 
 class Camera;
 class Player;
@@ -35,8 +35,8 @@ public:
 	{
 		m_speed = speed;
 		// 速度の符号で向きフラグを更新（0 のときは現状維持）
-		if (speed < 0.0f) m_isLeft = false;
-		else if (speed > 0.0f) m_isLeft = true;
+		if (speed < 0.0f) IsLeft = false;
+		else if (speed > 0.0f) IsLeft = true;
 	}
 
 	// 地面フラグ操作
@@ -58,7 +58,7 @@ private:
 	int m_speed;
 	float m_frameCount;
 	float m_switchSpeed;
-	bool m_isLeft;
+	bool IsLeft;
 	bool IsonGround = false;
 
 

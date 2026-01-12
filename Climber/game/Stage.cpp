@@ -1,8 +1,8 @@
 ﻿#include "Stage.h"
 #include <algorithm> //listとか色々ギュッとしてある
 #include "DxLib.h"
-#include "Camera.h"
-#include "Game.h"
+#include "../System/Camera.h"
+#include "../System/Game.h"
 #include <cmath>
 #include <cassert>
 

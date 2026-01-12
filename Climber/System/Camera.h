@@ -1,5 +1,5 @@
 #pragma once
-#include "Player.h"
+#include "../game/Player.h"
 #include <memory>
 
 class Player;

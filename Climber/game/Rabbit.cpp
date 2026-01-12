@@ -1,6 +1,6 @@
 #include "Rabbit.h"
 #include "Dxlib.h"
-#include "Camera.h"
+#include "../System/Camera.h"
 #include "Player.h"
 namespace
 {

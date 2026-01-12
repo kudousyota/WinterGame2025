@@ -5,6 +5,11 @@
 #include "Stage.h"
 #include "GameObject.h"
 
+namespace
+{
+	constexpr int knockbackPpwerX = 40;
+	constexpr int knockbackPpwerY = -5;
+}
 int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::shared_ptr<Rabbit> m_pRabbit, std::shared_ptr<Bat>m_pBat, std::shared_ptr<Stage> m_pStage)
 {
 	int pointDelta = 0;
@@ -27,7 +32,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::sh
 			}
 			else
 			{
-				// ハイジャンプ未解放 -> 被弾扱い（無敵でなければ減点して無敵を開始）
+				// ハイジャンプ未解放被弾扱い無敵でなければ減点して無敵を開始
 				if (!m_pPlayer->Isinvincible())
 				{
 					pointDelta -= 10;
@@ -36,8 +41,8 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::sh
 
 					// ノックバック処理
 					// 方向はプレイヤーと敵の相対位置で決定（プレイヤーが左なら左へ押し戻す）
-					const float knockbackX = 32.0f; // 水平方向の瞬間押し戻し量（ピクセル）
-					const float knockbackY = -8.0f; // 上向きの速度
+					const float knockbackX = knockbackPpwerX; // 水平方向の瞬間押し戻し量（ピクセル）
+					const float knockbackY = knockbackPpwerY; // 上向きの速度
 					Rect& playerRect = m_pPlayer->GetRect();
 					Rect& enemyRect = m_pRabbit->GetRect();
 
@@ -45,11 +50,13 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::sh
 					{
 						// プレイヤーが敵の左側 -> 左へ押す
 						playerRect.SetX(playerRect.GetX() - knockbackX);
+						playerRect.SetY(playerRect.GetY() + knockbackY);
 					}
 					else
 					{
-						// 右側 -> 右へ押す
+						// 右側
 						playerRect.SetX(playerRect.GetX() + knockbackX);
+						playerRect.SetY(playerRect.GetY() + knockbackY);
 					}
 
 					// 上向きの速度を与える（ジャンプ方向）
@@ -82,8 +89,8 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::sh
 					m_pPlayer->StartInvincible(60);
 
 					// ノックバック（Bat）
-					const float knockbackX = 32.0f;
-					const float knockbackY = -8.0f;
+					const float knockbackX = knockbackPpwerX;
+					const float knockbackY = knockbackPpwerY;
 					Rect& playerRect = m_pPlayer->GetRect();
 					Rect& batRect = m_pBat->GetRect();
 

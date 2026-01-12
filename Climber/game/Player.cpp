@@ -1,44 +1,44 @@
 #include "Player.h"
 #include "DxLib.h"
-#include "Camera.h"
+#include "../System/Camera.h"
 #include "Enemy.h"
 #include "Rabbit.h"
-#include "Input.h"
+#include "../System/Input.h"
 
 namespace
 {
-	constexpr float  kJumpPower		= 12.0f;
+	constexpr float  kJumpPower = 12.0f;
 	constexpr float  kHighJumpPower = 20.0f;
 	constexpr float  kGravity = 0.3f;
 }
-Player::Player():
-m_speed(0.0f),
-m_vel(0.0f),
-m_IdleHandle(-1),
-m_JumpHandle(-1),
-m_FallHandle(-1),
-m_RunHandle(-1),
-m_IdleFrameMax(0),
-m_RunFrameMax(0),
-m_JumpFrameMax(0),
-m_FallFrameMax(0),
-m_cutX(0),
-m_cutY(0),
-m_cutW(0),
-m_cutH(0),
-m_switchSpeed(0.0f),
-m_pos(0,0),
-m_x(0),
-m_brokeCount(0),
-m_highJumpUnlock(false),
-m_highJumpPoint(0),
-m_onGround(false),
-m_isLeft(false),
-m_animState(AnimState::Idle),
-m_isHighJumpActive(false),
-m_animRow(0),
-m_invincibleTime(0),
-m_frameCount(0)
+Player::Player() :
+	m_speed(0.0f),
+	m_vel(0.0f),
+	m_IdleHandle(-1),
+	m_JumpHandle(-1),
+	m_FallHandle(-1),
+	m_RunHandle(-1),
+	m_IdleFrameMax(0),
+	m_RunFrameMax(0),
+	m_JumpFrameMax(0),
+	m_FallFrameMax(0),
+	m_cutX(0),
+	m_cutY(0),
+	m_cutW(0),
+	m_cutH(0),
+	m_switchSpeed(0.0f),
+	m_pos(0, 0),
+	m_x(0),
+	m_brokeCount(0),
+	m_highJumpUnlock(false),
+	m_highJumpPoint(0),
+	m_onGround(false),
+	IsLeft(false),
+	m_animState(AnimState::Idle),
+	m_isHighJumpActive(false),
+	m_animRow(0),
+	m_invincibleTime(0),
+	m_frameCount(0)
 
 {
 	//画像の読み込み
@@ -46,11 +46,12 @@ m_frameCount(0)
 	m_JumpHandle = LoadGraph("data/JumpPlayer.png");
 	m_FallHandle = LoadGraph("data/FallPlayer.png");
 	m_RunHandle = LoadGraph("data/RunPlayer.png");
+	m_HitHandle = LoadGraph("data/HitPlayer.png");
 	m_pCamera = std::make_shared<Camera>();
 	m_pInput = std::make_shared<Input>();
 	m_pRabbit = std::make_shared<Rabbit>();
 	m_pEnemy = nullptr;
-	
+
 }
 
 Player::~Player()
@@ -101,7 +102,7 @@ void Player::TileBroke()
 }
 
 
-void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
+void Player::Update(const Rabbit& enemy, Rect& other, const Bg& bg)
 {
 	//中心座標から上下左右の座標を計算
 	const float halfW = m_rect.GetW() * 0.5f;
@@ -115,18 +116,18 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 	m_pInput->Update();
 
 	m_pos = { m_rect.GetX(), m_rect.GetY() };
-	
+
 
 	// 左右移動（Input を使用）
 	if (m_pInput->IsPressed("left"))
 	{
 		m_rect.SetX(m_rect.GetX() - m_speed);
-		m_isLeft = true;
+		IsLeft = true;
 	}
 	if (m_pInput->IsPressed("right"))
 	{
 		m_rect.SetX(m_rect.GetX() + m_speed);
-		m_isLeft = false;
+		IsLeft = false;
 	}
 
 	//重力
@@ -162,23 +163,23 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 		m_cutX = 0;
 		m_cutY = 0;
 		// ハイジャンプは一度使うと解除
-		m_highJumpUnlock = false; 
+		m_highJumpUnlock = false;
 		// ハイジャンプ処理中フラグを立てる
-		m_isHighJumpActive = true; 
+		m_isHighJumpActive = true;
 	}
-	
+
 	//Y座標の更新
 	m_rect.SetY(m_rect.GetY() + m_vel);
-	
 
-	if (!m_onGround) 
+
+	if (!m_onGround)
 	{
 		if (m_vel < 0.0f)
 		{
 			// 上昇中：ジャンプ行
 			m_animState = AnimState::Jump;
 			m_animRow = 2;
-			
+
 		}
 		else
 		{
@@ -211,7 +212,7 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 	{
 		m_frameCount = 0;
 		// アニメーションのフレームを進める
-		switch (m_animState) 
+		switch (m_animState)
 		{
 			//待機
 		case AnimState::Idle:
@@ -233,6 +234,10 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 			// 落下が1枚絵だから常に0
 			m_switchSpeed = 0;
 			break;
+		case AnimState::Hit:
+			m_switchSpeed = 3;
+			break;
+
 		}
 	}
 
@@ -240,20 +245,6 @@ void Player::Update(const Rabbit& enemy, Rect& other,const Bg& bg)
 	m_cutY = 0;
 	m_cutX = m_switchSpeed * m_cutW;
 
-	//// 敵との衝突判定（押し出しのみ、速度は触らない）
-	//if (m_rect.IsHit(enemy.GetRect()))
-	//{
-	//	Vec2 push = m_rect.FixPos(enemy.GetRect());
-	//	m_rect.SetX(m_rect.GetX() + push.x);
-	//	m_rect.SetY(m_rect.GetY() + push.y);
-	//	// 敵との衝突では速度は変更しない（CollisionManager で地面判定が有効化されるから）
-	//	
-	//	//ジャンプ解放されてるとき敵倒せるようにする
-	//	if (m_highJumpUnlock)
-	//	{
-	//		m_pEnemy->OnDead();
-	//	}
-	//}
 	//無敵時間のカウントダウン
 	if (m_invincibleTime > 0)
 	{
@@ -273,21 +264,41 @@ void Player::Draw(const Camera& camera)
 	const int halfW = static_cast<int>(m_rect.GetW() * 0.5f);
 	const int halfH = static_cast<int>(m_rect.GetH() * 0.5f);
 
-	const int left   = centerX - halfW;
-	const int right  = centerX + halfW;
-	const int Top    = centerY - halfH;
+	const int left = centerX - halfW;
+	const int right = centerX + halfW;
+	const int Top = centerY - halfH;
 	const int Bottom = centerY + halfH;
 
 	//描画する画像ハンドルを決定
 	int handle = m_IdleHandle;
-	switch (m_animState)
-	{
-	case AnimState::Run:  handle = m_RunHandle;  break;
-	case AnimState::Jump: handle = m_JumpHandle; break;
-	case AnimState::Fall: handle = m_FallHandle; break;
-	case AnimState::Idle: default: handle = m_IdleHandle; break;
-	}
 
+	// ブリンク制御: 無敵時間中は表示/非表示を切り替える
+	if (m_invincibleTime > 0)
+	{
+		const int blinkRate = 6; // 何フレームごとに切り替えるか（調整可）
+		bool show = ((m_invincibleTime / blinkRate) % 2) == 0;
+		if (show && m_HitHandle != -1)
+		{
+			// 被弾時の画像を表示
+			handle = m_HitHandle;
+		}
+		else
+		{
+			// 非表示フェーズなら描画しない（点滅）
+			// ただしデバッグ枠は描くため、ここで return せず一旦スキップ描画して下で枠のみ描画する
+			return;
+		}
+	}
+	else
+	{
+		switch (m_animState)
+		{
+		case AnimState::Run:  handle = m_RunHandle;  break;
+		case AnimState::Jump: handle = m_JumpHandle; break;
+		case AnimState::Fall: handle = m_FallHandle; break;
+		case AnimState::Idle: default: handle = m_IdleHandle; break;
+		}
+	}
 
 	DrawRectRotaGraph(
 		centerX, centerY,            // 画面の中心位置
@@ -297,27 +308,18 @@ void Player::Draw(const Camera& camera)
 		0.0f,                        // 回転角度
 		handle,                      // 画像ハンドル
 		true,                        // 透過あり
-		m_isLeft                     // 左右反転
+		IsLeft                     // 左右反転
 	);
 
-	
+
 #ifdef _DEBUG
 	//当たり判定の枠
 	DrawBox(
-		left,Top,
-		right,Bottom,
+		left, Top,
+		right, Bottom,
 		GetColor(255, 0, 0),
 		false
 	);
 #endif
-	
+
 }
-
-
-bool Player::isHit(const Rabbit& enemy)
-{
-	
-	return m_rect.IsHit(enemy.GetRect());
-}
-
-

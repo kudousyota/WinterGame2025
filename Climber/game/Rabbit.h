@@ -1,8 +1,8 @@
 #pragma once
 #include "Character.h"
-#include "Vec2.h"
+#include "../System/Vec2.h"
 #include <memory>
-#include "Geometry.h"
+#include "../System/Geometry.h"
 
 class Camera;
 class Player;

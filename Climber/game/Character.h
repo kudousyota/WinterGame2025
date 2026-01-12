@@ -1,6 +1,6 @@
 #pragma once
-#include "Rect.h"
-#include "Vec2.h"
+#include "../System/Rect.h"
+#include "../System/Vec2.h"
 
 class Rect;
 class Character

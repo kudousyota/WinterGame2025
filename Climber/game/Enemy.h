@@ -1,7 +1,7 @@
 #pragma once
-#include "Actor.h"
+#include "../System/Actor.h"
 #include <memory>
-#include"Geometry.h"
+#include"../System/Geometry.h"
 
 class Enemy:public Actor
 {

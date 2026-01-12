@@ -1,9 +1,9 @@
 #include "TitleScene.h"
 #include "DxLib.h"
-#include "Input.h"
+#include "../System/Input.h"
 #include "SceneMain.h"
 #include "SceneContoller.h"
-#include "Application.h"
+#include "../System/Application.h"
 
 constexpr int fade_interval = 60;
 
@@ -51,14 +51,14 @@ void TitleScene::NormalDraw()
 {
 	const auto& wsize = Application::GetInstance().GetWindowSize();
 	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 1.0f, 0.0f, m_titleH, true);
-	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 0.75f, 0.0f, m_titleLogoH, true);
+	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 0.25f, 0.0f, m_titleLogoH, true);
 }
 
 void TitleScene::FadeDraw()
 {
 	const auto& wsize = Application::GetInstance().GetWindowSize();
 	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 1.0f, 0.0f, m_titleH, true);
-	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 0.75f, 0.0f, m_titleLogoH, true);
+	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 0.25f, 0.0f, m_titleLogoH, true);
 	// ’l‚Ì”ÍˆÍ‚ð‚¢‚Á‚½‚ñ0.0~1.0‚É‚µ‚Ä‚¨‚­‚Æ‚¢‚ë‚¢‚ë‚Æˆµ‚¢‚â‚·‚­‚È‚è‚Ü‚·
 	auto rate = static_cast<float>(m_frame) / static_cast<float>(fade_interval);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);

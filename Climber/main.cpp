@@ -1,12 +1,12 @@
 #include "DxLib.h"
-#include "Game.h"
-#include"Bg.h"
-#include "Input.h"
+#include "System/Game.h"
+#include"System/Bg.h"
+#include "System/Input.h"
 #include <memory> //シェアードポイント
 
-#include "SceneMain.h"
-#include "TitleScene.h"
-#include "SceneContoller.h"
+#include "Scene/SceneMain.h"
+#include "Scene/TitleScene.h"
+#include "Scene/SceneContoller.h"
 //定数定義
 namespace
 {

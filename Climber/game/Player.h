@@ -1,6 +1,6 @@
 #pragma once
 #include "Character.h"
-#include "Vec2.h"
+#include "../System/Vec2.h"
 #include <memory>
 
 class Bg;
@@ -51,7 +51,7 @@ virtual~Player();
 	 
 	 //無敵時間関連
 	 // 無敵時間の取得
-	 void StartInvincible(int frame = 60);
+	 void StartInvincible(int frame = 180);
 	 bool Isinvincible() const { return m_invincibleTime > 0; }
 	 int GetInvincibleTime() const { return m_invincibleTime; }
 
@@ -68,18 +68,21 @@ virtual~Player();
 
 private:
 	//アニメーション	
-	enum class AnimState { Idle, Run, Jump, Fall };
+	enum class AnimState { Idle, Run, Jump, Fall ,Hit};
 
 	AnimState m_animState = AnimState::Idle; // 現在の状態
 	int       m_animRow = 0;               // 現在のアニメ行（0=Idle,1=Run,2=Jump,3=Fall）
 	int       m_runFrameMax = 11;           // 走りの横コマ数（画像に合わせて調整）
 	int       m_jumpFrameMax = 1;            // ジャンプの横コマ数（複数なら変更）
+	int       m_fallFrameMax = 1;            // 落下の横コマ数（複数なら変更）
+	int       m_HitFrameMax = 1;             // ダメージの横コマ数（複数なら変更）
 
 	//画像ハンドル
 	int m_IdleHandle;
 	int m_JumpHandle;
 	int m_FallHandle;
 	int m_RunHandle;
+	int m_HitHandle;
 	//カット位置
 	int m_cutX;
 	int m_cutY;
@@ -97,7 +100,7 @@ private:
 	int m_switchSpeed;
 
 	//向き判定
-	bool m_isLeft = false;
+	bool IsLeft = false;
 	//ハイジャンプ解禁
 	bool m_highJumpUnlock;
 	//解禁に必要なポイント
