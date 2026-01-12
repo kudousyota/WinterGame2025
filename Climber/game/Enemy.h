@@ -6,7 +6,8 @@
 class Enemy:public Actor
 {
 public:
-	Enemy(const Position2& pos,	// 敵の初期座標
+	// 敵の初期座標
+	Enemy(const Position2& pos,
 		float r);	// 敵の当たり判定の大きさ
 
 	//const Circle& GetCollision() const;
@@ -25,9 +26,10 @@ public:
 	/// 描画
 	/// </summary>
 	virtual void Draw() = 0;
-
-	virtual ~Enemy() {};	// 基底クラスのデストラクタはvirtualにしておく
+	// 基底クラスのデストラクタはvirtualにしておく
+	virtual ~Enemy() {};
 protected:
-	bool   m_isDead = false;	// 死亡フラグ
+	// 死亡フラグ
+	bool   m_isDead = false;
 };
 

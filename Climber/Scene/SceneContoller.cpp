@@ -12,16 +12,18 @@ void SceneContoller::ResetScene(std::shared_ptr<Scene> scene)
 
 void SceneContoller::ChangeScene(std::shared_ptr<Scene> scene)
 {
-	// もし、リストが空の場合、普通に代入でChangeSceneしようとすると、当然emptyの箱に対してChangeしようとするので、クラッシュします。
+	// リストが空の場合、普通に代入でChangeSceneしようとすると、当然emptyの箱に対してChangeしようとするので、クラッシュします。
 	// このため、最初にemptyかどうかをチェックします
-	if (m_scenes.empty())	// 最初は要素がないためpush_backで要素数を増やす
+	// 最初は要素がないためpush_backで要素数を増やす
+	if (m_scenes.empty())
 	{
 		// 空っぽの場合には指定の要素をpushします。少なくとも一つは積まれている状態にする
 		m_scenes.push_back(scene);
 	}
 	else
 	{
-		m_scenes.back() = scene;	// この行の時点で元のシーンは自動的に削除されています
+		// この行の時点で元のシーンは自動的に削除されています
+		m_scenes.back() = scene;
 		if (scene) scene->Init();
 	}
 }

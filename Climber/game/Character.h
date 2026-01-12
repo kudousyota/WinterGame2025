@@ -20,7 +20,8 @@ public:
 	const Vec2& GetPos()const { return m_pos; }
 
 protected:
-	Rect m_rect; //当たり判定用
+	//当たり判定用
+	Rect m_rect; 
 	Vec2 m_pos;
 	/// <summary>
 	/// マップチップとの当たり判定

@@ -3,8 +3,6 @@
 #include "../System/Camera.h"
 #include "Player.h"
 
-
-
 Bat::Bat() :
 	m_vel(0.0f),
 	m_Handle(-1),
@@ -86,7 +84,6 @@ void Bat::Update(const Player& player)
 		IsDead = true;
 	}
 	
-
 	// 速度を位置へ反映
 	m_rect.SetX(m_rect.GetX() + static_cast<float>(m_speed));
 	m_rect.SetY(m_rect.GetY() + m_vel);
@@ -115,8 +112,6 @@ void Bat::Draw(const Camera& camera,const Player& player)
 	const int Top = centerY - halfH;
 	const int Bottom = centerY + halfH;
 
-	
-	
 		DrawRectRotaGraph(
 			centerX, centerY,            // 画面の中心位置
 			m_cutX, m_cutY,              // 切り抜き開始位置
@@ -128,10 +123,6 @@ void Bat::Draw(const Camera& camera,const Player& player)
 			IsLeft					  // 左右反転
 			);
 	
-	
-
-	
-
 #ifdef _DEBUG
 	//当たり判定の枠
 	DrawBox(

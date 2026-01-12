@@ -48,8 +48,6 @@ Rabbit::Rabbit(int handle, const Position2& pos) :
 {
 	// Factory から渡されたハンドルは自分で削除しない
 	m_pCamera = std::make_shared<Camera>();
-	// 初期当たり判定は位置に合わせてセットしておく
-	m_rect.Init(m_pos.x, m_pos.y, 50.0f, 50.0f);
 }
 
 Rabbit::~Rabbit()
@@ -62,7 +60,7 @@ Rabbit::~Rabbit()
 }
 void Rabbit::Init()
 {
-	m_rect.Init(350.0f, 159800.0f, 50.0f, 50.0f);
+	m_rect.Init(350.0f, 159800.0f, 30.0f, 30.0f);
 	m_vel = 0.0f;
 	//アニメーション
 	m_cutW = 34;
