@@ -101,6 +101,11 @@ void Player::TileBroke()
 	}
 }
 
+bool Player::isHit(const Rabbit& enemy)
+{
+	return false;
+}
+
 
 void Player::Update(const Rabbit& enemy, Rect& other, const Bg& bg)
 {
@@ -272,7 +277,7 @@ void Player::Draw(const Camera& camera)
 	//描画する画像ハンドルを決定
 	int handle = m_IdleHandle;
 
-	// ブリンク制御: 無敵時間中は表示/非表示を切り替える
+	//無敵時間中は表示/非表示を切り替える
 	if (m_invincibleTime > 0)
 	{
 		const int blinkRate = 6; // 何フレームごとに切り替えるか（調整可）

@@ -70,45 +70,55 @@ void SceneMain::Update(Input& input)
 	m_frameCount++;
 	//  キャラの更新（移動・重力など）
 	m_pPlayer->Update(*m_pRabbit,*m_pRect,*m_pBg);
-	m_pRabbit->Update(*m_pPlayer);
-	m_pBat->Update(*m_pPlayer);
-	//m_pEnemyFactory->Update();
+
+	if (m_pRabbit) { m_pRabbit->Update(*m_pPlayer); }
+	if (m_pBat) { m_pBat->Update(*m_pPlayer); }
+
+	// 衝突チェックを呼ぶここで着地判定・押し出し・タイル破壊を行う
+
+	if (m_pPlayer && m_pStage) {
+		m_score += CollisionManager::CheckCollisions(m_pPlayer, m_pRabbit, m_pBat, m_pStage);
+	}
 
 
-	//  衝突チェックを呼ぶ（ここで着地判定・押し出し・タイル破壊を行う）
-	int scoreDelta = CollisionManager::CheckCollisions(m_pPlayer, m_pRabbit, m_pBat, m_pStage);
-	m_score += scoreDelta; // scoreDelta は負の値で減点になる想定
-	int brokeNow = m_pPlayer->GetBrokeCount();
-	int delta = brokeNow - m_lastScore;
+	// --- 敵が死亡していれば削除
+
+	if (m_pRabbit && m_pRabbit->IsDead)
+	{
+		m_pRabbit.reset(); // 削除
+		m_killCount++;     // キル数カウント
+	}
+	if (m_pBat && m_pBat->IsDead)
+	{
+		m_pBat.reset();
+		m_killCount++;
+	}
+
+	// 破壊タイルによるスコア集計（差分）
+	const int brokeNow = m_pPlayer->GetBrokeCount();
+	const int delta = brokeNow - m_lastScore;
 	if (delta > 0)
 	{
-		// タイル1つあたりの点数をステージから取得
 		m_score += delta * m_pStage->GetTileBrokePoint();
 		m_lastScore = brokeNow;
 	}
-	if (m_score < 0)
-	{
-		m_score = 0;
-	}
+	if (m_score < 0) { m_score = 0; }
 
-	// カメラ・背景更新（衝突後の位置でカメラを更新するため衝突チェックの後に呼ぶ）
-	m_pCamera->UpdateCamera(m_pCamera,m_pPlayer);
+	// カメラ・背景更新
+	m_pCamera->UpdateCamera(m_pCamera, m_pPlayer);
 	m_pBg->Update();
 
+	// タイマー更新
 	m_timer.Update();
-	// 時間切れならリザルトへ
-	if (m_timer.IsTimeUp()) 
+	if (m_timer.IsTimeUp())
 	{
 		ResultData::SetScore(m_score);
-
 		auto result = std::make_shared<ResultScene>(m_controller);
 		m_controller.ChangeScene(result);
 		return;
 	}
-
-
-
 }
+
 
 void SceneMain::Draw()
 {
@@ -118,8 +128,10 @@ void SceneMain::Draw()
 	//m_pStageTwo->Draw(*m_pCamera, 0, 0);
 	m_pRect->Draw();
 	m_pPlayer->Draw(*m_pCamera);
-	m_pRabbit->Draw(*m_pCamera);
-	m_pBat->Draw(*m_pCamera);
+
+	if (m_pRabbit) { m_pRabbit->Draw(*m_pCamera); }
+	if (m_pBat) { m_pBat->Draw(*m_pCamera, *m_pPlayer); }
+
 	//m_pEnemyFactory->Draw();
 	//m_pTitleScene->Draw();
 	

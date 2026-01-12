@@ -14,6 +14,11 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::sh
 {
 	int pointDelta = 0;
 
+	if(!m_pPlayer || !m_pStage)
+	{
+		return pointDelta; // 必須オブジェクトがない場合は早期終了
+	}
+
 	// プレイヤーとうさぎの当たり判定
 	if (m_pRabbit && m_pPlayer->IsHit(*m_pRabbit))
 	{
@@ -27,7 +32,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::sh
 			if (m_pPlayer->IsHighJumpUnlock())
 			{
 				m_pRabbit->OnDead();
-				// 倒したときの加点（必要なら値を変更）
+				// 倒したときの加点
 				pointDelta += 50;
 			}
 			else
@@ -37,30 +42,28 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::sh
 				{
 					pointDelta -= 10;
 					// 無敵開始
-					m_pPlayer->StartInvincible(60); // 60フレーム無敵
+					m_pPlayer->StartInvincible(120); // 60フレーム無敵
 
 					// ノックバック処理
 					// 方向はプレイヤーと敵の相対位置で決定（プレイヤーが左なら左へ押し戻す）
-					const float knockbackX = knockbackPpwerX; // 水平方向の瞬間押し戻し量（ピクセル）
-					const float knockbackY = knockbackPpwerY; // 上向きの速度
 					Rect& playerRect = m_pPlayer->GetRect();
 					Rect& enemyRect = m_pRabbit->GetRect();
 
 					if (playerRect.GetX() < enemyRect.GetX())
 					{
 						// プレイヤーが敵の左側 -> 左へ押す
-						playerRect.SetX(playerRect.GetX() - knockbackX);
-						playerRect.SetY(playerRect.GetY() + knockbackY);
+						playerRect.SetX(playerRect.GetX() - knockbackPpwerX);
+						playerRect.SetY(playerRect.GetY() + knockbackPpwerY);
 					}
 					else
 					{
 						// 右側
-						playerRect.SetX(playerRect.GetX() + knockbackX);
-						playerRect.SetY(playerRect.GetY() + knockbackY);
+						playerRect.SetX(playerRect.GetX() + knockbackPpwerX);
+						playerRect.SetY(playerRect.GetY() + knockbackPpwerY);
 					}
 
 					// 上向きの速度を与える（ジャンプ方向）
-					m_pPlayer->SetVelY(knockbackY);
+					m_pPlayer->SetVelY(knockbackPpwerY);
 
 					// 接地フラグ解除
 					m_pPlayer->SetOnGround(false);
@@ -169,77 +172,94 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::sh
 	}
 
 	// 敵とステージの当たり判定
-	Rect& enemyRect = m_pRabbit->GetRect();
-	Rect& enemyBatRect = m_pBat->GetRect();
+	// safety: shared_ptr が null の場合は参照を作らない
+	Rect* pEnemyRect = nullptr;
+	Rect* pEnemyBatRect = nullptr;
 
-	m_pRabbit->SetOnGround(false); // 毎フレーム最初に false に
-	m_pBat->SetOnGround(false);
+	if (m_pRabbit)
+	{
+		pEnemyRect = &m_pRabbit->GetRect();
+		m_pRabbit->SetOnGround(false); // 毎フレーム最初に false に
+	}
+	if (m_pBat)
+	{
+		pEnemyBatRect = &m_pBat->GetRect();
+		m_pBat->SetOnGround(false);
+	}
+
 	iter = 0;
 	const int kMaxIterEnemy = 3; // 速度が大きいなら 4〜6 でも
 
-	while (iter < kMaxIterEnemy && m_pStage->IsCollision(enemyRect, hitTileRect))
+	if (pEnemyRect)
 	{
-		Vec2 push = enemyRect.FixPos(hitTileRect); // AABB純押し出し
-
-		// 横壁
-		if (push.x != 0.0f)
+		while (iter < kMaxIterEnemy && m_pStage->IsCollision(*pEnemyRect, hitTileRect))
 		{
-			// 巡回反転
-			float inversion = m_pRabbit->GetVelX();
-			m_pRabbit->SetVelX(-inversion);
-		}
+			Vec2 push = pEnemyRect->FixPos(hitTileRect); // AABB純押し出し
 
-		// 床天井Y速度を停止、接地フラグ、スナップ
-		if (push.y < 0.0f)
-		{
-			// 床に乗った（下方向に押し戻された）
-			m_pRabbit->SetVelY(0.0f);
-			m_pRabbit->SetOnGround(true);
+			// 横壁
+			if (push.x != 0.0f)
+			{
+				// 巡回反転
+				float inversion = m_pRabbit->GetVelX();
+				m_pRabbit->SetVelX(-inversion);
+			}
 
-			// 中心原点のスナップ（Rect中心座標前提）
-			const float halfH = enemyRect.GetH() * 0.5f;
-			enemyRect.SetY(hitTileRect.GetTop() - halfH);
-		}
-		else if (push.y > 0.0f) {
-			// 天井
-			m_pRabbit->SetVelY(0.0f);
-			m_pRabbit->SetOnGround(false);
-		}
+			// 床天井Y速度を停止、接地フラグ、スナップ
+			if (push.y < 0.0f)
+			{
+				// 床に乗った（下方向に押し戻された）
+				m_pRabbit->SetVelY(0.0f);
+				m_pRabbit->SetOnGround(true);
 
-		++iter;
+				// 中心原点のスナップ（Rect中心座標前提）
+				const float halfH = pEnemyRect->GetH() * 0.5f;
+				pEnemyRect->SetY(hitTileRect.GetTop() - halfH);
+			}
+			else if (push.y > 0.0f) {
+				// 天井
+				m_pRabbit->SetVelY(0.0f);
+				m_pRabbit->SetOnGround(false);
+			}
+
+			++iter;
+		}
 	}
+
+	// Bat 用処理
 	iter = 0;
-	// コウモリ反復処理
-	while (iter < kMaxIterEnemy && m_pStage->IsCollision(enemyBatRect, hitTileRect))
+	if (pEnemyBatRect)
 	{
-		Vec2 push = enemyBatRect.FixPos(hitTileRect); // AABB純押し出し
-
-		// 横壁
-		if (push.x != 0.0f)
+		while (iter < kMaxIterEnemy && m_pStage->IsCollision(*pEnemyBatRect, hitTileRect))
 		{
-			// 巡回反転
-			float inversion = m_pBat->GetVelX();
-			m_pBat->SetVelX(-inversion);
-		}
+			Vec2 push = pEnemyBatRect->FixPos(hitTileRect); // AABB純押し出し
 
-		// 床天井Y速度を停止、接地フラグ、スナップ
-		if (push.y < 0.0f)
-		{
-			// 床に乗った（下方向に押し戻された）
-			m_pBat->SetVelY(0.0f);
-			m_pBat->SetOnGround(true);
+			// 横壁
+			if (push.x != 0.0f)
+			{
+				// 巡回反転
+				float inversion = m_pBat->GetVelX();
+				m_pBat->SetVelX(-inversion);
+			}
 
-			// 中心原点のスナップ（Rect中心座標前提）
-			const float halfH = enemyBatRect.GetH() * 0.5f;
-			enemyBatRect.SetY(hitTileRect.GetTop() - halfH);
-		}
-		else if (push.y > 0.0f) {
-			// 天井
-			m_pBat->SetVelY(0.0f);
-			m_pBat->SetOnGround(false);
-		}
+			// 床天井Y速度を停止、接地フラグ、スナップ
+			if (push.y < 0.0f)
+			{
+				// 床に乗った（下方向に押し戻された）
+				m_pBat->SetVelY(0.0f);
+				m_pBat->SetOnGround(true);
 
-		++iter;
+				// 中心原点のスナップ（Rect中心座標前提）
+				const float halfH = pEnemyBatRect->GetH() * 0.5f;
+				pEnemyBatRect->SetY(hitTileRect.GetTop() - halfH);
+			}
+			else if (push.y > 0.0f) {
+				// 天井
+				m_pBat->SetVelY(0.0f);
+				m_pBat->SetOnGround(false);
+			}
+
+			++iter;
+		}
 	}
 	return pointDelta;
 }

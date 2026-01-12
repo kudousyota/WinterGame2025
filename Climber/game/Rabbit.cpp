@@ -87,6 +87,11 @@ void Rabbit::Update(const Player& player)
 		m_cutX = m_switchSpeed * m_cutW;//切り取りいち
 		m_cutY = 0;
 	}
+	//プレイヤがハイジャンプが可能な時当たったら死ぬ
+	if (!IsDead&&player.IsHighJumpUnlock()&&isHit(player))
+	{
+		IsDead = true;
+	}
 	//重力
 	m_vel += kGravity;
 
@@ -97,6 +102,13 @@ void Rabbit::Update(const Player& player)
 }
 void Rabbit::Draw(const Camera& camera)
 {
+	//死んだとき描画しない
+	if (IsDead)
+	{
+		return;
+	}
+
+	//カメラのオフセット取得
 	const Vec2 cameraOffset = camera.GetCameraOffset();
 
 	//中心座標
@@ -141,6 +153,6 @@ void Rabbit::Draw(const Camera& camera)
 bool Rabbit::isHit(const Player& player)
 {
 	//ここに当たった時の処理
-	IsDead = false;
+	
 	return m_rect.IsHit(player.GetRect());
 }

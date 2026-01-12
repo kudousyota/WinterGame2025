@@ -22,7 +22,7 @@ public:
 
 	void Update(const Player& player);
 
-	void Draw(const Camera& camera);
+	void Draw(const Camera& camera,const Player& player);
 	Vec2 GetPos() { return m_pos; }
 
 	//c‘¬“x‚Ìæ“¾
