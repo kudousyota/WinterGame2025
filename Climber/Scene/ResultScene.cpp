@@ -1,9 +1,9 @@
 #include "ResultScene.h"
 #include "DxLib.h"
-#include "Input.h"
+#include "../System/Input.h"
 #include "TitleScene.h"
 #include "SceneContoller.h"
-#include "ResultData.h"
+#include "../System/ResultData.h"
 
 ResultScene::ResultScene(SceneContoller& controller) :
 	Scene(controller)

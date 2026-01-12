@@ -1,9 +1,9 @@
 ﻿#include "CollisionManager.h"
-#include "Player.h"
-#include "Rabbit.h"
-#include "Bat.h"
-#include "Stage.h"
-#include "GameObject.h"
+#include "../game/Player.h"
+#include "../game/Rabbit.h"
+#include "../game/Bat.h"
+#include "../game/Stage.h"
+#include "../game/GameObject.h"
 
 namespace
 {
