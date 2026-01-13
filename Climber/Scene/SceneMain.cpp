@@ -60,13 +60,14 @@ void SceneMain::Init()
 	m_pRabbit->Init();
 	m_pBat->Init();
 	int chipHandle = LoadGraph("data/mapChip1.png");
-	assert(chipHandle > 0);
+	int chipHandleTwo = LoadGraph("data/mapChip2.png");
+	//assert(chipHandle > 0);
 	int SchipHandle = LoadGraph("data/Enemy.png");
 	assert(SchipHandle > 0);
 	//タイルセットの設定
 	//小さすぎたから1チップ32x32で設定
 	m_pStage->SetTileSet(chipHandle, 32, 32);
-	m_pStageTwo->SetTileSet(SchipHandle, 32, 32);
+	//m_pStageTwo->SetTileSet(SchipHandle, 32, 32);
 }
 
 void SceneMain::Update(Input& input)
@@ -75,17 +76,24 @@ void SceneMain::Update(Input& input)
 	//  キャラの更新（移動・重力など）
 	m_pPlayer->Update(*m_pRabbit,*m_pRect,*m_pBg);
 
-	if (m_pRabbit) { m_pRabbit->Update(*m_pPlayer); }
-	if (m_pBat) { m_pBat->Update(*m_pPlayer); }
+	if (m_pRabbit)
+	{
+		m_pRabbit->Update(*m_pPlayer); 
+	}
+	if (m_pBat)
+	{
+		m_pBat->Update(*m_pPlayer); 
+	}
 
 	// 衝突チェックを呼ぶここで着地判定・押し出し・タイル破壊を行う
 
-	if (m_pPlayer && m_pStage) {
+	if (m_pPlayer && m_pStage)
+	{
 		m_score += CollisionManager::CheckCollisions(m_pPlayer, m_pRabbit, m_pBat, m_pStage);
 	}
 
 
-	// --- 敵が死亡していれば削除
+	// 敵が死亡していれば削除
 
 	if (m_pRabbit && m_pRabbit->IsDead)
 	{
