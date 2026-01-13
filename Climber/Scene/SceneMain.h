@@ -61,6 +61,8 @@ private:
 	int m_lastScore = 0;//前回のスコア
 	int m_killCount = 0;//倒した敵の数
 
+	int m_fontHandle;
+
 	
 	
 	

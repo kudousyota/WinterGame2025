@@ -23,6 +23,7 @@ SceneMain::SceneMain(SceneContoller& controller):
 Scene(controller),
 m_draw(0),
 m_update(0),
+m_fontHandle(-1),
 m_frameCount(0)
 {
 	m_pPlayer	= std::make_shared<Player>();
@@ -48,10 +49,13 @@ m_frameCount(0)
 
 SceneMain::~SceneMain()
 {
+	//フォントの解放
+	DeleteFontToHandle(m_fontHandle);
 }
 
 void SceneMain::Init()
 {
+	m_fontHandle = CreateFontToHandle("x10y12pxDonguriDuel", 24, -1, -1);
 	m_pPlayer->Init();
 	m_pRabbit->Init();
 	m_pBat->Init();
@@ -147,12 +151,21 @@ void SceneMain::Draw()
 
 	//仮地面の描画
 	//DrawLine(0 + m_pCamera->GetCameraOffset().x, 640 + m_pCamera->GetCameraOffset().y, Game::kScreenWidth + m_pCamera->GetCameraOffset().x, 640 + m_pCamera->GetCameraOffset().y, GetColor(255, 255, 255));
-	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
-	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", m_frameCount);
+	//DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
+	//DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", m_frameCount);
 
 	const int remainSec = static_cast<int>(std::ceil(m_timer.Remaining()));
-	DrawFormatString(20, 50, GetColor(255, 255, 255), "TIME: %d", remainSec);
-	DrawFormatString(20, 70, GetColor(255, 255, 0), "SCORE: %d", m_score);
-	DrawFormatString(20, 90, GetColor(255, 255, 0), "KILLS: %d", m_killCount);
+	//タイマー
+	char TimeBuf[64];
+	sprintf_s(TimeBuf, sizeof(TimeBuf), "TIME:%d", remainSec);
+	//スコア
+	char ScoreBuf[64];
+	sprintf_s(ScoreBuf, sizeof(ScoreBuf), "SCORE:%d", m_score);
+	//キルした数
+	char KillBuf[64];
+	sprintf_s(KillBuf, sizeof(KillBuf), "KILLS:%d", m_killCount);
+	DrawStringToHandle(20, 50,  TimeBuf,0xffffff, m_fontHandle, remainSec);
+	DrawStringToHandle(20, 70, ScoreBuf, 0xffffff,m_fontHandle,m_score);
+	DrawStringToHandle(20, 90, KillBuf, 0xffffff,m_fontHandle,m_killCount);
 
 }

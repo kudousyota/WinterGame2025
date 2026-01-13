@@ -30,6 +30,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return -1;			// エラーが起きたら直ちに終了
 	}
 
+	//フォントの読み込みを行う
+	AddFontResourceEx("data/x10y12pxDonguriDuel.ttf", FR_PRIVATE, NULL);
+
 	//描画対象をバックバッファに変更
 	SetDrawScreen(DX_SCREEN_BACK);
 
@@ -76,6 +79,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 
 	}
+
+	//フォントの解放
+	RemoveFontResourceEx("data/x10y12pxDonguriDuel.ttf", FR_PRIVATE, NULL);
 
 	//メモリの解放
 
