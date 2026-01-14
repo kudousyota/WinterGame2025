@@ -26,6 +26,8 @@ public:
 	void SetX(float x) { m_x = x; }
 	void SetY(float y) { m_y = y; }
 
+	void SetW(float w);
+	void SetH(float h);
 
 	void Init(float x, float y, float w, float h);
 	void Update();

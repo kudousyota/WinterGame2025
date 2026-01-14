@@ -67,7 +67,30 @@ void Rabbit::Init()
 	m_cutH = 45;
 	m_speed = -1;
 
+
+	// ヒットボックスのサイズは必ず設定
+	if (m_rect.GetW() <= 0.0f) SetW(static_cast<float>(m_cutW));
+	if (m_rect.GetH() <= 0.0f) SetH(static_cast<float>(m_cutH));
+
+	// カメラ
+	if (!m_pCamera) m_pCamera = std::make_shared<Camera>();
+
 }
+void Rabbit::SetPos(const Vec2& pos)
+{
+	m_pos = pos;
+	m_rect.SetX(pos.x);
+	m_rect.SetY(pos.y);
+}
+void Rabbit::SetW(float w)
+{
+	m_rect.SetW(w);
+}
+void Rabbit::SetH(float h)
+{
+	m_rect.SetH(h);
+}
+
 void Rabbit::Update(const Player& player)
 {
 	m_pos = { m_rect.GetX(),m_rect.GetY() };

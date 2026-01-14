@@ -24,6 +24,13 @@ public:
 
 	void Draw(const Camera& camera,const Player& player);
 	Vec2 GetPos() { return m_pos; }
+	Vec2 SetPos(const Vec2& pos)
+	{
+		m_pos = pos;
+		m_rect.SetX(pos.x);
+		m_rect.SetY(pos.y);
+		return m_pos;
+	}
 
 	//c‘¬“x‚Ìæ“¾
 	float GetVelY() const { return m_vel; }

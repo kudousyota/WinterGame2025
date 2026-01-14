@@ -3,6 +3,8 @@
 #include "../System/Vec2.h"
 #include <memory>
 #include "../System/Geometry.h"
+#include <Dxlib.h>
+#include "../System/Rect.h"
 
 class Camera;
 class Player;
@@ -23,6 +25,10 @@ public:
 
 
 	Vec2 GetPos() { return m_pos; }
+	void SetPos(const Vec2& p);
+
+	void SetW(float w);
+	void SetH(float h);
 
 	//c‘¬“x‚Ìæ“¾
 	float GetVelY() const { return m_vel; }

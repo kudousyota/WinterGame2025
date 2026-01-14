@@ -55,14 +55,45 @@ SceneMain::~SceneMain()
 
 void SceneMain::Init()
 {
+	//フォントの作成
 	m_fontHandle = CreateFontToHandle("x10y12pxDonguriDuel", 24, -1, -1);
+
 	m_pPlayer->Init();
+	// うさぎを複数配置
+	{
+		auto r1 = std::make_shared<Rabbit>();
+		r1->Init();
+		r1->SetPos({ 350.0f, 159800.0f, });
+		m_pRabbits.push_back(r1);
+
+		auto r2 = std::make_shared<Rabbit>();
+		r2->Init();
+		r2->SetPos({ 370.0f, 159899.0f, });
+		m_pRabbits.push_back(r2);
+
+		auto r3 = std::make_shared<Rabbit>();
+		r3->Init();
+		r3->SetPos({ 800.0f, 600.0f });
+		m_pRabbits.push_back(r3);
+	}
+
+	// コウモリを複数配置
+	{
+		auto b1 = std::make_shared<Bat>();
+		b1->Init();
+		b1->SetPos({ 350.0f, 159800.0f, });
+		m_pBats.push_back(b1);
+
+		auto b2 = std::make_shared<Bat>();
+		b2->Init();
+		b2->SetPos({ 350.0f, 159840.0f, });
+		m_pBats.push_back(b2);
+	}
+
+	
 	//m_pRabbit->Init();
 	//m_pBat->Init();
-	m_pRabbits.push_back(std::make_shared<Rabbit>());
-	m_pBats.push_back(std::make_shared<Bat>());
 	int chipHandle = LoadGraph("data/mapChip1.png");
-	int chipHandleTwo = LoadGraph("data/mapChip2.png");
 	//assert(chipHandle > 0);
 	int SchipHandle = LoadGraph("data/Enemy.png");
 	assert(SchipHandle > 0);

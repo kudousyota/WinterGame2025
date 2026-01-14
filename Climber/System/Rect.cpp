@@ -27,6 +27,16 @@ void Rect::Set(float left, float top, float right, float bottom)
 
 
 
+void Rect::SetW(float w)
+{
+	m_w = w;
+}
+
+void Rect::SetH(float h)
+{
+	m_h = h;
+}
+
 void Rect::Init(float x, float y, float w, float h)
 {
 	m_x = x;

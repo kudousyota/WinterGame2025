@@ -1,4 +1,5 @@
-﻿#include "CollisionManager.h"
+﻿
+#include "CollisionManager.h"
 #include "../game/Player.h"
 #include "../game/Rabbit.h"
 #include "../game/Bat.h"
@@ -7,178 +8,209 @@
 
 namespace
 {
-	constexpr int knockbackPpwerX = 40;
-	constexpr int knockbackPpwerY = -5;
+    constexpr int knockbackPowerX = 40;
+    constexpr int knockbackPowerY = -5;
 }
-int CollisionManager::CheckCollisions(std::shared_ptr<Player> m_pPlayer, std::vector<std::shared_ptr<Rabbit>> m_pRabbits, std::vector<std::shared_ptr<Bat>>m_pBats, std::shared_ptr<Stage> m_pStage)
+
+int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
+    std::vector<std::shared_ptr<Rabbit>>& m_pRabbits,
+    std::vector<std::shared_ptr<Bat>>& m_pBats,
+    std::shared_ptr<Stage>& m_pStage)
 {
-	int pointDeleta = 0;
+    int pointDelta = 0;
+    if (!m_pPlayer || !m_pStage) return pointDelta;
 
-	if (!m_pPlayer || !m_pStage)
-	{
-		return pointDeleta;
-	}
-	Rect hitTileRect;
-	//ウサギと当たった時の処理
-	for (auto& rabbit : m_pRabbits)
-	{
-		if (!rabbit)continue;
+    Rect hitTileRect;
 
-		if (m_pPlayer->IsHit(*rabbit))
-		{
-			Vec2 push = m_pPlayer->FixPos(*rabbit);
+    // --- Rabbit × ステージ衝突（Bat と同様に押し出し＆反応） ---
+    for (auto& rabbit : m_pRabbits)
+    {
+        if (!rabbit) continue;
 
-			if (!rabbit->IsDead)
-			{
-				if (m_pPlayer->IsHighJumpUnlock())
-				{
-					//ウサギが死んだとき
-					rabbit->OnDead();
-					pointDeleta += 50;
-				}
-				else
-				{
-					if (!m_pPlayer->Isinvincible())
-					{
+        Rect& rect = rabbit->GetRect();
+        rabbit->SetOnGround(false);
 
-						pointDeleta -= 10;
-						//無敵時間
-						m_pPlayer->StartInvincible(120);
+        int iter = 0;
+        const int kMaxIter = 3;
+        while (iter < kMaxIter && m_pStage->IsCollision(rect, hitTileRect))
+        {
+            Vec2 push = rect.FixPos(hitTileRect);
 
-						Rect& playerRect = m_pPlayer->GetRect();
-						Rect& enemyRect = rabbit->GetRect();
+            // 壁に当たったら左右反転（任意）
+            if (push.x != 0.0f) {
+                rabbit->SetVelX(-rabbit->GetVelX());
+            }
 
-						//敵と当たった時のノックバック
-						if (playerRect.GetX() < enemyRect.GetX())
-						{
-							playerRect.SetX(playerRect.GetX() - knockbackPpwerX);
-							playerRect.SetY(playerRect.GetY() + knockbackPpwerY);
-						}
-						else
-						{
-							playerRect.SetX(playerRect.GetX() + knockbackPpwerX);
-							playerRect.SetY(playerRect.GetY() + knockbackPpwerY);
-						}
+            if (push.y < 0.0f) // 上から着地
+            {
+                rabbit->SetVelY(0.0f);
+                rabbit->SetOnGround(true);
+                rect.SetY(hitTileRect.GetTop() - rect.GetH() * 0.5f);
+            }
+            else if (push.y > 0.0f) // 下から当たり
+            {
+                rabbit->SetVelY(0.0f);
+                rabbit->SetOnGround(false);
+            }
 
-						m_pPlayer->SetVelY(knockbackPpwerY);
-						m_pPlayer->SetOnGround(false);
-					}
-				}
-			}
-		}
-	}
+            ++iter;
+        }
 
-	//コウモリと当たった時の処理
-	for (auto& bat : m_pBats)
-	{
-		if (!bat)continue;
-		if (m_pPlayer->IsHit(*bat))
-		{
-			Vec2 push = m_pPlayer->FixPos(*bat);
+        // --- プレイヤー × Rabbit 衝突 ---
+        if (m_pPlayer->IsHit(*rabbit))
+        {
+            Vec2 push = m_pPlayer->FixPos(*rabbit);
 
-			if (!bat->IsDead)
-			{
-				if (m_pPlayer->IsHighJumpUnlock())
-				{
-					bat->OnDead();
-					pointDeleta += 50;
-				}
-				else
-				{
-					if (!m_pPlayer->Isinvincible())
-					{
-						pointDeleta -= 10;
-						m_pPlayer->StartInvincible(120);
+            if (!rabbit->IsDead)
+            {
+                if (m_pPlayer->IsHighJumpUnlock())
+                {
+                    rabbit->OnDead();
+                    pointDelta += 50;
+                }
+                else
+                {
+                    if (!m_pPlayer->Isinvincible())
+                    {
+                        pointDelta -= 10;
+                        m_pPlayer->StartInvincible(120);
 
-						Rect& playerRect = m_pPlayer->GetRect();
-						Rect& batRect = bat->GetRect();
+                        Rect& playerRect = m_pPlayer->GetRect();
+                        Rect& enemyRect = rabbit->GetRect();
 
-						if (playerRect.GetX() < batRect.GetX())
-						{
-							playerRect.SetX(playerRect.GetX() - knockbackPpwerX);
+                        // ノックバック
+                        if (playerRect.GetX() < enemyRect.GetX())
+                        {
+                            playerRect.SetX(playerRect.GetX() - knockbackPowerX);
+                            playerRect.SetY(playerRect.GetY() + knockbackPowerY);
+                        }
+                        else
+                        {
+                            playerRect.SetX(playerRect.GetX() + knockbackPowerX);
+                            playerRect.SetY(playerRect.GetY() + knockbackPowerY);
+                        }
 
-						}
-						else
-						{
-							playerRect.SetX(playerRect.GetX() + knockbackPpwerX);
-						}
-						m_pPlayer->SetVelY(knockbackPpwerY);
-						m_pPlayer->SetOnGround(false);
+                        m_pPlayer->SetVelY(knockbackPowerY);
+                        m_pPlayer->SetOnGround(false);
+                    }
+                }
+            }
+        }
+    }
 
-					}
-				}
-			}
-		}
-	}
-	//プレイヤーとステージの当たり判定
-	Rect& playerRect = m_pPlayer->GetRect();
-	m_pPlayer->SetOnGround(false);
+    // --- プレイヤー × Bat 衝突（既存） ---
+    for (auto& bat : m_pBats)
+    {
+        if (!bat) continue;
 
-	int iter = -0;
-	const int kMaxIter = 3;
+        if (m_pPlayer->IsHit(*bat))
+        {
+            Vec2 push = m_pPlayer->FixPos(*bat);
 
-	while (iter < kMaxIter && m_pStage->IsCollision(playerRect, hitTileRect))
-	{
-		Vec2 push = playerRect.FixPos(hitTileRect);
+            if (!bat->IsDead)
+            {
+                if (m_pPlayer->IsHighJumpUnlock())
+                {
+                    bat->OnDead();
+                    pointDelta += 50;
+                }
+                else
+                {
+                    if (!m_pPlayer->Isinvincible())
+                    {
+                        pointDelta -= 10;
+                        m_pPlayer->StartInvincible(120);
 
-		if (push.y < 0.0f)
-		{
-			float halfH = playerRect.GetH() * 0.5;
-			playerRect.SetY(hitTileRect.GetTop() - halfH);
-			m_pPlayer->SetVelY(0.0f);
-			m_pPlayer->SetOnGround(true);
-		}
-		else if (push.y > 0.0f)
-		{
-			int tx = hitTileRect.GetX() / m_pStage->GetChipW();
-			int ty = hitTileRect.GetY() / m_pStage->GetChipH();
+                        Rect& playerRect = m_pPlayer->GetRect();
+                        Rect& batRect = bat->GetRect();
 
-			if (m_pStage->GetData(tx, ty) != 0)
-			{
-				m_pStage->SetTile(tx, ty, 0);
+                        if (playerRect.GetX() < batRect.GetX())
+                        {
+                            playerRect.SetX(playerRect.GetX() - knockbackPowerX);
+                        }
+                        else
+                        {
+                            playerRect.SetX(playerRect.GetX() + knockbackPowerX);
+                        }
 
-				if (!m_pPlayer->IsHighJumpActive())
-					m_pPlayer->SetVelY(0.0f);
+                        m_pPlayer->SetVelY(knockbackPowerY);
+                        m_pPlayer->SetOnGround(false);
+                    }
+                }
+            }
+        }
+    }
 
-				m_pPlayer->TileBroke();
-			}
+    //プレイヤー×ステージ衝突
+    Rect& playerRect = m_pPlayer->GetRect();
+    m_pPlayer->SetOnGround(false);
 
-			m_pPlayer->SetOnGround(false);
-		}
+    int iter = 0; 
+    const int kMaxIter = 3;
 
-		++iter;
-	}
+    while (iter < kMaxIter && m_pStage->IsCollision(playerRect, hitTileRect))
+    {
+        Vec2 push = playerRect.FixPos(hitTileRect);
 
+        if (push.y < 0.0f) // 上から着地
+        {
+            float halfH = playerRect.GetH() * 0.5f;        // ← 0.5f
+            playerRect.SetY(hitTileRect.GetTop() - halfH);
+            m_pPlayer->SetVelY(0.0f);
+            m_pPlayer->SetOnGround(true);
+        }
+        else if (push.y > 0.0f) // 下から当たり（破壊）
+        {
+            int tx = static_cast<int>(hitTileRect.GetX()) / m_pStage->GetChipW();
+            int ty = static_cast<int>(hitTileRect.GetY()) / m_pStage->GetChipH();
 
-	for (auto& bat : m_pBats)
-	{
-		if (!bat)continue;
+            if (m_pStage->GetData(tx, ty) != 0)
+            {
+                m_pStage->SetTile(tx, ty, 0);
 
-		Rect& rect = bat->GetRect();
-		bat->SetOnGround(false);
+                if (!m_pPlayer->IsHighJumpActive())
+                    m_pPlayer->SetVelY(0.0f);
 
-		iter = 0;
-		while (iter < 3 && m_pStage->IsCollision(rect, hitTileRect))
-		{
-			Vec2 push = rect.FixPos(hitTileRect);
+                m_pPlayer->TileBroke();
+            }
 
-			if (push.x != 0.0f)
-				bat->SetVelX(-bat->GetVelX());
+            m_pPlayer->SetOnGround(false);
+        }
 
-			if (push.y < 0.0f)
-			{
-				bat->SetVelY(0.0f);
-				bat->SetOnGround(true);
-				rect.SetY(hitTileRect.GetTop() - rect.GetH() * 0.5f);
-			}
-			else if (push.y > 0.0f)
-			{
-				bat->SetVelY(0.0f);
-				bat->SetOnGround(false);
-			}
+        ++iter;
+    }
 
-			++iter;
-		}
-	}
-	return pointDeleta;
+    // --- Bat × ステージ衝突（既存・OK） ---
+    for (auto& bat : m_pBats)
+    {
+        if (!bat) continue;
+
+        Rect& rect = bat->GetRect();
+        bat->SetOnGround(false);
+
+        iter = 0;
+        while (iter < kMaxIter && m_pStage->IsCollision(rect, hitTileRect))
+        {
+            Vec2 push = rect.FixPos(hitTileRect);
+
+            if (push.x != 0.0f)
+                bat->SetVelX(-bat->GetVelX());
+
+            if (push.y < 0.0f)
+            {
+                bat->SetVelY(0.0f);
+                bat->SetOnGround(true);
+                rect.SetY(hitTileRect.GetTop() - rect.GetH() * 0.5f);
+            }
+            else if (push.y > 0.0f)
+            {
+                bat->SetVelY(0.0f);
+                bat->SetOnGround(false);
+            }
+
+            ++iter;
+        }
+    }
+
+    return pointDelta;
 }
