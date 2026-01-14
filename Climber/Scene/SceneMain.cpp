@@ -27,8 +27,8 @@ m_fontHandle(-1),
 m_frameCount(0)
 {
 	m_pPlayer	= std::make_shared<Player>();
-	m_pRabbit	= std::make_shared<Rabbit>();
-	m_pBat		= std::make_shared<Bat>();
+	//m_pRabbit	= std::make_shared<Rabbit>();
+	//m_pBat		= std::make_shared<Bat>();
 	m_pCamera	= std::make_shared<Camera>();
 	m_pRect		= std::make_shared<Rect>();
 	m_pBg		= std::make_shared<Bg>();
@@ -57,8 +57,10 @@ void SceneMain::Init()
 {
 	m_fontHandle = CreateFontToHandle("x10y12pxDonguriDuel", 24, -1, -1);
 	m_pPlayer->Init();
-	m_pRabbit->Init();
-	m_pBat->Init();
+	//m_pRabbit->Init();
+	//m_pBat->Init();
+	m_pRabbits.push_back(std::make_shared<Rabbit>());
+	m_pBats.push_back(std::make_shared<Bat>());
 	int chipHandle = LoadGraph("data/mapChip1.png");
 	int chipHandleTwo = LoadGraph("data/mapChip2.png");
 	//assert(chipHandle > 0);
@@ -74,37 +76,40 @@ void SceneMain::Update(Input& input)
 {
 	m_frameCount++;
 	//  キャラの更新（移動・重力など）
-	m_pPlayer->Update(*m_pRabbit,*m_pRect,*m_pBg);
-
-	if (m_pRabbit)
+	m_pPlayer->Update(*m_pRect, *m_pBg);
+	//敵の更新
+	for (auto& rabbit : m_pRabbits)
 	{
-		m_pRabbit->Update(*m_pPlayer); 
+		rabbit->Update(*m_pPlayer);
 	}
-	if (m_pBat)
+	for (auto& bat : m_pBats )
 	{
-		m_pBat->Update(*m_pPlayer); 
+		bat->Update(*m_pPlayer);
 	}
 
 	// 衝突チェックを呼ぶここで着地判定・押し出し・タイル破壊を行う
 
 	if (m_pPlayer && m_pStage)
 	{
-		m_score += CollisionManager::CheckCollisions(m_pPlayer, m_pRabbit, m_pBat, m_pStage);
+		m_score += CollisionManager::CheckCollisions(m_pPlayer, m_pRabbits, m_pBats, m_pStage);
+
 	}
 
 
 	// 敵が死亡していれば削除
 
-	if (m_pRabbit && m_pRabbit->IsDead)
-	{
-		m_pRabbit.reset(); // 削除
-		m_killCount++;     // キル数カウント
-	}
-	if (m_pBat && m_pBat->IsDead)
-	{
-		m_pBat.reset();
-		m_killCount++;
-	}
+	m_pRabbits.erase(
+		std::remove_if(m_pRabbits.begin(), m_pRabbits.end(),
+			[](auto& r) { return r->IsDead; }),
+		m_pRabbits.end()
+	);
+
+	m_pBats.erase(
+		std::remove_if(m_pBats.begin(), m_pBats.end(),
+			[](auto& b) { return b->IsDead; }),
+		m_pBats.end()
+	);
+
 
 	// 破壊タイルによるスコア集計（差分）
 	const int brokeNow = m_pPlayer->GetBrokeCount();
@@ -117,7 +122,7 @@ void SceneMain::Update(Input& input)
 	if (m_score < 0) { m_score = 0; }
 
 	// カメラ・背景更新
-	m_pCamera->UpdateCamera(m_pCamera, m_pPlayer);
+	m_pCamera->UpdateCamera(m_pPlayer);
 	m_pBg->Update();
 
 	// タイマー更新
@@ -141,9 +146,14 @@ void SceneMain::Draw()
 	m_pRect->Draw();
 	m_pPlayer->Draw(*m_pCamera);
 
-	if (m_pRabbit) { m_pRabbit->Draw(*m_pCamera); }
-	if (m_pBat) { m_pBat->Draw(*m_pCamera, *m_pPlayer); }
-
+	for (auto& rabbit: m_pRabbits)
+	{
+		rabbit->Draw(*m_pCamera);
+	}
+	for (auto& bat: m_pBats)
+	{
+		bat->Draw(*m_pCamera,*m_pPlayer);
+	}
 	//m_pEnemyFactory->Draw();
 	//m_pTitleScene->Draw();
 	

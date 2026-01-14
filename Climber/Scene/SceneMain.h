@@ -2,6 +2,7 @@
 #include <memory>
 #include "Scene.h"
 #include "../System/GameTimer.h"
+#include <vector>
 //#include "Geometry.h"
 
 class Stage;
@@ -37,8 +38,10 @@ private:
 	std::shared_ptr<Stage>  m_pStageTwo;
 	std::shared_ptr<Rect>   m_pRect;
 	std::shared_ptr<Player> m_pPlayer;
-	std::shared_ptr<Rabbit>  m_pRabbit;
-	std::shared_ptr<Bat>    m_pBat;
+	//std::shared_ptr<Rabbit>  m_pRabbit;
+	std::vector<std::shared_ptr<Rabbit>>m_pRabbits;
+	std::vector<std::shared_ptr<Bat>>m_pBats;
+	//std::shared_ptr<Bat>    m_pBat;
 	std::shared_ptr<Camera> m_pCamera;
 	std::shared_ptr<Bg>     m_pBg;
 	std::shared_ptr<TitleScene> m_pTitleScene;

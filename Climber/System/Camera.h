@@ -13,7 +13,7 @@ public:
 	void Draw();
 
 	void InitCamera(std::shared_ptr<Camera> camera);
-	void UpdateCamera(std::shared_ptr<Camera> camera, std::shared_ptr<Player> player);
+	void UpdateCamera(std::shared_ptr<Player> player);
 	
 	Vec2 GetCameraOffset()const;
 

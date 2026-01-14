@@ -49,8 +49,8 @@ Player::Player() :
 	m_HitHandle = LoadGraph("data/HitPlayer.png");
 	m_pCamera = std::make_shared<Camera>();
 	m_pInput = std::make_shared<Input>();
-	m_pRabbit = std::make_shared<Rabbit>();
-	m_pEnemy = nullptr;
+	//m_pRabbit = std::make_shared<Rabbit>();
+	//m_pEnemy = nullptr;
 
 }
 
@@ -107,7 +107,7 @@ bool Player::isHit(const Rabbit& enemy)
 }
 
 
-void Player::Update(const Rabbit& enemy, Rect& other, const Bg& bg)
+void Player::Update(Rect& other, const Bg& bg)
 {
 	//中心座標から上下左右の座標を計算
 	const float halfW = m_rect.GetW() * 0.5f;

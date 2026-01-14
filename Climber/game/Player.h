@@ -23,7 +23,7 @@ virtual~Player();
 	/// <param name="w">W : •</param>
 	/// <param name="h">H : ‚‚³</param>
 	 void Init();
-	 void Update(const Rabbit& enemy, Rect& other, const Bg& bg);
+	 void Update(Rect& other, const Bg& bg);
 	 void Draw(const Camera& camera);
 
 
@@ -128,8 +128,8 @@ private:
 	std::shared_ptr<Camera> m_pCamera;
 	std::shared_ptr<CollisionManager> m_pCollision;
 	std::shared_ptr<Input> m_pInput;
-	std::shared_ptr<Rabbit>m_pRabbit;
-	std::shared_ptr<Enemy>m_pEnemy;
+	//std::shared_ptr<Rabbit>m_pRabbit;
+	//std::shared_ptr<Enemy>m_pEnemy;
 
 	////Šg‘å—¦
 	//float m_scaleX;

@@ -44,7 +44,7 @@ void Camera::InitCamera(std::shared_ptr<Camera>camera)
 	camera.posY;*/
 }
 
-void Camera::UpdateCamera(std::shared_ptr<Camera> camera,std::shared_ptr<Player> player)
+void Camera::UpdateCamera(std::shared_ptr<Player> player)
 {
 	//camera.pos = m_pPlayer->GetRect().GetX();
 	//プレイヤーとカメラの位置を同じにする
