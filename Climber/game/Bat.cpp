@@ -38,7 +38,7 @@ Bat::Bat(int handle, const Position2& pos) :
 	m_ownsHandle(false)
 {
 	m_pCamera = std::make_shared<Camera>();
-	m_rect.Init(m_pos.x, m_pos.y, 50.0f, 50.0f);
+	//m_rect.Init(m_pos.x, m_pos.y, 50.0f, 50.0f);
 }
 
 Bat::~Bat()
@@ -51,7 +51,7 @@ Bat::~Bat()
 
 void Bat::Init()
 {
-	m_rect.Init(360.0f, 159800.0f, 30.0f, 30.0f);
+//	m_rect.Init(360.0f, 159800.0f, 30.0f, 30.0f);
 	m_vel = 0.0f;
 	m_cutH = 30;
 	m_cutW = 46;

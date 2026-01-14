@@ -60,7 +60,7 @@ Rabbit::~Rabbit()
 }
 void Rabbit::Init()
 {
-	m_rect.Init(350.0f, 159800.0f, 30.0f, 30.0f);
+	//m_rect.Init(350.0f, 159800.0f, 30.0f, 30.0f);
 	m_vel = 0.0f;
 	//アニメーション
 	m_cutW = 34;
