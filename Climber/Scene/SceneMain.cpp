@@ -68,13 +68,24 @@ void SceneMain::Init()
 
 		auto r2 = std::make_shared<Rabbit>();
 		r2->Init();
-		r2->SetPos({ 370.0f, 159899.0f, });
+		r2->SetPos({ 319.0f, 158577.0f, });
 		m_pRabbits.push_back(r2);
 
 		auto r3 = std::make_shared<Rabbit>();
 		r3->Init();
-		r3->SetPos({ 800.0f, 600.0f });
+		r3->SetPos({ 321.0f, 157425.0f });
 		m_pRabbits.push_back(r3);
+
+		auto r4 = std::make_shared<Rabbit>();
+		r4->Init();
+		r4->SetPos({ 301.0f, 156721.0f });
+		m_pRabbits.push_back(r4);
+
+		auto r5 = std::make_shared<Rabbit>();
+		r5->Init();
+		r5->SetPos({ 641.0f, 150193.0f });
+		m_pRabbits.push_back(r5);
+
 	}
 
 	// コウモリを複数配置
@@ -86,8 +97,33 @@ void SceneMain::Init()
 
 		auto b2 = std::make_shared<Bat>();
 		b2->Init();
-		b2->SetPos({ 350.0f, 159840.0f, });
+		b2->SetPos({ 350.0f, 159282.0f, });
 		m_pBats.push_back(b2);
+
+		auto b3 = std::make_shared<Bat>();
+		b3->Init();
+		b3->SetPos({ 320.0f,157906.0f });
+		m_pBats.push_back(b3);
+
+		auto b4 = std::make_shared<Bat>();
+		b4->Init();
+		b4->SetPos({ 495.0f,157225.0f });
+		m_pBats.push_back(b4);
+
+		auto b5 = std::make_shared<Bat>();
+		b5->Init();
+		b5->SetPos({ 401.0f,156228.0f });
+		m_pBats.push_back(b5);
+
+		auto b6 = std::make_shared<Bat>();
+		b6->Init();
+		b6->SetPos({ 527.0f,149571.0f });
+		m_pBats.push_back(b6);
+
+		auto b7 = std::make_shared<Bat>();
+		b7->Init();
+		b7->SetPos({ 321.0f,150626.0f });
+		m_pBats.push_back(b7);
 	}
 
 	

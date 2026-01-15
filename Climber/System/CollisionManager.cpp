@@ -164,9 +164,10 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
             int tx = static_cast<int>(hitTileRect.GetX()) / m_pStage->GetChipW();
             int ty = static_cast<int>(hitTileRect.GetY()) / m_pStage->GetChipH();
 
-            if (m_pStage->GetData(tx, ty) != 0)
+			int tileId = m_pStage->GetData(tx, ty);
+            if (tileId != 0 && tileId != 59)
             {
-                m_pStage->SetTile(tx, ty, 0);
+				m_pStage->SetTile(tx, ty, 0);
 
                 if (!m_pPlayer->IsHighJumpActive())
                     m_pPlayer->SetVelY(0.0f);
