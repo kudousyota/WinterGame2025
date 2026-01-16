@@ -50,15 +50,15 @@ void TitleScene::FadeOutUpdate(Input&)
 void TitleScene::NormalDraw()
 {
 	const auto& wsize = Application::GetInstance().GetWindowSize();
-	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 1.0f, 0.0f, m_titleH, true);
-	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 0.25f, 0.0f, m_titleLogoH, true);
+	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 4.0f, 0.0f, m_titleH, true);
+	DrawRotaGraph(wsize.w / 2, wsize.h / 4, 0.25f, 0.0f, m_titleLogoH, true);
 }
 
 void TitleScene::FadeDraw()
 {
 	const auto& wsize = Application::GetInstance().GetWindowSize();
-	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 1.0f, 0.0f, m_titleH, true);
-	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 0.25f, 0.0f, m_titleLogoH, true);
+	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 4.0f, 0.0f, m_titleH, true);
+	DrawRotaGraph(wsize.w / 2, wsize.h / 4, 0.25f, 0.0f, m_titleLogoH, true);
 	// ’l‚Ì”ÍˆÍ‚ð‚¢‚Á‚½‚ñ0.0~1.0‚É‚µ‚Ä‚¨‚­‚Æ‚¢‚ë‚¢‚ë‚Æˆµ‚¢‚â‚·‚­‚È‚è‚Ü‚·
 	auto rate = static_cast<float>(m_frame) / static_cast<float>(fade_interval);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);
@@ -68,8 +68,8 @@ void TitleScene::FadeDraw()
 
 TitleScene::TitleScene(SceneContoller& controller) : Scene(controller)
 {
-	//m_titleH = LoadGraph("data/title_bg.png");
-	m_titleLogoH = LoadGraph("data/game_title.png");
+	m_titleH = LoadGraph("data/bg.png");
+	m_titleLogoH = LoadGraph("data/game_title .png");
 	m_update = &TitleScene::FadeInUpdate;
 	m_draw = &TitleScene::FadeDraw;
 	m_frame = fade_interval;

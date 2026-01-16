@@ -68,7 +68,7 @@ virtual~Player();
 
 private:
 	//アニメーション	
-	enum class AnimState { Idle, Run, Jump, Fall ,Hit};
+	enum class AnimState { Idle, Run, Jump, High, Fall, Hit, Persona};
 
 	AnimState m_animState = AnimState::Idle; // 現在の状態
 	int       m_animRow = 0;               // 現在のアニメ行（0=Idle,1=Run,2=Jump,3=Fall）
@@ -76,13 +76,17 @@ private:
 	int       m_jumpFrameMax = 1;            // ジャンプの横コマ数（複数なら変更）
 	int       m_fallFrameMax = 1;            // 落下の横コマ数（複数なら変更）
 	int       m_HitFrameMax = 1;             // ダメージの横コマ数（複数なら変更）
+	int		  m_highJumpFrameMax = 6;
+	int		  m_PersonaFrameMax = 11;
 
 	//画像ハンドル
 	int m_IdleHandle;
+	int m_HighJumpHandle;
 	int m_JumpHandle;
 	int m_FallHandle;
 	int m_RunHandle;
 	int m_HitHandle;
+	int m_PersonaHandle;
 	//カット位置
 	int m_cutX;
 	int m_cutY;
@@ -96,6 +100,7 @@ private:
 	int m_RunFrameMax; // 走りアニメの速度調整用
 	int m_JumpFrameMax; // ジャンプアニメの速度調整用
 	int m_FallFrameMax; // 落下アニメの速度調整用
+	int m_HighJumpMax;//ハイジャンプの速度調整
 	//切り替え速度
 	int m_switchSpeed;
 

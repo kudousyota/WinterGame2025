@@ -38,6 +38,7 @@ Player::Player() :
 	m_isHighJumpActive(false),
 	m_animRow(0),
 	m_invincibleTime(0),
+	m_PersonaHandle(-1),
 	m_frameCount(0)
 
 {
@@ -45,8 +46,10 @@ Player::Player() :
 	m_IdleHandle = LoadGraph("data/IdlePlayer.png");
 	m_JumpHandle = LoadGraph("data/JumpPlayer.png");
 	m_FallHandle = LoadGraph("data/FallPlayer.png");
+	m_HighJumpHandle = LoadGraph("data/HighJump.png");
 	m_RunHandle = LoadGraph("data/RunPlayer.png");
 	m_HitHandle = LoadGraph("data/HitPlayer.png");
+	m_PersonaHandle = LoadGraph("data/Persona.png");
 	m_pCamera = std::make_shared<Camera>();
 	m_pInput = std::make_shared<Input>();
 	//m_pRabbit = std::make_shared<Rabbit>();
@@ -68,7 +71,7 @@ void Player::Init()
 	m_cutH = 32;
 	m_speed = 2.0f;
 	m_highJumpUnlock = false;
-	m_highJumpPoint = 10;
+	m_highJumpPoint = 1;
 	m_animState = AnimState::Idle;
 	m_switchSpeed = 0;
 	m_frameCount = 0;
@@ -78,6 +81,7 @@ void Player::Init()
 	m_RunFrameMax = 12;
 	m_JumpFrameMax = 1;
 	m_FallFrameMax = 1;
+	m_HighJumpMax = 6;
 	m_invincibleTime = 0;
 
 
@@ -161,7 +165,7 @@ void Player::Update(Rect& other, const Bg& bg)
 		m_vel = -kHighJumpPower;
 		m_onGround = false;
 
-		m_animState = AnimState::Jump;
+		m_animState = AnimState::High;
 		m_animRow = 2;
 		m_frameCount = 0;
 		m_switchSpeed = 0;
@@ -179,21 +183,35 @@ void Player::Update(Rect& other, const Bg& bg)
 
 	if (!m_onGround)
 	{
-		if (m_vel < 0.0f)
+		if (m_isHighJumpActive)
 		{
-			// 上昇中：ジャンプ行
-			m_animState = AnimState::Jump;
-			m_animRow = 2;
-
+			//ハイジャンプの時アニメーションを変えない
 		}
 		else
 		{
-			// 落下中：落下行
-			m_animState = AnimState::Fall;
-			m_animRow = 3;
-			// 上昇中はハイジャンプ処理終了
+
+
+			if (m_vel < 0.0f)
+			{
+				// 上昇中：ジャンプ行
+				m_animState = AnimState::Jump;
+				m_animRow = 2;
+
+			}
+			else
+			{
+				// 落下中：落下行
+				m_animState = AnimState::Fall;
+				m_animRow = 3;
+				// 上昇中はハイジャンプ処理終了
+				m_isHighJumpActive = false;
+			}
+		}
+		if (m_vel >= 0.0f)
+		{
 			m_isHighJumpActive = false;
 		}
+		
 	}
 	else
 	{
@@ -242,6 +260,16 @@ void Player::Update(Rect& other, const Bg& bg)
 		case AnimState::Hit:
 			m_switchSpeed = 3;
 			break;
+		case AnimState::High:
+			m_switchSpeed++;
+			if (m_switchSpeed >= 6) m_switchSpeed = 0;
+			break;
+		case AnimState::Persona:
+			m_switchSpeed++;
+			if (m_switchSpeed >= 14)
+			{
+				m_switchSpeed = 0;
+			}
 
 		}
 	}
@@ -276,10 +304,12 @@ void Player::Draw(const Camera& camera)
 
 	//描画する画像ハンドルを決定
 	int handle = m_IdleHandle;
-
+	int persona = m_PersonaHandle;
+	
 	//無敵時間中は表示/非表示を切り替える
 	if (m_invincibleTime > 0)
 	{
+		
 		const int blinkRate = 6; // 何フレームごとに切り替えるか（調整可）
 		bool show = ((m_invincibleTime / blinkRate) % 2) == 0;
 		if (show && m_HitHandle != -1)
@@ -300,6 +330,7 @@ void Player::Draw(const Camera& camera)
 		{
 		case AnimState::Run:  handle = m_RunHandle;  break;
 		case AnimState::Jump: handle = m_JumpHandle; break;
+		case AnimState::High: handle = m_HighJumpHandle; break;
 		case AnimState::Fall: handle = m_FallHandle; break;
 		case AnimState::Idle: default: handle = m_IdleHandle; break;
 		}
@@ -315,6 +346,20 @@ void Player::Draw(const Camera& camera)
 		true,                        // 透過あり
 		IsLeft                     // 左右反転
 	);
+	//ハイジャンプが解放されているときのみ表示
+	if (m_highJumpUnlock)
+	{
+		DrawRectRotaGraph(
+			centerX + 40,centerY + 20,
+			m_cutX,m_cutY,
+			m_cutW,m_cutH,
+			1.0f,
+			0.0f,
+			persona,
+			true,
+			IsLeft
+		);
+	}
 
 
 #ifdef _DEBUG
