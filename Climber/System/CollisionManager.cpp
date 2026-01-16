@@ -165,7 +165,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
             int ty = static_cast<int>(hitTileRect.GetY()) / m_pStage->GetChipH();
 
 			int tileId = m_pStage->GetData(tx, ty);
-            if (tileId != 0 && tileId != 59)
+            if (tileId != 0 && tileId != 59 && tileId != 29 &&tileId != 81 && tileId != 51 && tileId != 73)
             {
 				m_pStage->SetTile(tx, ty, 0);
 
