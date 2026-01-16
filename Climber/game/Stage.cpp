@@ -129,35 +129,36 @@ bool Stage::IsCollision(const Rect& other, Rect& hitTileRect) const
 	const float top = other.GetTop();
 	const float bottom = other.GetBottom();
 
-	// 対応するタイルインデックス範囲（floor を使って外接するタイルを含める）
-	int ix0 = static_cast<int>(std::floor(left / tileW));
-	int ix1 = static_cast<int>(std::floor(right / tileW));
-	int iy0 = static_cast<int>(std::floor(top / tileH));
-	int iy1 = static_cast<int>(std::floor(bottom / tileH));
+	
+	const float eps = 0.001f; // 1e-4f～1e-3f くらいでOK
 
-	// クランプ
+	int ix0 = static_cast<int>(std::floor(left / tileW));
+	int ix1 = static_cast<int>(std::floor((right - eps) / tileW));
+	int iy0 = static_cast<int>(std::floor(top / tileH));
+	int iy1 = static_cast<int>(std::floor((bottom - eps) / tileH));
+
+	// クランプは現状のままでOK
 	if (ix0 < 0) ix0 = 0;
 	if (iy0 < 0) iy0 = 0;
 	if (ix1 >= m_dataSize.w) ix1 = m_dataSize.w - 1;
 	if (iy1 >= m_dataSize.h) iy1 = m_dataSize.h - 1;
 
-	// 範囲内のタイルをチェック
 	for (int y = iy0; y <= iy1; ++y)
 	{
 		for (int x = ix0; x <= ix1; ++x)
 		{
 			uint8_t id = GetData(x, y);
-			if (id == 0) continue; // 0 = 空き（当たり無し）、仕様に合わせて判定条件を変更
+			if (id == 0) continue;
 
-			// 衝突したタイルの矩形を world 座標で作成（Rect は中心基準）
 			float tileCenterX = x * tileW + tileW * 0.5f;
 			float tileCenterY = y * tileH + tileH * 0.5f;
-			hitTileRect.Init(tileCenterX, tileCenterY, static_cast<float>(tileW), static_cast<float>(tileH));
+			hitTileRect.Init(tileCenterX, tileCenterY, (float)tileW, (float)tileH);
 			return true;
 		}
 	}
 	return false;
 }
+
 
 void Stage::SetTile(int xidx, int yidx, uint8_t id)
 {

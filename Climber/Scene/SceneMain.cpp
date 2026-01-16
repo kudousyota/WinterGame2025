@@ -39,7 +39,7 @@ m_frameCount(0)
 	//m_pEnemyFactory = std::make_shared<EnemyFactory>();
 
 	//指定した秒数で終了
-	m_timer.Reset(5000.0f);
+	m_timer.Reset(50000.0f);
 	m_score = 0;
 	m_killCount = 0;
 	//ステージをロード
@@ -158,8 +158,9 @@ void SceneMain::Update(Input& input)
 
 	if (m_pPlayer && m_pStage)
 	{
-		m_score += CollisionManager::CheckCollisions(m_pPlayer, m_pRabbits, m_pBats, m_pStage);
-
+		int killCount = 0;
+		m_score += CollisionManager::CheckCollisions(m_pPlayer, m_pRabbits, m_pBats, m_pStage,killCount);
+		m_killCount += killCount;
 	}
 
 
@@ -193,13 +194,17 @@ void SceneMain::Update(Input& input)
 	m_pBg->Update();
 
 	// タイマー更新
+	// 終了判定
 	m_timer.Update();
 	if (m_timer.IsTimeUp())
 	{
+
 		ResultData::SetScore(m_score);
+		ResultData::SetKillCount(m_killCount);   // ← これが必要！！
 		auto result = std::make_shared<ResultScene>(m_controller);
 		m_controller.ChangeScene(result);
 		return;
+
 	}
 }
 

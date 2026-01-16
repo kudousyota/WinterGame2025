@@ -15,14 +15,16 @@ namespace
 int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
     std::vector<std::shared_ptr<Rabbit>>& m_pRabbits,
     std::vector<std::shared_ptr<Bat>>& m_pBats,
-    std::shared_ptr<Stage>& m_pStage)
+    std::shared_ptr<Stage>& m_pStage,
+    int& killCount)
 {
     int pointDelta = 0;
+	killCount = 0;
     if (!m_pPlayer || !m_pStage) return pointDelta;
 
     Rect hitTileRect;
 
-    // --- Rabbit × ステージ衝突（Bat と同様に押し出し＆反応） ---
+    // Rabbit×ステージ衝突
     for (auto& rabbit : m_pRabbits)
     {
         if (!rabbit) continue;
@@ -56,7 +58,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
             ++iter;
         }
 
-        // --- プレイヤー × Rabbit 衝突 ---
+        //プレイヤー×Rabbit衝突
         if (m_pPlayer->IsHit(*rabbit))
         {
             Vec2 push = m_pPlayer->FixPos(*rabbit);
@@ -67,6 +69,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
                 {
                     rabbit->OnDead();
                     pointDelta += 50;
+					killCount += 1;
                 }
                 else
                 {
@@ -98,7 +101,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
         }
     }
 
-    // --- プレイヤー × Bat 衝突（既存） ---
+    //プレイヤー×Bat衝突
     for (auto& bat : m_pBats)
     {
         if (!bat) continue;
@@ -113,6 +116,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
                 {
                     bat->OnDead();
                     pointDelta += 50;
+					killCount+= 1;
                 }
                 else
                 {
@@ -181,7 +185,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
         ++iter;
     }
 
-    // --- Bat × ステージ衝突（既存・OK） ---
+    // Bat×ステージ衝突
     for (auto& bat : m_pBats)
     {
         if (!bat) continue;

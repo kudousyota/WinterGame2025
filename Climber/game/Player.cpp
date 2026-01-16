@@ -22,11 +22,11 @@ Player::Player() :
 	m_RunFrameMax(0),
 	m_JumpFrameMax(0),
 	m_FallFrameMax(0),
-	m_cutX(0),
-	m_cutY(0),
-	m_cutW(0),
-	m_cutH(0),
-	m_switchSpeed(0.0f),
+	m_CutX(0),
+	m_CutY(0),
+	m_CutW(0),
+	m_CutH(0),
+	m_SwitchSpeed(0.0f),
 	m_pos(0, 0),
 	m_x(0),
 	m_brokeCount(0),
@@ -36,9 +36,21 @@ Player::Player() :
 	IsLeft(false),
 	m_animState(AnimState::Idle),
 	m_isHighJumpActive(false),
+	m_HighJumpFrameMax(0),
 	m_animRow(0),
 	m_invincibleTime(0),
 	m_PersonaHandle(-1),
+	m_PersonaCutH(0),
+	m_PersonaCutW(0),
+	m_PersonaCutX(0),
+	m_PersonaCutY(0),
+	m_personaFollowAlpha(0.3f),
+	m_personaOffsetX(24.0f),
+	m_personaOffsetY(20.0f),
+	m_PersonaPosX(0),
+	m_PersonaPosY(0),
+	m_isPersonaDraw(false),
+
 	m_frameCount(0)
 
 {
@@ -67,13 +79,15 @@ void Player::Init()
 	m_rect.Init(250.0f, 159800.0f, 30.0f, 30.0f);
 	m_vel = 0.0f;
 	//アニメーション初期化
-	m_cutW = 32;
-	m_cutH = 32;
+	m_CutW = 32;
+	m_CutH = 32;
+	m_PersonaCutW = 96;
+	m_PersonaCutH = 80;
 	m_speed = 2.0f;
 	m_highJumpUnlock = false;
 	m_highJumpPoint = 1;
 	m_animState = AnimState::Idle;
-	m_switchSpeed = 0;
+	m_SwitchSpeed = 0;
 	m_frameCount = 0;
 	m_brokeCount = 0;
 	//アニメーション速度設定
@@ -153,9 +167,9 @@ void Player::Update(Rect& other, const Bg& bg)
 		m_animRow = 2;                 // スプライトのジャンプ行
 		m_frameCount = 0;              // 切り替え直後にフレームをリセット
 
-		m_switchSpeed = 0;
-		m_cutX = 0;
-		m_cutY = 0;
+		m_SwitchSpeed = 0;
+		m_CutX = 0;
+		m_CutY = 0;
 
 
 	}
@@ -168,9 +182,9 @@ void Player::Update(Rect& other, const Bg& bg)
 		m_animState = AnimState::High;
 		m_animRow = 2;
 		m_frameCount = 0;
-		m_switchSpeed = 0;
-		m_cutX = 0;
-		m_cutY = 0;
+		m_SwitchSpeed = 0;
+		m_CutX = 0;
+		m_CutY = 0;
 		// ハイジャンプは一度使うと解除
 		m_highJumpUnlock = false;
 		// ハイジャンプ処理中フラグを立てる
@@ -239,49 +253,84 @@ void Player::Update(Rect& other, const Bg& bg)
 		{
 			//待機
 		case AnimState::Idle:
-			m_switchSpeed++;
-			if (m_switchSpeed >= m_IdleFrameMax) m_switchSpeed = 0;
+			m_SwitchSpeed++;
+			if (m_SwitchSpeed >= m_IdleFrameMax) m_SwitchSpeed = 0;
 			break;
 			//走り
 		case AnimState::Run:
-			m_switchSpeed++;
-			if (m_switchSpeed >= m_RunFrameMax) m_switchSpeed = 0;
+			m_SwitchSpeed++;
+			if (m_SwitchSpeed >= m_RunFrameMax) m_SwitchSpeed = 0;
 			break;
 			//ジャンプ
 		case AnimState::Jump:
 			// ジャンプが1枚だから常に0
-			m_switchSpeed = 0;
+			m_SwitchSpeed = 0;
 			break;
 			//落下
 		case AnimState::Fall:
 			// 落下が1枚絵だから常に0
-			m_switchSpeed = 0;
+			m_SwitchSpeed = 0;
 			break;
 		case AnimState::Hit:
-			m_switchSpeed = 3;
+			m_SwitchSpeed = 3;
 			break;
 		case AnimState::High:
-			m_switchSpeed++;
-			if (m_switchSpeed >= 6) m_switchSpeed = 0;
+			m_SwitchSpeed++;
+			if (m_SwitchSpeed >= 6) m_SwitchSpeed = 0;
 			break;
 		case AnimState::Persona:
-			m_switchSpeed++;
-			if (m_switchSpeed >= 14)
+			m_SwitchSpeed++;
+			if (m_SwitchSpeed >= 14)
 			{
-				m_switchSpeed = 0;
+				m_SwitchSpeed = 0;
 			}
 
 		}
 	}
 
 	//切り抜き座標の決定
-	m_cutY = 0;
-	m_cutX = m_switchSpeed * m_cutW;
+	m_CutY = 0;
+	m_CutX = m_SwitchSpeed * m_CutW;
+	m_PersonaCutY = 0;
+	m_PersonaCutX = m_SwitchSpeed * m_PersonaCutW;
+	
 
 	//無敵時間のカウントダウン
 	if (m_invincibleTime > 0)
 	{
 		--m_invincibleTime;
+	}
+	//ペルソナの位置計算
+	float personaX = m_rect.GetX();
+	float personaY = m_rect.GetY();
+
+	//背中に追従
+	float offsetX = (IsLeft ? +m_personaOffsetX : -m_personaOffsetX);
+	// 少し上にオフセット
+	float offsetY = -m_personaOffsetY;
+	// 目標位置
+	float targetX = personaX + offsetX;
+	float targetY = personaY + offsetY;
+
+	// 解禁された瞬間はスナップ（ワープ防止）
+	if (m_highJumpUnlock && !m_isPersonaDraw)
+	{
+		m_PersonaPosX = targetX;
+		m_PersonaPosY = targetY;
+		m_isPersonaDraw = true;
+	}
+
+	// 解禁中は追従（スムーズに付いてくる）
+	if (m_highJumpUnlock)
+	{
+		float a = m_personaFollowAlpha; // 例：0.3f
+		m_PersonaPosX += (targetX - m_PersonaPosX) * a;
+		m_PersonaPosY += (targetY - m_PersonaPosY) * a;
+	}
+	else
+	{
+		// ロック中は次に解禁したときにスナップさせる
+		m_isPersonaDraw = false;
 	}
 
 }
@@ -302,10 +351,34 @@ void Player::Draw(const Camera& camera)
 	const int Top = centerY - halfH;
 	const int Bottom = centerY + halfH;
 
+
+	// ペルソナを描画（プレイヤーより先＝背面）
+	if (m_highJumpUnlock && m_PersonaHandle != -1)
+	{
+		// 座標
+		int personaX = static_cast<int>(m_PersonaPosX + cameraOffset.x);
+		int personaY = static_cast<int>(m_PersonaPosY + cameraOffset.y);
+
+		DrawRectRotaGraph(
+			personaX, personaY,
+			m_PersonaCutX, m_PersonaCutY,
+			m_PersonaCutW, m_PersonaCutH,
+			1.0f,
+			0.0f,
+			m_PersonaHandle,
+			true,
+			IsLeft
+		);
+	}
+
+
+
 	//描画する画像ハンドルを決定
 	int handle = m_IdleHandle;
 	int persona = m_PersonaHandle;
 	
+	bool drawPlayer = true;
+
 	//無敵時間中は表示/非表示を切り替える
 	if (m_invincibleTime > 0)
 	{
@@ -321,7 +394,7 @@ void Player::Draw(const Camera& camera)
 		{
 			// 非表示フェーズなら描画しない（点滅）
 			// ただしデバッグ枠は描くため、ここで return せず一旦スキップ描画して下で枠のみ描画する
-			return;
+			drawPlayer = false;
 		}
 	}
 	else
@@ -336,30 +409,22 @@ void Player::Draw(const Camera& camera)
 		}
 	}
 
-	DrawRectRotaGraph(
-		centerX, centerY,            // 画面の中心位置
-		m_cutX, m_cutY,              // 切り抜き開始位置
-		m_cutW, m_cutH,              // 切り抜きサイズ
-		1.0f,                        // 拡大率
-		0.0f,                        // 回転角度
-		handle,                      // 画像ハンドル
-		true,                        // 透過あり
-		IsLeft                     // 左右反転
-	);
-	//ハイジャンプが解放されているときのみ表示
-	if (m_highJumpUnlock)
+
+
+	if (drawPlayer && handle != -1)
 	{
 		DrawRectRotaGraph(
-			centerX + 40,centerY + 20,
-			m_cutX,m_cutY,
-			m_cutW,m_cutH,
+			centerX, centerY,
+			m_CutX, m_CutY,
+			m_CutW, m_CutH,
 			1.0f,
 			0.0f,
-			persona,
+			handle,
 			true,
 			IsLeft
 		);
 	}
+
 
 
 #ifdef _DEBUG

@@ -16,7 +16,7 @@ Rabbit::Rabbit() :
 	m_cutY(0),
 	m_cutW(0),
 	m_cutH(0),
-	m_switchSpeed(0.0f),
+	m_SwitchSpeed(0.0f),
 	m_pos(0, 0),
 	m_speed(0),
 	m_frameCount(0),
@@ -38,7 +38,7 @@ Rabbit::Rabbit(int handle, const Position2& pos) :
 	m_cutY(0),
 	m_cutW(0),
 	m_cutH(0),
-	m_switchSpeed(0.0f),
+	m_SwitchSpeed(0.0f),
 	m_pos(pos.x, pos.y),
 	isLeft(false),
 	m_speed(0),
@@ -99,20 +99,16 @@ void Rabbit::Update(const Player& player)
 	if (m_frameCount >= 5)
 	{
 		m_frameCount = 0;
-		m_switchSpeed++;
+		m_SwitchSpeed++;
 		//横にずらす
-		if (m_switchSpeed >= 8)
+		if (m_SwitchSpeed >= 8)
 		{
-			m_switchSpeed = 0;
+			m_SwitchSpeed = 0;
 		}
-		m_cutX = m_switchSpeed * m_cutW;//切り取りいち
+		m_cutX = m_SwitchSpeed * m_cutW;//切り取りいち
 		m_cutY = 0;
 	}
-	//プレイヤがハイジャンプが可能な時当たったら死ぬ
-	if (!IsDead&&player.IsHighJumpUnlock()&&isHit(player))
-	{
-		IsDead = true;
-	}
+	
 	//重力
 	m_vel += kGravity;
 

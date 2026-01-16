@@ -64,7 +64,7 @@ private:
 	int m_cutH;
 	int m_speed;
 	float m_frameCount;
-	float m_switchSpeed;
+	float m_SwitchSpeed;
 	bool IsLeft;
 	bool IsonGround = false;
 

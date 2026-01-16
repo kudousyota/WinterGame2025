@@ -10,7 +10,7 @@ Bat::Bat() :
 	m_cutY(0),
 	m_cutW(0),
 	m_cutH(0),
-	m_switchSpeed(0.0f),
+	m_SwitchSpeed(0.0f),
 	m_pos(0, 0),
 	IsLeft(false),
 	m_speed(0),
@@ -29,7 +29,7 @@ Bat::Bat(int handle, const Position2& pos) :
 	m_cutY(0),
 	m_cutW(0),
 	m_cutH(0),
-	m_switchSpeed(0.0f),
+	m_SwitchSpeed(0.0f),
 	m_pos(pos.x, pos.y),
 	IsLeft(false),
 	m_speed(0),
@@ -56,7 +56,7 @@ void Bat::Init()
 	m_cutH = 30;
 	m_cutW = 46;
 	m_speed = -2;
-	m_switchSpeed = 0;
+	m_SwitchSpeed = 0;
 	m_frameCount = 0;
 
 }
@@ -69,20 +69,16 @@ void Bat::Update(const Player& player)
 	if (m_frameCount >= 5)
 	{
 		m_frameCount = 0;
-		m_switchSpeed++;
+		m_SwitchSpeed++;
 		//横にずらす
-		if (m_switchSpeed >= 7)
+		if (m_SwitchSpeed >= 7)
 		{
-			m_switchSpeed = 0;
+			m_SwitchSpeed = 0;
 		}
-		m_cutX = m_switchSpeed * m_cutW;//切り取りいち
+		m_cutX = m_SwitchSpeed * m_cutW;//切り取りいち
 		m_cutY = 0;
 	}
-	//プレイヤがハイジャンプが可能な時当たったら死ぬ
-	if (!IsDead&&player.IsHighJumpUnlock()&&isHit(player))
-	{
-		IsDead = true;
-	}
+
 	
 	// 速度を位置へ反映
 	m_rect.SetX(m_rect.GetX() + static_cast<float>(m_speed));

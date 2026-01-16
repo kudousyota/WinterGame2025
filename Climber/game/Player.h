@@ -76,7 +76,7 @@ private:
 	int       m_jumpFrameMax = 1;            // ジャンプの横コマ数（複数なら変更）
 	int       m_fallFrameMax = 1;            // 落下の横コマ数（複数なら変更）
 	int       m_HitFrameMax = 1;             // ダメージの横コマ数（複数なら変更）
-	int		  m_highJumpFrameMax = 6;
+	int		  m_HighJumpFrameMax = 6;
 	int		  m_PersonaFrameMax = 11;
 
 	//画像ハンドル
@@ -86,13 +86,15 @@ private:
 	int m_FallHandle;
 	int m_RunHandle;
 	int m_HitHandle;
-	int m_PersonaHandle;
+
 	//カット位置
-	int m_cutX;
-	int m_cutY;
+	int m_CutX;
+	int m_CutY;
+	
 	//１フレームの高さ
-	int m_cutW;
-	int m_cutH;
+	int m_CutW;
+	int m_CutH;
+	
 	//フレームカウント
 	float m_frameCount;
 	//アニメ速度
@@ -102,7 +104,7 @@ private:
 	int m_FallFrameMax; // 落下アニメの速度調整用
 	int m_HighJumpMax;//ハイジャンプの速度調整
 	//切り替え速度
-	int m_switchSpeed;
+	int m_SwitchSpeed;
 
 	//向き判定
 	bool IsLeft = false;
@@ -117,6 +119,24 @@ private:
 
 	//無敵時間
 	int m_invincibleTime;
+
+
+	//ペルソナ関連
+	int m_PersonaHandle;
+	int m_PersonaCutX;
+	int m_PersonaCutY;
+	int m_PersonaCutW;
+	int m_PersonaCutH;
+	int m_PersonaPosX;
+	int m_PersonaPosY;
+	//初期化時に描画するかどうか
+	bool m_isPersonaDraw;
+	//追従の速さ
+	float m_personaFollowAlpha;
+	//背中側のオフセット
+	int m_personaOffsetX;
+	//少し上側のオフセット
+	int m_personaOffsetY;
 
 
 	float m_x;
