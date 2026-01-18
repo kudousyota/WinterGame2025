@@ -26,12 +26,13 @@ Player::Player() :
 	m_CutY(0),
 	m_CutW(0),
 	m_CutH(0),
-	m_SwitchSpeed(0.0f),
+	m_SwitchSpeed(0),
 	m_pos(0, 0),
 	m_x(0),
 	m_brokeCount(0),
 	m_highJumpUnlock(false),
 	m_highJumpPoint(0),
+	m_HighJumpMax(0),
 	m_onGround(false),
 	IsLeft(false),
 	m_animState(AnimState::Idle),
@@ -323,9 +324,10 @@ void Player::Update(Rect& other, const Bg& bg)
 	// 解禁中は追従（スムーズに付いてくる）
 	if (m_highJumpUnlock)
 	{
-		float a = m_personaFollowAlpha; // 例：0.3f
-		m_PersonaPosX += (targetX - m_PersonaPosX) * a;
-		m_PersonaPosY += (targetY - m_PersonaPosY) * a;
+		// 追従率
+		float personaFollowing = m_personaFollowAlpha; // 0.3f
+		m_PersonaPosX += (targetX - m_PersonaPosX) * personaFollowing;
+		m_PersonaPosY += (targetY - m_PersonaPosY) * personaFollowing;
 	}
 	else
 	{
