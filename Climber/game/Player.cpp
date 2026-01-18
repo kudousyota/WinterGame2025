@@ -86,7 +86,8 @@ void Player::Init()
 	m_PersonaCutH = 80;
 	m_speed = 2.0f;
 	m_highJumpUnlock = false;
-	m_highJumpPoint = 1;
+	//解禁に必要なポイント設定
+	m_highJumpPoint = 15;
 	m_animState = AnimState::Idle;
 	m_SwitchSpeed = 0;
 	m_frameCount = 0;
@@ -190,6 +191,9 @@ void Player::Update(Rect& other, const Bg& bg)
 		m_highJumpUnlock = false;
 		// ハイジャンプ処理中フラグを立てる
 		m_isHighJumpActive = true;
+		//ブロック破壊数リセット
+
+		m_brokeCount = 0;
 	}
 
 	//Y座標の更新
