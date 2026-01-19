@@ -90,7 +90,7 @@ void Player::Init()
 	m_speed = 2.0f;
 	m_highJumpUnlock = false;
 	//解禁に必要なポイント設定
-	m_highJumpPoint = 10;
+	m_highJumpPoint = 1;
 	m_animState = AnimState::Idle;
 	m_SwitchSpeed = 0;
 	m_frameCount = 0;
@@ -344,11 +344,21 @@ void Player::Update(Rect& other, const Bg& bg)
 		// ロック中は次に解禁したときにスナップさせる
 		m_isPersonaDraw = false;
 	}
+	//エフェクトの更新
+	if (m_pAnimationManager)
+	{
+		m_pAnimationManager->Update();
+	}
 
 }
 void Player::Draw(const Camera& camera)
 {
 	const Vec2 cameraOffset = camera.GetCameraOffset();
+
+	if (m_pAnimationManager)
+	{
+		m_pAnimationManager->Draw(cameraOffset);
+	}
 
 	//中心座標
 	const int centerX = static_cast<int>(m_rect.GetX() + cameraOffset.x);

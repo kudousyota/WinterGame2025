@@ -43,10 +43,10 @@ void AnimationManager::Update()
 	});
 
 }
-void AnimationManager::Draw()
+void AnimationManager::Draw(const Vec2& cameraOffset)
 {
 	for (auto& effect: m_effect )
 	{
-		effect->Draw();
+		effect->Draw(cameraOffset);
 	}
 }

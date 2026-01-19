@@ -8,7 +8,7 @@
 class Player;
 //エフェクト
 class Effect;
-
+class Camera;
 enum  class EffectType
 {
 	//何もしない
@@ -27,7 +27,7 @@ public:
 	virtual void Create(const Position2& pos, EffectType type);
 	virtual void Init();
 	virtual void Update();
-	virtual void Draw();
+	virtual void Draw(const Vec2& cameraOffset);
 
 private:
 	//エフェクトを持つ

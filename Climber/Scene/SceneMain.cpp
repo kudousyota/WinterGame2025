@@ -39,7 +39,7 @@ m_frameCount(0)
 	//m_pEnemyFactory = std::make_shared<EnemyFactory>();
 
 	//指定した秒数で終了
-	m_timer.Reset(5.0f);
+	m_timer.Reset(50.0f);
 	m_score = 0;
 	m_killCount = 0;
 	//ステージをロード
@@ -200,7 +200,7 @@ void SceneMain::Update(Input& input)
 	{
 
 		ResultData::SetScore(m_score);
-		ResultData::SetKillCount(m_killCount);   // ← これが必要！！
+		ResultData::SetKillCount(m_killCount);   // これが必要！！
 		auto result = std::make_shared<ResultScene>(m_controller);
 		m_controller.ChangeScene(result);
 		return;

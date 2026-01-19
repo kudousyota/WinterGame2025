@@ -177,6 +177,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
                     m_pPlayer->SetVelY(0.0f);
 
                 m_pPlayer->TileBroke();
+				//pointDelta += 10;
             }
 
             m_pPlayer->SetOnGround(false);
