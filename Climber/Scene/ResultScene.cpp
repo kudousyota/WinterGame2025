@@ -70,6 +70,7 @@ void ResultScene::FadeDraw()
 
 ResultScene::ResultScene(SceneContoller& controller) :
 	m_draw(0),
+	m_fontHandle(-1),
 	Scene(controller)
 {
 	m_ResultH = LoadGraph("data/bg.png");
@@ -85,6 +86,7 @@ ResultScene::~ResultScene()
 
 void ResultScene::Init()
 {
+	m_fontHandle = CreateFontToHandle("x10y12pxDonguriDuel", 24, -1, -1);
 }
 void ResultScene::Update(Input& input)
 {
@@ -93,19 +95,21 @@ void ResultScene::Update(Input& input)
 void ResultScene::Draw()
 {
 	(this->*m_draw)();
-	DrawString(320, 240, "Result Scene", 0xffffff);
+	DrawStringToHandle(320, 240, "Result Scene", 0xffffff,m_fontHandle);
 
 	// スコア表示
 	int score = ResultData::GetScore();
 	int kill = ResultData::GetKillCount();	
 	char scoreText[64];
+	sprintf_s(scoreText,sizeof(scoreText),"SCORE:%d", score);
+
+	DrawStringToHandle(320, 280, scoreText, 0xffffff,m_fontHandle);
+
 	char killText[64];
-	sprintf_s(scoreText, "Score: %d", score);
-	DrawString(320, 280, scoreText, 0xffffff);
-	sprintf_s(killText, "Enemies Defeated: %d", kill);
-	DrawString(320, 310, killText, 0xffffff);
+	sprintf_s(killText, sizeof(killText), "Enemies Defeated: %d", kill);
+	DrawStringToHandle(320, 310, killText, 0xffffff,m_fontHandle);
 
 	//操作説明表示
-	DrawString(320, 320, "Press OK to return to Title", 0xffffff);
+	DrawStringToHandle(320, 350, "Press OK to return to Title", 0xffffff,m_fontHandle);
 	
 }

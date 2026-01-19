@@ -17,6 +17,9 @@ private:
 	int m_ResultLogoH;
 	//経過フレーム
 	int m_frame;
+	//フォント
+	int m_fontHandle;
+
 
 	// メンバ関数ポインタを使用して内部状態を書き換える
 	// update関数とdraw関数を、現在のTitleSceneの状態に合わせて

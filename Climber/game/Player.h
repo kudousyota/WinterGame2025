@@ -8,6 +8,8 @@ class Camera;
 class Rabbit;
 class Enemy;
 class CollisionManager;
+class AnimationManager;
+
 class Input;
 class Player : public Character
 {
@@ -153,6 +155,7 @@ private:
 	std::shared_ptr<Camera> m_pCamera;
 	std::shared_ptr<CollisionManager> m_pCollision;
 	std::shared_ptr<Input> m_pInput;
+	std::shared_ptr<AnimationManager> m_pAnimationManager;
 	//std::shared_ptr<Rabbit>m_pRabbit;
 	//std::shared_ptr<Enemy>m_pEnemy;
 

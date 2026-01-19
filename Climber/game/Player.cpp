@@ -4,6 +4,8 @@
 #include "Enemy.h"
 #include "Rabbit.h"
 #include "../System/Input.h"
+#include "../System/AnimationManager.h"
+#include <algorithm>
 
 namespace
 {
@@ -56,15 +58,16 @@ Player::Player() :
 
 {
 	//画像の読み込み
-	m_IdleHandle = LoadGraph("data/IdlePlayer.png");
-	m_JumpHandle = LoadGraph("data/JumpPlayer.png");
-	m_FallHandle = LoadGraph("data/FallPlayer.png");
-	m_HighJumpHandle = LoadGraph("data/HighJump.png");
-	m_RunHandle = LoadGraph("data/RunPlayer.png");
-	m_HitHandle = LoadGraph("data/HitPlayer.png");
-	m_PersonaHandle = LoadGraph("data/Persona.png");
-	m_pCamera = std::make_shared<Camera>();
-	m_pInput = std::make_shared<Input>();
+	m_IdleHandle		= LoadGraph("data/IdlePlayer.png");
+	m_JumpHandle		= LoadGraph("data/JumpPlayer.png");
+	m_FallHandle		= LoadGraph("data/FallPlayer.png");
+	m_HighJumpHandle	= LoadGraph("data/HighJump.png");
+	m_RunHandle			= LoadGraph("data/RunPlayer.png");
+	m_HitHandle			= LoadGraph("data/HitPlayer.png");
+	m_PersonaHandle		= LoadGraph("data/Persona.png");
+	m_pCamera			= std::make_shared<Camera>();
+	m_pInput			= std::make_shared<Input>();
+	m_pAnimationManager = std::make_shared<AnimationManager>();
 	//m_pRabbit = std::make_shared<Rabbit>();
 	//m_pEnemy = nullptr;
 
@@ -87,7 +90,7 @@ void Player::Init()
 	m_speed = 2.0f;
 	m_highJumpUnlock = false;
 	//解禁に必要なポイント設定
-	m_highJumpPoint = 15;
+	m_highJumpPoint = 10;
 	m_animState = AnimState::Idle;
 	m_SwitchSpeed = 0;
 	m_frameCount = 0;
@@ -118,6 +121,10 @@ void Player::TileBroke()
 	if (!m_highJumpUnlock && m_brokeCount >= m_highJumpPoint)
 	{
 		m_highJumpUnlock = true;
+
+		m_pAnimationManager->Create({ m_rect.GetX(), m_rect.GetY() },
+			EffectType::persona
+		);
 	}
 }
 
@@ -192,7 +199,6 @@ void Player::Update(Rect& other, const Bg& bg)
 		// ハイジャンプ処理中フラグを立てる
 		m_isHighJumpActive = true;
 		//ブロック破壊数リセット
-
 		m_brokeCount = 0;
 	}
 

@@ -146,7 +146,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AnimationManager.cpp" />
+    <ClCompile Include="System\PersonaEffect.cpp" />
+    <ClCompile Include="System\Effect.cpp" />
+    <ClCompile Include="System\AnimationManager.cpp" />
     <ClCompile Include="System\Actor.cpp" />
     <ClCompile Include="game\Enemy.cpp" />
     <ClCompile Include="game\EnemyFactory.cpp" />
@@ -174,7 +176,9 @@
     <ClCompile Include="Scene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AnimationManager.h" />
+    <ClInclude Include="System\PersonaEffect.h" />
+    <ClInclude Include="System\Effect.h" />
+    <ClInclude Include="System\AnimationManager.h" />
     <ClInclude Include="System\Actor.h" />
     <ClInclude Include="game\Enemy.h" />
     <ClInclude Include="game\EnemyFactory.h" />
