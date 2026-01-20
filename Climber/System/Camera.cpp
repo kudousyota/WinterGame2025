@@ -22,19 +22,20 @@ Camera::Camera():
 
 Camera::~Camera()
 {
+	//‰½‚à‚µ‚È‚¢
 }
 
 void Camera::Init()
 {
-
+	//‰½‚à‚µ‚È‚¢
 }
 void Camera::Update()
 {
-
+	//‰½‚à‚µ‚È‚¢
 }
 void Camera::Draw()
 {
-
+	//‰½‚à‚µ‚È‚¢
 }
 void Camera::InitCamera(std::shared_ptr<Camera>camera)
 {

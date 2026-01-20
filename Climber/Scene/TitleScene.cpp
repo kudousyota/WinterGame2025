@@ -56,7 +56,7 @@ void TitleScene::NormalDraw()
 	const auto& wsize = Application::GetInstance().GetWindowSize();
 	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 4.0f, 0.0f, m_titleH, true);
 	DrawRotaGraph(wsize.w / 2, wsize.h / 4, 0.25f, 0.0f, m_titleLogoH, true);
-	const auto& wsize = Application::GetInstance().GetWindowSize();
+
 
 	//------------------------------//
 		// エフェクトルーチン

@@ -19,6 +19,11 @@ private:
 	int m_frame;
 	//フォント
 	int m_fontHandle;
+	//スコア表示の足されていく演出用
+	int m_displayScore;
+	int m_finalScore;
+	//アニメーションを用
+	float m_scoreAnimTime;
 
 
 	// メンバ関数ポインタを使用して内部状態を書き換える
