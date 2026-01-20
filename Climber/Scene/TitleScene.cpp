@@ -94,8 +94,7 @@ void TitleScene::Init()
 	const auto& wsize = Application::GetInstance().GetWindowSize();
 	// エフェクトの拡大率を設定する。
 	// Effekseerで作成したエフェクトは2D表示の場合、小さすぎることが殆どなので必ず拡大する。
-	//SetScalePlayingEffekseer2DEffect(m_effectPlayingHandle, 25.0f, 25.0f, 25.0f);
-	//SetPosPlayingEffekseer2DEffect(m_effectPlayingHandle,wsize.w/2,wsize.h / 2,0);
+	
 }
 
 void TitleScene::Update(Input& input)

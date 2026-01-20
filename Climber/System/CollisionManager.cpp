@@ -38,18 +38,19 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
         {
             Vec2 push = rect.FixPos(hitTileRect);
 
-            // 壁に当たったら左右反転（任意）
-            if (push.x != 0.0f) {
+            // 壁に当たったら左右反転
+            if (push.x != 0.0f) 
+            {
                 rabbit->SetVelX(-rabbit->GetVelX());
             }
 
-            if (push.y < 0.0f) // 上から着地
+            if (push.y < 0.0f) //上から着地
             {
                 rabbit->SetVelY(0.0f);
                 rabbit->SetOnGround(true);
                 rect.SetY(hitTileRect.GetTop() - rect.GetH() * 0.5f);
             }
-            else if (push.y > 0.0f) // 下から当たり
+            else if (push.y > 0.0f) //下から当たり
             {
                 rabbit->SetVelY(0.0f);
                 rabbit->SetOnGround(false);
