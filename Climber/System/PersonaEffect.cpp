@@ -70,7 +70,7 @@ void PersonaEffect::Update()
         // 退場斜め
         // 調整するときスピード8～16px/frame,Yは0～-8
         m_SlideX += 12.0f;
-        m_SlideY -= 3.0f;
+        m_SlideY -= 8.0f;
 
         // 調整するときフェード時間 12～24f
         if (m_timer > 20)

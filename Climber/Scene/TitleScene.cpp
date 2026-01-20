@@ -57,23 +57,6 @@ void TitleScene::NormalDraw()
 	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 4.0f, 0.0f, m_titleH, true);
 	DrawRotaGraph(wsize.w / 2, wsize.h / 4, 0.25f, 0.0f, m_titleLogoH, true);
 
-
-	//------------------------------//
-		// エフェクトルーチン
-		//------------------------------//
-	if (m_effectPlayingHandle >= 0) // 再生中エフェクトのハンドルがあれば.
-	{
-		// 再生中のエフェクトを移動
-		SetPosPlayingEffekseer2DEffect(m_effectPlayingHandle, wsize.w / 2, wsize.h / 2, 0);
-
-		// Effekseerにより再生中のエフェクトを更新する。
-		UpdateEffekseer2D();
-
-		// Effekseerにより再生中のエフェクトを描画する。
-		DrawEffekseer2D();
-	}
-
-
 }
 
 void TitleScene::FadeDraw()
@@ -111,8 +94,8 @@ void TitleScene::Init()
 	const auto& wsize = Application::GetInstance().GetWindowSize();
 	// エフェクトの拡大率を設定する。
 	// Effekseerで作成したエフェクトは2D表示の場合、小さすぎることが殆どなので必ず拡大する。
-	SetScalePlayingEffekseer2DEffect(m_effectPlayingHandle, 25.0f, 25.0f, 25.0f);
-	SetPosPlayingEffekseer2DEffect(m_effectPlayingHandle,wsize.w/2,wsize.h / 2,0);
+	//SetScalePlayingEffekseer2DEffect(m_effectPlayingHandle, 25.0f, 25.0f, 25.0f);
+	//SetPosPlayingEffekseer2DEffect(m_effectPlayingHandle,wsize.w/2,wsize.h / 2,0);
 }
 
 void TitleScene::Update(Input& input)
