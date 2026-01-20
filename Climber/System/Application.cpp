@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "EffekseerForDXLib.h"
 #include "DxLib.h"
 #include <cassert>
 #include "input.h"
