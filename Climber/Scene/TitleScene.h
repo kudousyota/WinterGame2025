@@ -14,8 +14,14 @@ private:
 	int m_titleH;
 	//タイトルのロゴ画像
 	int m_titleLogoH;
+	//エフェクとのハンドル
+	int m_effectHandle;
+	//再生用にハンドル
+	int m_effectPlayingHandle;
 	//経過フレーム
 	int m_frame;
+
+
 
 	// メンバ関数ポインタを使用して内部状態を書き換える
 	// update関数とdraw関数を、現在のTitleSceneの状態に合わせて

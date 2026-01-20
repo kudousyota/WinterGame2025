@@ -4,6 +4,7 @@
 #include "SceneMain.h"
 #include "SceneContoller.h"
 #include "../System/Application.h"
+#include "EffekseerForDXLib.h"
 
 constexpr int fade_interval = 60;
 
@@ -29,6 +30,9 @@ void TitleScene::FadeInUpdate(Input& input)
 
 void TitleScene::NormalUpdate(Input& input)
 {
+	// エフェクトを再生する。
+	m_effectPlayingHandle = PlayEffekseer2DEffect(m_effectHandle);
+
 	if (input.IsTriggered("ok"))
 	{
 		m_update = &TitleScene::FadeOutUpdate;
@@ -52,6 +56,24 @@ void TitleScene::NormalDraw()
 	const auto& wsize = Application::GetInstance().GetWindowSize();
 	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 4.0f, 0.0f, m_titleH, true);
 	DrawRotaGraph(wsize.w / 2, wsize.h / 4, 0.25f, 0.0f, m_titleLogoH, true);
+	const auto& wsize = Application::GetInstance().GetWindowSize();
+
+	//------------------------------//
+		// エフェクトルーチン
+		//------------------------------//
+	if (m_effectPlayingHandle >= 0) // 再生中エフェクトのハンドルがあれば.
+	{
+		// 再生中のエフェクトを移動
+		SetPosPlayingEffekseer2DEffect(m_effectPlayingHandle, wsize.w / 2, wsize.h / 2, 0);
+
+		// Effekseerにより再生中のエフェクトを更新する。
+		UpdateEffekseer2D();
+
+		// Effekseerにより再生中のエフェクトを描画する。
+		DrawEffekseer2D();
+	}
+
+
 }
 
 void TitleScene::FadeDraw()
@@ -66,10 +88,14 @@ void TitleScene::FadeDraw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);	// ブレンドしない
 }
 
-TitleScene::TitleScene(SceneContoller& controller) : Scene(controller)
+TitleScene::TitleScene(SceneContoller& controller) : Scene(controller),
+m_effectHandle(-1),
+m_effectPlayingHandle(-1)
 {
 	m_titleH = LoadGraph("data/bg.png");
-	m_titleLogoH = LoadGraph("data/game_title .png");
+	m_titleLogoH = LoadGraph("data/game_title.png");
+	m_effectHandle = LoadEffekseerEffect("data/effect.efk");
+	//m_effectPlayingHandle = PlayEffekseer2DEffect(m_effectHandle);
 	m_update = &TitleScene::FadeInUpdate;
 	m_draw = &TitleScene::FadeDraw;
 	m_frame = fade_interval;
@@ -80,15 +106,30 @@ TitleScene::~TitleScene()
 }
 
 void TitleScene::Init()
+	
 {
+	const auto& wsize = Application::GetInstance().GetWindowSize();
+	// エフェクトの拡大率を設定する。
+	// Effekseerで作成したエフェクトは2D表示の場合、小さすぎることが殆どなので必ず拡大する。
+	SetScalePlayingEffekseer2DEffect(m_effectPlayingHandle, 25.0f, 25.0f, 25.0f);
+	SetPosPlayingEffekseer2DEffect(m_effectPlayingHandle,wsize.w/2,wsize.h / 2,0);
 }
 
 void TitleScene::Update(Input& input)
 {
+
+	// Effekseerにより再生中のエフェクトを更新する。
+	//UpdateEffekseer2D();
 	(this->*m_update)(input);
+
+
 }
 
 void TitleScene::Draw()
 {
+	
+	
 	(this->*m_draw)();
+	
+	
 }

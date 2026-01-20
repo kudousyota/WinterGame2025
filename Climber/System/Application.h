@@ -10,6 +10,17 @@ class Application
 {
 private:
 	Size windowSize_;
+	//enum  class EffectState
+	//{
+	//	Stoped,		// 完全停止済
+	//	Play,		// プレイ中
+	//	SpawnStop	// 生成停止
+	//};
+
+	//int			playingEffectHandle = -1;	// 再生中のエフェクト
+	//EffectState	effectState = EffectState::Stoped;
+	//VECTOR		effectPos = VGet(windowSize_.w * 0.5f, windowSize_.h * 0.5f, 0);
+
 
 	Application();	// privateにすることでシングルトンクラスにできる
 	Application(const Application& app) = delete;	// コピーコンストラクタもprivateにして複製を防ぐ

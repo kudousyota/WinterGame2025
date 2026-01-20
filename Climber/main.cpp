@@ -3,7 +3,7 @@
 #include"System/Bg.h"
 #include "System/Input.h"
 #include <memory> //シェアードポイント
-
+#include "System/Application.h" 
 #include "Scene/SceneMain.h"
 #include "Scene/TitleScene.h"
 #include "Scene/SceneContoller.h"
