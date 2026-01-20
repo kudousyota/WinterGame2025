@@ -39,7 +39,7 @@ m_frameCount(0)
 	//m_pEnemyFactory = std::make_shared<EnemyFactory>();
 
 	//指定した秒数で終了
-	m_timer.Reset(2.0f);
+	m_timer.Reset(5.0f);
 	m_score = 0;
 	m_killCount = 0;
 	//ステージをロード
@@ -124,6 +124,16 @@ void SceneMain::Init()
 		b7->Init();
 		b7->SetPos({ 321.0f,150626.0f });
 		m_pBats.push_back(b7);
+
+		auto b8 = std::make_shared<Bat>();
+		b8->Init();
+		b8->SetPos({ 303.0f,151129.0f });
+		m_pBats.push_back(b8);
+
+		auto b9 = std::make_shared<Bat>();
+		b9->Init();
+		b9->SetPos({ 406.0f,151773.0f });
+		m_pBats.push_back(b9);
 	}
 
 	
@@ -200,7 +210,7 @@ void SceneMain::Update(Input& input)
 	{
 
 		ResultData::SetScore(m_score);
-		ResultData::SetKillCount(m_killCount);   // これが必要！！
+		ResultData::SetKillCount(m_killCount);   //これが必要！！
 		auto result = std::make_shared<ResultScene>(m_controller);
 		m_controller.ChangeScene(result);
 		return;

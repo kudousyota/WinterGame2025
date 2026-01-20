@@ -5,8 +5,8 @@
 
 namespace 
 {
-    constexpr int kPersonaCutW = 1050;
-	constexpr int kPersonaCutH = 1050;
+    constexpr int kPersonaCutW = 1150;
+	constexpr int kPersonaCutH = 1150;
 }
 
 PersonaEffect::PersonaEffect(const Position2& pos, int handle):
@@ -57,8 +57,8 @@ void PersonaEffect::Update()
     case CutinState::Stay:
     {
         // 完全停止
-        // 調整ポイント：20～40f
-        if (m_timer > 40)
+        // 調整ポイント
+        if (m_timer > 60)
         {
             m_timer = 0;
             m_state = CutinState::Exit;
@@ -70,7 +70,7 @@ void PersonaEffect::Update()
         // 退場斜め
         // 調整するときスピード8～16px/frame,Yは0～-8
         m_SlideX += 12.0f;
-        m_SlideY -= 8.0f;
+        m_SlideY -= 3.0f;
 
         // 調整するときフェード時間 12～24f
         if (m_timer > 20)
@@ -99,7 +99,7 @@ void PersonaEffect::Draw(const Vec2& cameraOffset)
 
     //  スケール/アルファをステート別に 
     // 基本は等倍
-    float scale = 1.0f;
+    float scale = 1.3f;
     // Entrance/Stay は不透明
     int alpha = 255;   
 
@@ -119,7 +119,7 @@ void PersonaEffect::Draw(const Vec2& cameraOffset)
         // 近づくにつれ等倍に戻る：距離に応じた縮小/拡大
         float dist = static_cast<float>(std::fabs(m_pos.x - m_SlideX));
         float t = max(1.0f, dist / 200.0f); // 0..1
-        scale = 1.0f + 0.1f * t; // 遠いほど1.1倍、近づくと1.0へ
+      //  scale = 1.0f + 0.1f * t; // 遠いほど1.1倍、近づくと1.0へ
     }
 
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
