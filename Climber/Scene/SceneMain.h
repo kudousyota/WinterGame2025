@@ -63,12 +63,21 @@ private:
 	int m_score = 0;//スコア
 	int m_lastScore = 0;//前回のスコア
 	int m_killCount = 0;//倒した敵の数
+	//表示中の+加点
+	int m_popupAmount = 0;
+	//表示中の+加点のフレームカウント
+	int m_popupFrame = 0;
+	//表示時間
+	int m_popupDisplayTime;
+	//現在アルファ(0-255)
+	int m_popupAlpha = 0;
+	//表示Y
+	float m_popupY = 0.0f;  
+	//前フレームのスコア
+	int  m_prevScore = 0;   
+
 
 	int m_fontHandle;
 
-	
-	
-	
-	//bool IsHit(const Circle& a, const Circle& b);
 };
 

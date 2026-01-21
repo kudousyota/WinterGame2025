@@ -70,7 +70,7 @@ void PersonaEffect::Update()
         // 退場斜め
         // 調整するときスピード8～16px/frame,Yは0～-8
         m_SlideX += 12.0f;
-        m_SlideY -= 8.0f;
+        m_SlideY -= 30.0f;
 
         // 調整するときフェード時間 12～24f
         if (m_timer > 20)
@@ -99,19 +99,18 @@ void PersonaEffect::Draw(const Vec2& cameraOffset)
 
     //  スケール/アルファをステート別に 
     // 基本は等倍
-    float scale = 1.3f;
+    float scale = 1.4f;
     // Entrance/Stay は不透明
     int alpha = 255;   
 
     if (m_state == CutinState::Exit)
     {
-        // 退場中だけフェードアウト0～20f255→0
+        // 退場中だけフェードアウト
         int a = 255 - m_timer * (255 / 20);
         if (a < 0) a = 0;
         alpha = a;
 
         // 少しだけ縮める伸ばす遊びできる
-        // scale = 1.0f + 0.05f * (m_timer / 20.0f);
     }
     else if (m_state == CutinState::Entrance)
     {
@@ -119,7 +118,6 @@ void PersonaEffect::Draw(const Vec2& cameraOffset)
         // 近づくにつれ等倍に戻る：距離に応じた縮小/拡大
         float dist = static_cast<float>(std::fabs(m_pos.x - m_SlideX));
         float t = max(1.0f, dist / 200.0f); // 0..1
-      //  scale = 1.0f + 0.1f * t; // 遠いほど1.1倍、近づくと1.0へ
     }
 
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);

@@ -32,6 +32,9 @@ public:
 		return m_pos;
 	}
 
+	void SetW(float w);
+	void SetH(float h);
+
 	//c‘¬“x‚Ìæ“¾
 	float GetVelY() const { return m_vel; }
 	void SetVelY(float vel) { m_vel = vel; }

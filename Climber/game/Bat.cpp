@@ -59,7 +59,20 @@ void Bat::Init()
 	m_SwitchSpeed = 0;
 	m_frameCount = 0;
 
+	// ヒットボックスのサイズ設定
+	if (m_rect.GetW() <= 0.0f) SetW(static_cast<float>(m_cutW));
+	if (m_rect.GetH() <= 0.0f) SetH(static_cast<float>(m_cutH));
+
 }
+void Bat::SetW(float w)
+{
+	m_rect.SetW(w);
+}
+void Bat::SetH(float h)
+{
+	m_rect.SetH(h);
+}
+
 
 void Bat::Update(const Player& player)
 {

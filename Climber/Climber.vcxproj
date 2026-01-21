@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="System\SoundManager.cpp" />
     <ClCompile Include="System\PersonaEffect.cpp" />
     <ClCompile Include="System\Effect.cpp" />
     <ClCompile Include="System\AnimationManager.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="Scene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="System\SoundManager.h" />
     <ClInclude Include="System\PersonaEffect.h" />
     <ClInclude Include="System\Effect.h" />
     <ClInclude Include="System\AnimationManager.h" />

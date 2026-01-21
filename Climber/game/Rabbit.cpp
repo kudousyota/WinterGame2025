@@ -68,7 +68,7 @@ void Rabbit::Init()
 	m_speed = -1;
 
 
-	// ヒットボックスのサイズは必ず設定
+	// ヒットボックスのサイズ設定
 	if (m_rect.GetW() <= 0.0f) SetW(static_cast<float>(m_cutW));
 	if (m_rect.GetH() <= 0.0f) SetH(static_cast<float>(m_cutH));
 
@@ -150,8 +150,8 @@ void Rabbit::Draw(const Camera& camera)
 		1.0f,                        // 拡大率
 		0.0f,                        // 回転角度
 		m_Handle,                    // 画像ハンドル
-		true,                         // 透過あり
-		isLeft					  // 左右反転
+		true,                        // 透過あり
+		isLeft						 // 左右反転
 	);
 
 

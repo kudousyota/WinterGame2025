@@ -24,6 +24,7 @@ Scene(controller),
 m_draw(0),
 m_update(0),
 m_fontHandle(-1),
+m_popupDisplayTime(0),
 m_frameCount(0)
 {
 	m_pPlayer	= std::make_shared<Player>();
@@ -39,7 +40,7 @@ m_frameCount(0)
 	//m_pEnemyFactory = std::make_shared<EnemyFactory>();
 
 	//指定した秒数で終了
-	m_timer.Reset(100000.0f);
+	m_timer.Reset(5.0f);
 	m_score = 0;
 	m_killCount = 0;
 	//ステージをロード
@@ -63,7 +64,7 @@ void SceneMain::Init()
 	{
 		auto r1 = std::make_shared<Rabbit>();
 		r1->Init();
-		r1->SetPos({ 350.0f, 159800.0f, });
+		r1->SetPos({ 238, 158257, });
 		m_pRabbits.push_back(r1);
 
 		auto r2 = std::make_shared<Rabbit>();
@@ -201,6 +202,11 @@ void SceneMain::Init()
 void SceneMain::Update(Input& input)
 {
 	m_frameCount++;
+
+	//前のスコアを保存
+	const int previousScore = m_score;
+
+
 	//  キャラの更新（移動・重力など）
 	m_pPlayer->Update(*m_pRect, *m_pBg);
 	//敵の更新
@@ -269,6 +275,19 @@ void SceneMain::Update(Input& input)
 	}
 
 	if (m_score < 0) { m_score = 0; }
+	// ここまでスコア計算
+	const int scoreDelta = m_score - previousScore;
+	if (scoreDelta > 0)
+	{
+		//ポップ開始
+		m_popupAmount = scoreDelta;
+		m_popupFrame = 0;
+		//1秒間表示
+		m_popupDisplayTime = 60;
+		m_popupAlpha = 255;
+		//表示位置リセット
+		m_popupY = 70.0f;
+	}
 
 	// カメラ・背景更新
 	m_pCamera->UpdateCamera(m_pPlayer);
@@ -295,9 +314,8 @@ void SceneMain::Draw()
 	
 	m_pBg->Draw(*m_pCamera);
 	m_pStage->Draw(*m_pCamera, 0, 0);//ステージデータの描画
-	//m_pStageTwo->Draw(*m_pCamera, 0, 0);
 	m_pRect->Draw();
-	m_pPlayer->Draw(*m_pCamera);
+	
 
 	for (auto& rabbit: m_pRabbits)
 	{
@@ -307,8 +325,8 @@ void SceneMain::Draw()
 	{
 		bat->Draw(*m_pCamera,*m_pPlayer);
 	}
-	//m_pEnemyFactory->Draw();
-	//m_pTitleScene->Draw();
+	m_pPlayer->Draw(*m_pCamera);
+	
 	
 	constexpr int Rabbit = 1;
 
@@ -333,11 +351,57 @@ void SceneMain::Draw()
 	//スコア
 	char ScoreBuf[64];
 	sprintf_s(ScoreBuf, sizeof(ScoreBuf), "SCORE:%d", m_score);
+	//sprintf_s(ScoreBuf, sizeof(ScoreBuf), "+%d", m_score);
+
 	//キルした数
 	char KillBuf[64];
 	sprintf_s(KillBuf, sizeof(KillBuf), "KILLS:%d", m_killCount);
+
+	const int scoreX = 20;
+	const int scoreY = 70;
+
+
 	DrawStringToHandle(20, 50,  TimeBuf,0xffffff, m_fontHandle, remainSec);
 	DrawStringToHandle(20, 70, ScoreBuf, 0xffffff,m_fontHandle,m_score);
 	DrawStringToHandle(20, 90, KillBuf, 0xffffff,m_fontHandle,m_killCount);
 
+	// ポップアップ表示
+	if (m_popupFrame < m_popupDisplayTime && m_popupAmount > 0)
+	{
+		m_popupFrame++;
+		// Y位置を上に移動
+		m_popupY -= 0.5f;
+		// 徐々に透明化
+		m_popupAlpha = 255 * (m_popupDisplayTime - m_popupFrame) / m_popupDisplayTime;
+		// スコアの右端位置を取得
+		const int scoreTextWidth =GetDrawStringWidthToHandle(ScoreBuf, std::strlen(ScoreBuf), m_fontHandle);
+		// 右に10ずらす
+		const int popupX = scoreX + scoreTextWidth + 10; 
+		//プラスされる位置
+		const int popupY = static_cast<int>(m_popupY);
+		// ポップアップテキスト
+		char PopupBuf[32];
+		std::snprintf(PopupBuf, sizeof(PopupBuf), "+%d", m_popupAmount);
+
+		// 読みやすいように影
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_popupAlpha);
+		//カラー
+		const unsigned int shadow = GetColor(0, 0, 0);
+		//四方向にずらして描画して影を作る
+		const int ox[4] = { -1, 1, -1, 1 };
+		const int oy[4] = { -1, -1, 1, 1 };
+		for (int i = 0; i < 4; ++i)
+		{
+			DrawStringToHandle(popupX + ox[i], popupY + oy[i], PopupBuf, shadow, m_fontHandle);
+		}
+		// 本体カラー
+		const unsigned int gold = GetColor(255, 240, 90);
+		// 本体描画
+		DrawStringToHandle(popupX, popupY, PopupBuf, gold, m_fontHandle);
+
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+
 }
+
+	

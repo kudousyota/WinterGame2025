@@ -164,8 +164,6 @@ void Player::Update(Rect& other, const Bg& bg)
 
 	//重力
 	m_vel += kGravity;
-	//衝突判定
-	//Rect chipRect;
 	// ジャンプ処理（地面にいるときだけ、Input を使用）
 	if (m_pInput->IsTriggered("Jump") && m_onGround)  // "Jump" = Z キー
 	{
@@ -179,7 +177,6 @@ void Player::Update(Rect& other, const Bg& bg)
 		m_SwitchSpeed = 0;
 		m_CutX = 0;
 		m_CutY = 0;
-
 
 	}
 	// ハイジャンプ 解禁されていた場合のみジャンプ処理
@@ -270,6 +267,7 @@ void Player::Update(Rect& other, const Bg& bg)
 			//走り
 		case AnimState::Run:
 			m_SwitchSpeed++;
+			// 走りアニメの最大フレーム数でループ
 			if (m_SwitchSpeed >= m_RunFrameMax) m_SwitchSpeed = 0;
 			break;
 			//ジャンプ
@@ -282,6 +280,7 @@ void Player::Update(Rect& other, const Bg& bg)
 			// 落下が1枚絵だから常に0
 			m_SwitchSpeed = 0;
 			break;
+			
 		case AnimState::Hit:
 			m_SwitchSpeed = 3;
 			break;
@@ -323,7 +322,7 @@ void Player::Update(Rect& other, const Bg& bg)
 	float targetX = personaX + offsetX;
 	float targetY = personaY + offsetY;
 
-	// 解禁された瞬間はスナップ（ワープ防止）
+	// 解禁された瞬間はスナップワープ防止
 	if (m_highJumpUnlock && !m_isPersonaDraw)
 	{
 		m_PersonaPosX = targetX;
@@ -331,11 +330,12 @@ void Player::Update(Rect& other, const Bg& bg)
 		m_isPersonaDraw = true;
 	}
 
-	// 解禁中は追従（スムーズに付いてくる）
+	// 解禁中は追従スムーズに付いてくる
 	if (m_highJumpUnlock)
 	{
 		// 追従率
-		float personaFollowing = m_personaFollowAlpha; // 0.3f
+		// 0.3f
+		float personaFollowing = m_personaFollowAlpha;
 		m_PersonaPosX += (targetX - m_PersonaPosX) * personaFollowing;
 		m_PersonaPosY += (targetY - m_PersonaPosY) * personaFollowing;
 	}

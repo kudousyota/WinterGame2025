@@ -155,6 +155,4 @@ void ResultScene::Draw()
 		DrawStringToHandle(470, 580, "Press A to Title", Color, m_fontHandle);
 	}
 
-	
-	
 }
