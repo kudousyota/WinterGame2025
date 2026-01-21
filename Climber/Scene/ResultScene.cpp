@@ -142,7 +142,16 @@ void ResultScene::Draw()
 	sprintf_s(killText, sizeof(killText), "Enemies Defeated: %d", kill);
 	DrawStringToHandle(320, 390, killText, white,m_fontHandle);
 
-	//操作説明表示
-	DrawStringToHandle(360, 460, "Press OK to return to Title", white,m_fontHandle);
+	//点滅頻度
+	const int intervar = 650;
+	int now = GetNowCount();
+	bool visible = (now / intervar) % 2;
+	if (visible)
+	{
+		//操作説明表示
+		DrawStringToHandle(360, 460, "Press A to Title", white, m_fontHandle);
+	}
+
+	
 	
 }

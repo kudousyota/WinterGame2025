@@ -39,7 +39,7 @@ m_frameCount(0)
 	//m_pEnemyFactory = std::make_shared<EnemyFactory>();
 
 	//指定した秒数で終了
-	m_timer.Reset(5.0f);
+	m_timer.Reset(100.0f);
 	m_score = 0;
 	m_killCount = 0;
 	//ステージをロード
@@ -189,14 +189,36 @@ void SceneMain::Update(Input& input)
 	);
 
 
-	// 破壊タイルによるスコア集計（差分）
+	// 破壊タイルによるスコア集計
 	const int brokeNow = m_pPlayer->GetBrokeCount();
+	const int tilepoint = m_pStage->GetTileBrokePoint();
+
 	const int delta = brokeNow - m_lastScore;
 	if (delta > 0)
 	{
 		m_score += delta * m_pStage->GetTileBrokePoint();
 		m_lastScore = brokeNow;
 	}
+	if (brokeNow >= m_lastScore)
+	{
+		//増えた分だけ加点
+		const int delta = brokeNow - m_lastScore;
+		if (delta > 0)
+		{
+			m_score += delta * tilepoint;
+		}
+		m_lastScore = brokeNow;
+	}
+	else
+	{
+		//リセット後に壊した分も加点する
+		if (brokeNow > 0)
+		{
+			m_score += brokeNow * tilepoint;
+		}
+		m_lastScore = brokeNow;
+	}
+
 	if (m_score < 0) { m_score = 0; }
 
 	// カメラ・背景更新

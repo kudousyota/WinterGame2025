@@ -73,6 +73,7 @@ void TitleScene::FadeDraw()
 
 TitleScene::TitleScene(SceneContoller& controller) : Scene(controller),
 m_effectHandle(-1),
+m_fontHandl(-1),
 m_effectPlayingHandle(-1)
 {
 	m_titleH = LoadGraph("data/bg.png");
@@ -92,8 +93,7 @@ void TitleScene::Init()
 	
 {
 	const auto& wsize = Application::GetInstance().GetWindowSize();
-	// エフェクトの拡大率を設定する。
-	// Effekseerで作成したエフェクトは2D表示の場合、小さすぎることが殆どなので必ず拡大する。
+	m_fontHandl = CreateFontToHandle("x10y12pxDonguriDuel", 40, 6, DX_FONTTYPE_ANTIALIASING_EDGE);
 	
 }
 
@@ -109,9 +109,19 @@ void TitleScene::Update(Input& input)
 
 void TitleScene::Draw()
 {
-	
+	//色は描画時に指定
+	const int white = GetColor(255, 255, 255);
 	
 	(this->*m_draw)();
 	
+	//点滅頻度
+	const int intervar = 650;
+	int now = GetNowCount();
+	bool visible = (now / intervar) % 2;
+	if (visible)
+	{
+		//操作説明表示
+		DrawStringToHandle(360, 460, "Press A to GameScene", white, m_fontHandl);
+	}
 	
 }

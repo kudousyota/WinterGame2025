@@ -17,16 +17,16 @@ namespace
 void Input::InitializeInputTable()
 {
 	m_inputTable["ok"] = { { PeripheralType::keyboard,KEY_INPUT_RETURN},
-					  { PeripheralType::pad1,PAD_INPUT_L } };	// PADのSELECTボタン
+					  { PeripheralType::pad1,PAD_INPUT_A } };	// PADのSELECTボタン
 	m_inputTable["pause"] = { { PeripheralType::keyboard,KEY_INPUT_P},
 						  { PeripheralType::pad1,PAD_INPUT_R } };	// PADのSTARTボタン
 
 	m_inputTable["Jump"] = { { PeripheralType::keyboard,KEY_INPUT_Z},
-						  { PeripheralType::pad1,PAD_INPUT_C } };	// PADのXボタン
+						  { PeripheralType::pad1,PAD_INPUT_A } };	// PADのXボタン
 	m_inputTable["slow"] = { { PeripheralType::keyboard,KEY_INPUT_LSHIFT},
-						  { PeripheralType::pad1,PAD_INPUT_A } };	// PADのAボタン
+						  { PeripheralType::pad1,PAD_INPUT_Y } };	// PADのAボタン
 	m_inputTable["HighJump"] = { { PeripheralType::keyboard,KEY_INPUT_X},
-						  { PeripheralType::pad1,PAD_INPUT_X } };	// PADのYボタン
+						  { PeripheralType::pad1,PAD_INPUT_C } };	// PADのYボタン
 
 	m_inputTable["up"] = { { PeripheralType::keyboard,KEY_INPUT_UP},
 						{ PeripheralType::pad1,PAD_INPUT_UP } };

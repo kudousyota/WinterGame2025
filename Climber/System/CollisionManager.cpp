@@ -66,7 +66,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
 
             if (!rabbit->IsDead)
             {
-                if (m_pPlayer->IsHighJumpUnlock())
+                if (m_pPlayer->IsHighJumpUnlock() || m_pPlayer->IsHighJumpActive())
                 {
                     rabbit->OnDead();
                     pointDelta += 50;
@@ -113,7 +113,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
 
             if (!bat->IsDead)
             {
-                if (m_pPlayer->IsHighJumpUnlock())
+                if (m_pPlayer->IsHighJumpUnlock()||m_pPlayer->IsHighJumpActive())
                 {
                     bat->OnDead();
                     pointDelta += 50;

@@ -14,6 +14,8 @@ private:
 	int m_titleH;
 	//タイトルのロゴ画像
 	int m_titleLogoH;
+	//フォント
+	int m_fontHandl;
 	//エフェクとのハンドル
 	int m_effectHandle;
 	//再生用にハンドル

@@ -90,7 +90,7 @@ void Player::Init()
 	m_speed = 2.0f;
 	m_highJumpUnlock = false;
 	//解禁に必要なポイント設定
-	m_highJumpPoint = 1;
+	m_highJumpPoint = 10;
 	m_animState = AnimState::Idle;
 	m_SwitchSpeed = 0;
 	m_frameCount = 0;

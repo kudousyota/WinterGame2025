@@ -26,6 +26,10 @@ private:
 	int m_mapHandle;
 	//”wŒi
 	int	m_bgHandle;
+	int m_cloudLonelyHandle;
+	int m_cloudbgHandle;
+	int m_cloudmgWonHandle;
+	int m_cloudmgTwoHandle;
 	
 	//”wŒi‚ÌˆÊ’u
 	Vec2 m_pos;
