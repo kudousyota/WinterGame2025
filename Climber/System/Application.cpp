@@ -1,5 +1,4 @@
 #include "Application.h"
-#include "EffekseerForDXLib.h"
 #include "DxLib.h"
 #include <cassert>
 #include "input.h"
@@ -41,37 +40,6 @@ bool Application::Init()
 		return false;
 	}
 
-	//エフェクシア
-	//DirectX11を使用するようにする
-	//Effekseerを必ず設定する
-	SetUseDirect3DVersion(DX_DIRECT3D_11);
-
-	//effekseerを初期化する
-	//引数に画面に表示する最大パーティクル数を設定する
-	if (Effekseer_Init(8000) == -1)
-	{
-		DxLib_End();
-		return -1;
-	}
-	// フルスクリーンウインドウの切り替えでリソースが消えるのを防ぐ。
-		// Effekseerを使用する場合は必ず設定する。
-	SetChangeScreenModeGraphicsSystemResetFlag(FALSE);
-
-	// DXライブラリのデバイスロストした時のコールバックを設定する。
-	// ウインドウとフルスクリーンの切り替えが発生する場合は必ず実行する。
-	// ただし、DirectX11を使用する場合は実行する必要はない。
-	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
-
-	// Effekseerに2D描画の設定をする。
-	Effekseer_Set2DSetting(windowSize_.w, windowSize_.h);
-
-	// Zバッファを有効にする。
-	// Effekseerを使用する場合、2DゲームでもZバッファを使用する。
-	SetUseZBuffer3D(TRUE);
-
-	// Zバッファへの書き込みを有効にする。
-	// Effekseerを使用する場合、2DゲームでもZバッファを使用する。
-	SetWriteZBuffer3D(TRUE);
 	return true;
 
 }
@@ -100,7 +68,7 @@ void Application::Run()
 
 void Application::Terminate()
 {
-	Effkseer_End();
+
 	DxLib_End();
 }
 

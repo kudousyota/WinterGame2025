@@ -8,7 +8,7 @@ class Camera
 public:
 	Camera();
 	~Camera();
-	void Init();
+	void Init(Player& player);
 	void Update();
 	void Draw();
 

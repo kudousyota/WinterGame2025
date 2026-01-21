@@ -39,7 +39,7 @@ m_frameCount(0)
 	//m_pEnemyFactory = std::make_shared<EnemyFactory>();
 
 	//指定した秒数で終了
-	m_timer.Reset(100.0f);
+	m_timer.Reset(100000.0f);
 	m_score = 0;
 	m_killCount = 0;
 	//ステージをロード
@@ -86,54 +86,103 @@ void SceneMain::Init()
 		r5->SetPos({ 641.0f, 150193.0f });
 		m_pRabbits.push_back(r5);
 
+		auto r6 = std::make_shared<Rabbit>();
+		r6->Init();
+		r6->SetPos({ 427, 159441 });
+		m_pRabbits.push_back(r6);
+
+		auto r7 = std::make_shared<Rabbit>();
+		r7->Init();
+		r7->SetPos({ 592, 154705 });
+		m_pRabbits.push_back(r7);
+
+		auto r8 = std::make_shared<Rabbit>();
+		r8->Init();
+		r8->SetPos({ 253, 154641 });
+		m_pRabbits.push_back(r8);
+
+		auto r9 = std::make_shared<Rabbit>();
+		r9->Init();
+		r9->SetPos({ 305, 152721 });
+		m_pRabbits.push_back(r9);
 	}
 
 	// コウモリを複数配置
 	{
 		auto b1 = std::make_shared<Bat>();
 		b1->Init();
-		b1->SetPos({ 350.0f, 159800.0f, });
+		b1->SetPos({ 350, 159800, });
 		m_pBats.push_back(b1);
 
 		auto b2 = std::make_shared<Bat>();
 		b2->Init();
-		b2->SetPos({ 350.0f, 159282.0f, });
+		b2->SetPos({ 350, 159282, });
 		m_pBats.push_back(b2);
 
 		auto b3 = std::make_shared<Bat>();
 		b3->Init();
-		b3->SetPos({ 320.0f,157906.0f });
+		b3->SetPos({ 320,157906});
 		m_pBats.push_back(b3);
 
 		auto b4 = std::make_shared<Bat>();
 		b4->Init();
-		b4->SetPos({ 495.0f,157225.0f });
+		b4->SetPos({ 495,157225 });
 		m_pBats.push_back(b4);
 
 		auto b5 = std::make_shared<Bat>();
 		b5->Init();
-		b5->SetPos({ 401.0f,156228.0f });
+		b5->SetPos({ 401,156228 });
 		m_pBats.push_back(b5);
 
 		auto b6 = std::make_shared<Bat>();
 		b6->Init();
-		b6->SetPos({ 527.0f,149571.0f });
+		b6->SetPos({ 527,149571 });
 		m_pBats.push_back(b6);
 
 		auto b7 = std::make_shared<Bat>();
 		b7->Init();
-		b7->SetPos({ 321.0f,150626.0f });
+		b7->SetPos({ 321,150626 });
 		m_pBats.push_back(b7);
 
 		auto b8 = std::make_shared<Bat>();
 		b8->Init();
-		b8->SetPos({ 303.0f,151129.0f });
+		b8->SetPos({ 303,151129 });
 		m_pBats.push_back(b8);
 
 		auto b9 = std::make_shared<Bat>();
 		b9->Init();
-		b9->SetPos({ 406.0f,151773.0f });
+		b9->SetPos({ 406,151773 });
 		m_pBats.push_back(b9);
+
+		auto b10 = std::make_shared<Bat>();
+		b10->Init();
+		b10->SetPos({ 53,159422 });
+		m_pBats.push_back(b10);
+
+		auto b11 = std::make_shared<Bat>();
+		b11->Init();
+		b11->SetPos({ 600,159245 });
+		m_pBats.push_back(b11);
+
+		auto b12 = std::make_shared<Bat>();
+		b12->Init();
+		b12->SetPos({ 53,158520 });
+		m_pBats.push_back(b12);
+
+		auto b13 = std::make_shared<Bat>();
+		b13->Init();
+		b13->SetPos({ 53,157265 });
+		m_pBats.push_back(b13);
+
+		auto b14 = std::make_shared<Bat>();
+		b14->Init();
+		b14->SetPos({ 506,155744 });
+		m_pBats.push_back(b14);
+
+		auto b15 = std::make_shared<Bat>();
+		b15->Init();
+		b15->SetPos({ 271,155744 });
+		m_pBats.push_back(b15);
 	}
 
 	
@@ -268,9 +317,10 @@ void SceneMain::Draw()
 	auto mapSize = m_pStage->MapSize();
 	const auto& mapData = m_pStage->GetAllData();
 
+#ifdef _DEBUG
 
 	DrawFormatString(100, 100, 0xffffff, "%.2f,%.2f", m_pPlayer->GetPos().x, m_pPlayer->GetPos().y);
-
+#endif
 	//仮地面の描画
 	//DrawLine(0 + m_pCamera->GetCameraOffset().x, 640 + m_pCamera->GetCameraOffset().y, Game::kScreenWidth + m_pCamera->GetCameraOffset().x, 640 + m_pCamera->GetCameraOffset().y, GetColor(255, 255, 255));
 	//DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));

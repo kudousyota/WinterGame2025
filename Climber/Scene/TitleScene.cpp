@@ -4,7 +4,6 @@
 #include "SceneMain.h"
 #include "SceneContoller.h"
 #include "../System/Application.h"
-#include "EffekseerForDXLib.h"
 
 constexpr int fade_interval = 60;
 
@@ -30,8 +29,7 @@ void TitleScene::FadeInUpdate(Input& input)
 
 void TitleScene::NormalUpdate(Input& input)
 {
-	// エフェクトを再生する。
-	m_effectPlayingHandle = PlayEffekseer2DEffect(m_effectHandle);
+	
 
 	if (input.IsTriggered("ok"))
 	{
@@ -55,7 +53,7 @@ void TitleScene::NormalDraw()
 {
 	const auto& wsize = Application::GetInstance().GetWindowSize();
 	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 4.0f, 0.0f, m_titleH, true);
-	DrawRotaGraph(wsize.w / 2, wsize.h / 4, 0.25f, 0.0f, m_titleLogoH, true);
+	DrawRotaGraph(wsize.w / 2, wsize.h / 3, 0.25f, 0.0f, m_titleLogoH, true);
 
 }
 
@@ -63,7 +61,7 @@ void TitleScene::FadeDraw()
 {
 	const auto& wsize = Application::GetInstance().GetWindowSize();
 	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 4.0f, 0.0f, m_titleH, true);
-	DrawRotaGraph(wsize.w / 2, wsize.h / 4, 0.25f, 0.0f, m_titleLogoH, true);
+	DrawRotaGraph(wsize.w / 2, wsize.h / 3, 0.25f, 0.0f, m_titleLogoH, true);
 	// 値の範囲をいったん0.0~1.0にしておくといろいろと扱いやすくなります
 	auto rate = static_cast<float>(m_frame) / static_cast<float>(fade_interval);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);
@@ -78,8 +76,6 @@ m_effectPlayingHandle(-1)
 {
 	m_titleH = LoadGraph("data/bg.png");
 	m_titleLogoH = LoadGraph("data/game_title.png");
-	m_effectHandle = LoadEffekseerEffect("data/effect.efk");
-	//m_effectPlayingHandle = PlayEffekseer2DEffect(m_effectHandle);
 	m_update = &TitleScene::FadeInUpdate;
 	m_draw = &TitleScene::FadeDraw;
 	m_frame = fade_interval;
@@ -100,8 +96,7 @@ void TitleScene::Init()
 void TitleScene::Update(Input& input)
 {
 
-	// Effekseerにより再生中のエフェクトを更新する。
-	//UpdateEffekseer2D();
+	
 	(this->*m_update)(input);
 
 
@@ -110,7 +105,7 @@ void TitleScene::Update(Input& input)
 void TitleScene::Draw()
 {
 	//色は描画時に指定
-	const int white = GetColor(255, 255, 255);
+	const int Color = GetColor(224, 255, 255);
 	
 	(this->*m_draw)();
 	
@@ -121,7 +116,7 @@ void TitleScene::Draw()
 	if (visible)
 	{
 		//操作説明表示
-		DrawStringToHandle(360, 460, "Press A to GameScene", white, m_fontHandl);
+		DrawStringToHandle(430, 460, "Press A to GameScene", Color, m_fontHandl);
 	}
 	
 }

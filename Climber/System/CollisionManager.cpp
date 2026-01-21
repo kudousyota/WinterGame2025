@@ -37,9 +37,16 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
         while (iter < kMaxIter && m_pStage->IsCollision(rect, hitTileRect))
         {
             Vec2 push = rect.FixPos(hitTileRect);
+            int tx = static_cast<int>(hitTileRect.GetX()) / m_pStage->GetChipW();
+            int ty = static_cast<int>(hitTileRect.GetY()) / m_pStage->GetChipH();
+            int tileId = m_pStage->GetData(tx, ty);
 
-            // 壁に当たったら左右反転
-            if (push.x != 0.0f) 
+            // 壁に当たったら左右反転と指定されたチップに触れたら反転するように
+            if (push.x != 0.0f)
+            {
+                rabbit->SetVelX(-rabbit->GetVelX());
+            }
+            if (tileId == 122 || tileId == 124)
             {
                 rabbit->SetVelX(-rabbit->GetVelX());
             }

@@ -457,6 +457,7 @@ void Player::Draw(const Camera& camera)
 		GetColor(255, 0, 0),
 		false
 	);
+
 #endif
 
 }

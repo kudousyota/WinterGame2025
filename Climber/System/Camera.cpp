@@ -25,9 +25,9 @@ Camera::~Camera()
 	//‰½‚à‚µ‚È‚¢
 }
 
-void Camera::Init()
+void Camera::Init(Player& player)
 {
-	//‰½‚à‚µ‚È‚¢
+	m_pos = player.GetPos();
 }
 void Camera::Update()
 {
