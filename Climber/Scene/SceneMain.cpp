@@ -40,7 +40,7 @@ m_frameCount(0)
 	//m_pEnemyFactory = std::make_shared<EnemyFactory>();
 
 	//指定した秒数で終了
-	m_timer.Reset(5.0f);
+	m_timer.Reset(100.0f);
 	m_score = 0;
 	m_killCount = 0;
 	//ステージをロード
