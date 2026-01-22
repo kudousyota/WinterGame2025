@@ -5,6 +5,7 @@
 #include "Rabbit.h"
 #include "../System/Input.h"
 #include "../System/AnimationManager.h"
+#include "../System/SoundManager.h"
 #include <algorithm>
 
 namespace
@@ -68,8 +69,10 @@ Player::Player() :
 	m_pCamera			= std::make_shared<Camera>();
 	m_pInput			= std::make_shared<Input>();
 	m_pAnimationManager = std::make_shared<AnimationManager>();
-	//m_pRabbit = std::make_shared<Rabbit>();
-	//m_pEnemy = nullptr;
+
+	//サウンドの読み込み
+	
+	
 
 }
 
@@ -103,6 +106,7 @@ void Player::Init()
 	m_HighJumpMax = 6;
 	m_invincibleTime = 0;
 
+	SoundManager::Load();
 
 }
 
@@ -155,11 +159,14 @@ void Player::Update(Rect& other, const Bg& bg)
 	{
 		m_rect.SetX(m_rect.GetX() - m_speed);
 		IsLeft = true;
+
+		//SoundManager::PlaySE("run");
 	}
 	if (m_pInput->IsPressed("right"))
 	{
 		m_rect.SetX(m_rect.GetX() + m_speed);
 		IsLeft = false;
+		//SoundManager::PlaySE("run");
 	}
 
 	//重力
@@ -177,6 +184,7 @@ void Player::Update(Rect& other, const Bg& bg)
 		m_SwitchSpeed = 0;
 		m_CutX = 0;
 		m_CutY = 0;
+		SoundManager::PlaySE("Jump");
 
 	}
 	// ハイジャンプ 解禁されていた場合のみジャンプ処理
@@ -197,6 +205,7 @@ void Player::Update(Rect& other, const Bg& bg)
 		m_isHighJumpActive = true;
 		//ブロック破壊数リセット
 		m_brokeCount = 0;
+		SoundManager::PlaySE("HighJump");
 	}
 
 	//Y座標の更新

@@ -4,6 +4,7 @@
 #include "SceneMain.h"
 #include "SceneContoller.h"
 #include "../System/Application.h"
+#include "../System/SoundManager.h"
 
 constexpr int fade_interval = 60;
 
@@ -16,6 +17,8 @@ void TitleScene::FadeInUpdate(Input& input)
 		m_draw = &TitleScene::FadeDraw;
 		m_frame = 0;	// フェードアウトの最初
 		return;
+
+		
 	}
 
 
@@ -44,8 +47,10 @@ void TitleScene::FadeOutUpdate(Input&)
 {
 	if (m_frame ++ >= fade_interval)
 	{
+		SoundManager::PlaySE("Admission");
 		m_controller.ChangeScene(std::make_shared<SceneMain>(m_controller));
 		return;
+
 	}
 }
 
@@ -67,6 +72,8 @@ void TitleScene::FadeDraw()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);
 	DrawBox(0, 0, wsize.w, wsize.h, 0x000000, true);	// 画面全体に黒フィルムをかける
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);	// ブレンドしない
+
+	
 }
 
 TitleScene::TitleScene(SceneContoller& controller) : Scene(controller),
@@ -90,7 +97,10 @@ void TitleScene::Init()
 {
 	const auto& wsize = Application::GetInstance().GetWindowSize();
 	m_fontHandl = CreateFontToHandle("x10y12pxDonguriDuel", 40, 6, DX_FONTTYPE_ANTIALIASING_EDGE);
-	
+	SoundManager::Load();
+
+
+	SoundManager::PlayBGM("Title", true);
 }
 
 void TitleScene::Update(Input& input)

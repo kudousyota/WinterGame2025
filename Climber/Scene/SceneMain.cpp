@@ -16,6 +16,7 @@
 #include "ResultScene.h"
 #include "../System/ResultData.h"
 #include "SceneContoller.h"
+#include "../System/SoundManager.h"
 #include <memory>
 #include <cassert>
 
@@ -196,7 +197,12 @@ void SceneMain::Init()
 	//タイルセットの設定
 	//小さすぎたから1チップ32x32で設定
 	m_pStage->SetTileSet(chipHandle, 32, 32);
-	//m_pStageTwo->SetTileSet(SchipHandle, 32, 32);
+	
+	SoundManager::Load();
+
+
+	SoundManager::PlayBGM("Stage1");
+
 }
 
 void SceneMain::Update(Input& input)

@@ -1,10 +1,10 @@
-﻿
-#include "CollisionManager.h"
+﻿#include "CollisionManager.h"
 #include "../game/Player.h"
 #include "../game/Rabbit.h"
 #include "../game/Bat.h"
 #include "../game/Stage.h"
 #include "../game/GameObject.h"
+#include "SoundManager.h"
 
 namespace
 {
@@ -78,6 +78,8 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
                     rabbit->OnDead();
                     pointDelta += 50;
 					killCount += 1;
+
+					SoundManager::PlaySE("Kill");
                 }
                 else
                 {
@@ -125,6 +127,8 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
                     bat->OnDead();
                     pointDelta += 50;
 					killCount+= 1;
+
+					SoundManager::PlaySE("Kill");
                 }
                 else
                 {
@@ -177,6 +181,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
             int ty = static_cast<int>(hitTileRect.GetY()) / m_pStage->GetChipH();
 
 			int tileId = m_pStage->GetData(tx, ty);
+            SoundManager::PlaySE("TileBreak");
             if (tileId != 0 && tileId != 59 && tileId != 29 &&tileId != 81 && tileId != 51 && tileId != 73)
             {
 				m_pStage->SetTile(tx, ty, 0);
@@ -185,6 +190,7 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
                     m_pPlayer->SetVelY(0.0f);
 
                 m_pPlayer->TileBroke();
+				
 				//pointDelta += 10;
             }
 
