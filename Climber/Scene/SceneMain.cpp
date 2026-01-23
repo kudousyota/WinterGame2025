@@ -1,4 +1,4 @@
-#include "SceneMain.h"
+ï»¿#include "SceneMain.h"
 #include "DxLib.h"
 #include "../System/Game.h"
 #include "../System/Bg.h"
@@ -26,6 +26,11 @@ m_draw(0),
 m_update(0),
 m_fontHandle(-1),
 m_popupDisplayTime(0),
+m_clockAlpha(0),
+m_clocktwelveHandle(-1),
+m_clockThreeHandle(-1),
+m_clockSixHandle(-1),
+m_cloclNineHanlde(-1),
 m_frameCount(0)
 {
 	m_pPlayer	= std::make_shared<Player>();
@@ -40,28 +45,35 @@ m_frameCount(0)
 	m_pResultScene = std::make_shared<ResultScene>(m_controller);
 	//m_pEnemyFactory = std::make_shared<EnemyFactory>();
 
-	//w’è‚µ‚½•b”‚ÅI—¹
-	m_timer.Reset(10.0f);
+	//æŒ‡å®šã—ãŸç§’æ•°ã§çµ‚äº†
+	m_timer.Reset(100.0f);
 	m_score = 0;
 	m_killCount = 0;
-	//ƒXƒe[ƒW‚ğƒ[ƒh
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ãƒ­ãƒ¼ãƒ‰
 	m_pStage->Load(2);
 //	m_pStageTwo->Load(3);
 }
 
 SceneMain::~SceneMain()
 {
-	//ƒtƒHƒ“ƒg‚Ì‰ğ•ú
+	//ãƒ•ã‚©ãƒ³ãƒˆã®è§£æ”¾
 	DeleteFontToHandle(m_fontHandle);
+
+
+	if (m_clocktwelveHandle > 0) { DeleteGraph(m_clocktwelveHandle); m_clocktwelveHandle = -1; }
+	if (m_clockThreeHandle > 0) { DeleteGraph(m_clockThreeHandle);  m_clockThreeHandle = -1; }
+	if (m_clockSixHandle > 0) { DeleteGraph(m_clockSixHandle);    m_clockSixHandle = -1; }
+	if (m_cloclNineHanlde > 0) { DeleteGraph(m_cloclNineHanlde);   m_cloclNineHanlde = -1; }
+
 }
 
 void SceneMain::Init()
 {
-	//ƒtƒHƒ“ƒg‚Ìì¬
+	//ãƒ•ã‚©ãƒ³ãƒˆã®ä½œæˆ
 	m_fontHandle = CreateFontToHandle("x10y12pxDonguriDuel", 24, -1, -1);
 
 	m_pPlayer->Init();
-	// ‚¤‚³‚¬‚ğ•¡””z’u
+	// ã†ã•ãã‚’è¤‡æ•°é…ç½®
 	{
 		auto r1 = std::make_shared<Rabbit>();
 		r1->Init();
@@ -109,7 +121,7 @@ void SceneMain::Init()
 		m_pRabbits.push_back(r9);
 	}
 
-	// ƒRƒEƒ‚ƒŠ‚ğ•¡””z’u
+	// ã‚³ã‚¦ãƒ¢ãƒªã‚’è¤‡æ•°é…ç½®
 	{
 		auto b1 = std::make_shared<Bat>();
 		b1->Init();
@@ -187,15 +199,26 @@ void SceneMain::Init()
 		m_pBats.push_back(b15);
 	}
 
+	m_clocktwelveHandle = LoadGraph("data/clocktwelve.png");
+	m_clockThreeHandle = LoadGraph("data/clockThree.png");
+	m_clockSixHandle = LoadGraph("data/clockSix.png");
+	m_cloclNineHanlde = LoadGraph("data/clockNine.png");
 	
+
+	m_ClockState = ClockState::Twelve;
+	m_clockElapsedSec = 0.0f;
+	m_clockAlpha = 255;
+	m_clockBlinkUp = false;
+
+
 	//m_pRabbit->Init();
 	//m_pBat->Init();
 	int chipHandle = LoadGraph("data/mapChip1.png");
 	//assert(chipHandle > 0);
 	int SchipHandle = LoadGraph("data/Enemy.png");
 	assert(SchipHandle > 0);
-	//ƒ^ƒCƒ‹ƒZƒbƒg‚Ìİ’è
-	//¬‚³‚·‚¬‚½‚©‚ç1ƒ`ƒbƒv32x32‚Åİ’è
+	//ã‚¿ã‚¤ãƒ«ã‚»ãƒƒãƒˆã®è¨­å®š
+	//å°ã•ã™ããŸã‹ã‚‰1ãƒãƒƒãƒ—32x32ã§è¨­å®š
 	m_pStage->SetTileSet(chipHandle, 32, 32);
 	
 	SoundManager::Load();
@@ -209,13 +232,13 @@ void SceneMain::Update(Input& input)
 {
 	m_frameCount++;
 
-	//‘O‚ÌƒXƒRƒA‚ğ•Û‘¶
+	//å‰ã®ã‚¹ã‚³ã‚¢ã‚’ä¿å­˜
 	const int previousScore = m_score;
 
 
-	//  ƒLƒƒƒ‰‚ÌXViˆÚ“®Ed—Í‚È‚Çj
+	//  ã‚­ãƒ£ãƒ©ã®æ›´æ–°ï¼ˆç§»å‹•ãƒ»é‡åŠ›ãªã©ï¼‰
 	m_pPlayer->Update(*m_pRect, *m_pBg);
-	//“G‚ÌXV
+	//æ•µã®æ›´æ–°
 	for (auto& rabbit : m_pRabbits)
 	{
 		rabbit->Update(*m_pPlayer);
@@ -225,7 +248,7 @@ void SceneMain::Update(Input& input)
 		bat->Update(*m_pPlayer);
 	}
 
-	// Õ“Ëƒ`ƒFƒbƒN‚ğŒÄ‚Ô‚±‚±‚Å’…’n”»’èE‰Ÿ‚µo‚µEƒ^ƒCƒ‹”j‰ó‚ğs‚¤
+	// è¡çªãƒã‚§ãƒƒã‚¯ã‚’å‘¼ã¶ã“ã“ã§ç€åœ°åˆ¤å®šãƒ»æŠ¼ã—å‡ºã—ãƒ»ã‚¿ã‚¤ãƒ«ç ´å£Šã‚’è¡Œã†
 
 	if (m_pPlayer && m_pStage)
 	{
@@ -235,7 +258,7 @@ void SceneMain::Update(Input& input)
 	}
 
 
-	// “G‚ª€–S‚µ‚Ä‚¢‚ê‚Îíœ
+	// æ•µãŒæ­»äº¡ã—ã¦ã„ã‚Œã°å‰Šé™¤
 
 	m_pRabbits.erase(
 		std::remove_if(m_pRabbits.begin(), m_pRabbits.end(),
@@ -250,7 +273,7 @@ void SceneMain::Update(Input& input)
 	);
 
 
-	// ”j‰óƒ^ƒCƒ‹‚É‚æ‚éƒXƒRƒAWŒv
+	// ç ´å£Šã‚¿ã‚¤ãƒ«ã«ã‚ˆã‚‹ã‚¹ã‚³ã‚¢é›†è¨ˆ
 	const int brokeNow = m_pPlayer->GetBrokeCount();
 	const int tilepoint = m_pStage->GetTileBrokePoint();
 
@@ -262,7 +285,7 @@ void SceneMain::Update(Input& input)
 	}
 	if (brokeNow >= m_lastScore)
 	{
-		//‘‚¦‚½•ª‚¾‚¯‰Á“_
+		//å¢—ãˆãŸåˆ†ã ã‘åŠ ç‚¹
 		const int delta = brokeNow - m_lastScore;
 		if (delta > 0)
 		{
@@ -272,7 +295,7 @@ void SceneMain::Update(Input& input)
 	}
 	else
 	{
-		//ƒŠƒZƒbƒgŒã‚É‰ó‚µ‚½•ª‚à‰Á“_‚·‚é
+		//ãƒªã‚»ãƒƒãƒˆå¾Œã«å£Šã—ãŸåˆ†ã‚‚åŠ ç‚¹ã™ã‚‹
 		if (brokeNow > 0)
 		{
 			m_score += brokeNow * tilepoint;
@@ -281,37 +304,75 @@ void SceneMain::Update(Input& input)
 	}
 
 	if (m_score < 0) { m_score = 0; }
-	// ‚±‚±‚Ü‚ÅƒXƒRƒAŒvZ
+	// ã“ã“ã¾ã§ã‚¹ã‚³ã‚¢è¨ˆç®—
 	const int scoreDelta = m_score - previousScore;
 	if (scoreDelta > 0)
 	{
-		//ƒ|ƒbƒvŠJn
+		//ãƒãƒƒãƒ—é–‹å§‹
 		m_popupAmount = scoreDelta;
 		m_popupFrame = 0;
-		//1•bŠÔ•\¦
+		//1ç§’é–“è¡¨ç¤º
 		m_popupDisplayTime = 60;
 		m_popupAlpha = 255;
-		//•\¦ˆÊ’uƒŠƒZƒbƒg
+		//è¡¨ç¤ºä½ç½®ãƒªã‚»ãƒƒãƒˆ
 		m_popupY = 70.0f;
 	}
 
-	// ƒJƒƒ‰E”wŒiXV
+	// ã‚«ãƒ¡ãƒ©ãƒ»èƒŒæ™¯æ›´æ–°
 	m_pCamera->UpdateCamera(m_pPlayer);
 	m_pBg->Update();
 
-	// ƒ^ƒCƒ}[XV
-	// I—¹”»’è
+	// ã‚¿ã‚¤ãƒãƒ¼æ›´æ–°
+
+ // çµŒéæ™‚é–“(1/60ç§’)ã‚’ç©ç®—
+	m_clockElapsedSec += 1.0f / 60.0f;
+
+	// 1ç§’ã”ã¨ã«é‡ï¼ˆç”»åƒï¼‰ã‚’åˆ‡ã‚Šæ›¿ãˆ
+	if (m_clockElapsedSec >= 1.0f)
+	{
+		m_clockElapsedSec -= 1.0f;
+
+		switch (m_ClockState)
+		{
+		case ClockState::Twelve: m_ClockState = ClockState::Three;  break;
+		case ClockState::Three:  m_ClockState = ClockState::Six;    break;
+		case ClockState::Six:    m_ClockState = ClockState::Nine;   break;
+		case ClockState::Nine:   m_ClockState = ClockState::Twelve; break;
+		}
+
+		// åˆ‡æ›¿ç¬é–“ã«æ˜æ»…ã‚¹ã‚¿ãƒ¼ãƒˆ
+		m_clockAlpha = 200;
+		m_clockBlinkUp = true;
+
+		
+		// m_clockScale = 1.06f;
+		// SoundManager::PlaySE("Tick");
+	}
+
+	// ç‚¹æ»…ã¯æ¯ãƒ•ãƒ¬ãƒ¼ãƒ æ›´æ–°ï¼ˆ200ã€œ255ã‚ãŸã‚Šã‚’è¡Œãæ¥ï¼‰
+	if (m_clockBlinkUp) {
+		m_clockAlpha += 5;
+		if (m_clockAlpha >= 255) { m_clockAlpha = 255; m_clockBlinkUp = false; }
+	}
+	else {
+		m_clockAlpha -= 2;                // ã‚†ã£ãã‚Šå®‰å®š
+		if (m_clockAlpha < 220) m_clockAlpha = 220;
+	}
+
+	// m_clockScale += (1.0f - m_clockScale) * 0.2f;
+
+
+	// ã‚¿ã‚¤ãƒãƒ¼ã¯æ¯ãƒ•ãƒ¬ãƒ¼ãƒ æ›´æ–°ã™ã‚‹
 	m_timer.Update();
 	if (m_timer.IsTimeUp())
 	{
-
 		ResultData::SetScore(m_score);
-		ResultData::SetKillCount(m_killCount);   //‚±‚ê‚ª•K—vII
+		ResultData::SetKillCount(m_killCount);
 		auto result = std::make_shared<ResultScene>(m_controller);
 		m_controller.ChangeScene(result);
 		return;
-
 	}
+
 }
 
 
@@ -319,7 +380,7 @@ void SceneMain::Draw()
 {
 	
 	m_pBg->Draw(*m_pCamera);
-	m_pStage->Draw(*m_pCamera, 0, 0);//ƒXƒe[ƒWƒf[ƒ^‚Ì•`‰æ
+	m_pStage->Draw(*m_pCamera, 0, 0);//ã‚¹ãƒ†ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿ã®æç”»
 	m_pRect->Draw();
 	
 
@@ -337,7 +398,7 @@ void SceneMain::Draw()
 	constexpr int Rabbit = 1;
 
 
-	//ƒ[ƒh‚µ‚½ƒXƒe[ƒWƒf[ƒ^‚Ì•`‰æ
+	//ãƒ­ãƒ¼ãƒ‰ã—ãŸã‚¹ãƒ†ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿ã®æç”»
 	auto mapSize = m_pStage->MapSize();
 	const auto& mapData = m_pStage->GetAllData();
 
@@ -345,21 +406,18 @@ void SceneMain::Draw()
 
 	DrawFormatString(100, 100, 0xffffff, "%.2f,%.2f", m_pPlayer->GetPos().x, m_pPlayer->GetPos().y);
 #endif
-	//‰¼’n–Ê‚Ì•`‰æ
-	//DrawLine(0 + m_pCamera->GetCameraOffset().x, 640 + m_pCamera->GetCameraOffset().y, Game::kScreenWidth + m_pCamera->GetCameraOffset().x, 640 + m_pCamera->GetCameraOffset().y, GetColor(255, 255, 255));
-	//DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
-	//DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", m_frameCount);
+	
 
 	const int remainSec = static_cast<int>(std::ceil(m_timer.Remaining()));
-	//ƒ^ƒCƒ}[
+	//ã‚¿ã‚¤ãƒãƒ¼
 	char TimeBuf[64];
 	sprintf_s(TimeBuf, sizeof(TimeBuf), "TIME:%d", remainSec);
-	//ƒXƒRƒA
+	//ã‚¹ã‚³ã‚¢
 	char ScoreBuf[64];
 	sprintf_s(ScoreBuf, sizeof(ScoreBuf), "SCORE:%d", m_score);
 	//sprintf_s(ScoreBuf, sizeof(ScoreBuf), "+%d", m_score);
 
-	//ƒLƒ‹‚µ‚½”
+	//ã‚­ãƒ«ã—ãŸæ•°
 	char KillBuf[64];
 	sprintf_s(KillBuf, sizeof(KillBuf), "KILLS:%d", m_killCount);
 
@@ -367,46 +425,66 @@ void SceneMain::Draw()
 	const int scoreY = 70;
 
 
-	DrawStringToHandle(20, 50,  TimeBuf,0xffffff, m_fontHandle, remainSec);
-	DrawStringToHandle(20, 70, ScoreBuf, 0xffffff,m_fontHandle,m_score);
-	DrawStringToHandle(20, 90, KillBuf, 0xffffff,m_fontHandle,m_killCount);
 
-	// ƒ|ƒbƒvƒAƒbƒv•\¦
+	DrawStringToHandle(20, 50, TimeBuf, 0xffffff, m_fontHandle);
+	DrawStringToHandle(20, 70, ScoreBuf, 0xffffff, m_fontHandle);
+	DrawStringToHandle(20, 90, KillBuf, 0xffffff, m_fontHandle);
+
+
+	// ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—è¡¨ç¤º
 	if (m_popupFrame < m_popupDisplayTime && m_popupAmount > 0)
 	{
 		m_popupFrame++;
-		// YˆÊ’u‚ğã‚ÉˆÚ“®
+		// Yä½ç½®ã‚’ä¸Šã«ç§»å‹•
 		m_popupY -= 0.5f;
-		// ™X‚É“§–¾‰»
+		// å¾ã€…ã«é€æ˜åŒ–
 		m_popupAlpha = 255 * (m_popupDisplayTime - m_popupFrame) / m_popupDisplayTime;
-		// ƒXƒRƒA‚Ì‰E’[ˆÊ’u‚ğæ“¾
+		// ã‚¹ã‚³ã‚¢ã®å³ç«¯ä½ç½®ã‚’å–å¾—
 		const int scoreTextWidth =GetDrawStringWidthToHandle(ScoreBuf, std::strlen(ScoreBuf), m_fontHandle);
-		// ‰E‚É10‚¸‚ç‚·
+		// å³ã«10ãšã‚‰ã™
 		const int popupX = scoreX + scoreTextWidth + 10; 
-		//ƒvƒ‰ƒX‚³‚ê‚éˆÊ’u
+		//ãƒ—ãƒ©ã‚¹ã•ã‚Œã‚‹ä½ç½®
 		const int popupY = static_cast<int>(m_popupY);
-		// ƒ|ƒbƒvƒAƒbƒvƒeƒLƒXƒg
+		// ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ†ã‚­ã‚¹ãƒˆ
 		char PopupBuf[32];
 		std::snprintf(PopupBuf, sizeof(PopupBuf), "+%d", m_popupAmount);
 
-		// “Ç‚İ‚â‚·‚¢‚æ‚¤‚É‰e
+		// èª­ã¿ã‚„ã™ã„ã‚ˆã†ã«å½±
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_popupAlpha);
-		//ƒJƒ‰[
+		//ã‚«ãƒ©ãƒ¼
 		const unsigned int shadow = GetColor(0, 0, 0);
-		//l•ûŒü‚É‚¸‚ç‚µ‚Ä•`‰æ‚µ‚Ä‰e‚ğì‚é
+		//å››æ–¹å‘ã«ãšã‚‰ã—ã¦æç”»ã—ã¦å½±ã‚’ä½œã‚‹
 		const int ox[4] = { -1, 1, -1, 1 };
 		const int oy[4] = { -1, -1, 1, 1 };
 		for (int i = 0; i < 4; ++i)
 		{
 			DrawStringToHandle(popupX + ox[i], popupY + oy[i], PopupBuf, shadow, m_fontHandle);
 		}
-		// –{‘ÌƒJƒ‰[
+		// æœ¬ä½“ã‚«ãƒ©ãƒ¼
 		const unsigned int gold = GetColor(255, 240, 90);
-		// –{‘Ì•`‰æ
+		// æœ¬ä½“æç”»
 		DrawStringToHandle(popupX, popupY, PopupBuf, gold, m_fontHandle);
 
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
+
+
+	int handle = -1;
+	switch (m_ClockState)
+	{
+	case ClockState::Twelve: handle = m_clocktwelveHandle; break;
+	case ClockState::Three:  handle = m_clockThreeHandle;  break;
+	case ClockState::Six:    handle = m_clockSixHandle;    break;
+	case ClockState::Nine:   handle = m_cloclNineHanlde;   break;
+	}
+
+	if (handle > 0)
+	{
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_clockAlpha);
+		DrawRotaGraph(m_clockCenterX, m_clockCenterY, m_clockScale, 0.0, handle, TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+
 
 }
 

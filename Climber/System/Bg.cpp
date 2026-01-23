@@ -82,7 +82,7 @@ void Bg::DrawBg(const Camera& camera)
 
 
 	DrawExtendGraph(
-		0, 0,
+		0 , 0 ,
 		Game::kScreenWidth,
 		Game::kScreenHeight,
 		m_cloudLonelyHandle,

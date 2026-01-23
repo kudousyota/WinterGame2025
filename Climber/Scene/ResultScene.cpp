@@ -141,7 +141,7 @@ void ResultScene::Draw()
 	char scoreText[64];
 	sprintf_s(scoreText,sizeof(scoreText),"SCORE:%d", m_displayScore);
 
-	DrawStringToHandle(wsize.w / 2.3, wsize.h/2, scoreText, Cyan,m_fontHandle);
+	DrawStringToHandle(wsize.w / 2.3, wsize.h/1.8, scoreText, Cyan,m_fontHandle);
 
 	char killText[64];
 	sprintf_s(killText, sizeof(killText), "Enemies Defeated: %d", kill);

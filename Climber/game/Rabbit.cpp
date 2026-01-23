@@ -25,8 +25,8 @@ Rabbit::Rabbit() :
 	m_ownsHandle(true)
 {
 	// 自前で生成する場合は自身でロード・所有
-	m_Handle = LoadGraph("data/Enemy.png");
-	m_RunHandle = LoadGraph("data/EnemyRun.png");
+	//m_Handle = LoadGraph("data/Enemy.png");
+	m_RunHandle = LoadGraph("data/EnemyRun .png");
 	m_pCamera = std::make_shared<Camera>();
 }
 
@@ -96,12 +96,12 @@ void Rabbit::Update(const Player& player)
 	m_pos = { m_rect.GetX(),m_rect.GetY() };
 	//アニメーションの更新
 	m_frameCount++;
-	if (m_frameCount >= 5)
+	if (m_frameCount >= 6)
 	{
 		m_frameCount = 0;
 		m_SwitchSpeed++;
 		//横にずらす
-		if (m_SwitchSpeed >= 8)
+		if (m_SwitchSpeed >= 11)
 		{
 			m_SwitchSpeed = 0;
 		}
@@ -149,7 +149,7 @@ void Rabbit::Draw(const Camera& camera)
 		m_cutW, m_cutH,              // 切り抜きサイズ（例：32×32）
 		1.0f,                        // 拡大率
 		0.0f,                        // 回転角度
-		m_Handle,                    // 画像ハンドル
+		m_RunHandle,                    // 画像ハンドル
 		true,                        // 透過あり
 		isLeft						 // 左右反転
 	);

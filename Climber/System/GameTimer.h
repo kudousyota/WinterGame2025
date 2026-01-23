@@ -36,7 +36,7 @@ public:
     float Elapsed()   const { return m_elapsed; }    // 経過秒
     bool  IsTimeUp()  const { return m_remaining <= 0.0f; }
 
-    // ポーズ制御（必要なら）
+    // ポーズ制御
     void SetPaused(bool paused) { m_paused = paused; }
     bool IsPaused() const { return m_paused; }
 
