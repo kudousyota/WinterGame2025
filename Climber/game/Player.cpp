@@ -337,6 +337,7 @@ void Player::Update(Rect& other, const Bg& bg)
 		m_PersonaPosX = targetX;
 		m_PersonaPosY = targetY;
 		m_isPersonaDraw = true;
+		SoundManager::PlaySE("Persona");
 	}
 
 	// 解禁中は追従スムーズに付いてくる
@@ -389,6 +390,8 @@ void Player::Draw(const Camera& camera)
 		// 座標
 		int personaX = static_cast<int>(m_PersonaPosX + cameraOffset.x);
 		int personaY = static_cast<int>(m_PersonaPosY + cameraOffset.y);
+
+		
 
 		DrawRectRotaGraph(
 			personaX, personaY,

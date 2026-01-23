@@ -27,7 +27,17 @@ Bg::Bg():
 	int graphH = 0;
 	GetGraphSize(m_mapHandle, &graphW, &graphH);
 	//背景の読み込み
-	m_bgHandle = LoadGraph("data/bg.png");
+	//m_bgHandle = LoadGraph("data/bg.png");
+	m_cloudLonelyHandle = LoadGraph("bg/cloud_lonely.png");
+	m_cloudbgHandle = LoadGraph("bg/clouds_bg.png");
+	m_cloudmgWonHandle = LoadGraph("bg/clouds_mg_1.png");
+	m_cloudmgTwoHandle = LoadGraph("bg/clouds_mg_1_lightened.png");
+	m_cloudmgHandle = LoadGraph("bg/clouds_mg_2.png");
+	m_cloudHandle = LoadGraph("bg/clouds_mg_3.png");
+	m_glacialHandle = LoadGraph("bg/glacial_mountains.png");
+	m_glacialWonHandle = LoadGraph("bg/glacial_mountains_lightened.png");
+	m_skyHandle = LoadGraph("bg/sky.png");
+	m_skyTwoHandle = LoadGraph("bg/sky_lightened.png");
 
 	//縦のマス数は画面の高さ/マップチップ一つの
 	//サイズで求められる
@@ -55,18 +65,45 @@ void Bg::Draw(const Camera& camera)
 
 void Bg::DrawBg(const Camera& camera)
 {
-	Vec2 cameraPos = camera.GetCameraOffset();
 
-	/*DrawRectRotaGraph(m_pos.x, m_pos.y ,
-		m_src.x,m_src.y,
-		kMapWidth,kMapHeight,
-		0.0f, 1.0f,
-		m_bgHandle, false);*/
+	// スクリーン変換オフセット（ワールド→画面への平行移動）
+	const Vec2 ofs = camera.GetCameraOffset();
+	const int ox = static_cast<int>(ofs.x);
+	const int oy = static_cast<int>(ofs.y);
+
+
 
 	// 背景の描画
-	DrawExtendGraph(0 /*+camera.GetCameraOffset().x*/, 0 /*+ camera.GetCameraOffset().y*/, Game::kScreenWidth /*+ camera.GetCameraOffset().x*/, Game::kScreenHeight /*+ camera.GetCameraOffset().y*/, m_bgHandle, true);
+	//DrawExtendGraph(0 , 0 , Game::kScreenWidth , Game::kScreenHeight, m_bgHandle, true);
+	//一番奥
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_skyHandle, true);
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_skyTwoHandle, true);
+	//二番目に表示
+
+
+	DrawExtendGraph(
+		0, 0,
+		Game::kScreenWidth,
+		Game::kScreenHeight,
+		m_cloudLonelyHandle,
+		true
+	);
+
+
+
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_cloudbgHandle, true);
+	
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_glacialWonHandle, true);
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_glacialHandle, true);
+	
+
+	
+	
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_cloudHandle, true);
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_cloudmgHandle, true);
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_cloudmgTwoHandle, true);
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_cloudmgWonHandle, true);
+
 }
-
-
 
 

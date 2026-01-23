@@ -56,9 +56,9 @@ void Camera::UpdateCamera(std::shared_ptr<Player> player)
 	auto playerX=player->GetPos().x;
 	auto playerY=player->GetPos().y;
 	Vec2 playerPos = { playerX,playerY };
-
+	Vec2 playerPosX = { 400,playerY };
 	//カメラとプレイヤーの位置を同じにする
-	m_pos = VLerp(m_pos, playerPos, 0.9f);
+	m_pos= VLerp(m_pos, playerPosX, 0.9f);
 
 	//反転する
 	m_drawOffset.x = m_pos.x * -1;

@@ -14,11 +14,12 @@ void SoundManager::Load()
 	seList["run"]		= LoadSoundMem("Sound/run.mp3");
 	seList["Admission"] = LoadSoundMem("Sound/Admission.wav");
 	seList["TileBreak"] = LoadSoundMem("Sound/hitTile.mp3");
-
+	seList["Persona"] = LoadSoundMem("Sound/persona.wav");
 
 	//BGMÇÃì«Ç›çûÇ›
 	bgmList["Stage1"] = LoadSoundMem("Sound/stageBGM.ogg");
 	bgmList["Title"] = LoadSoundMem("Sound/titleBGM.ogg");
+	bgmList["Result"] = LoadSoundMem("Sound/Result.ogg");
 
 
 }
@@ -28,7 +29,7 @@ void SoundManager::PlaySE(const std::string& key)
 	auto it = seList.find(key);
 	if (it != seList.end())
 	{
-		ChangeVolumeSoundMem(120, it->second);
+		ChangeVolumeSoundMem(170, it->second);
 		PlaySoundMem(it->second, DX_PLAYTYPE_BACK);
 	}
 }
@@ -49,7 +50,7 @@ void SoundManager::PlayBGM(const std::string& key, bool loop)
 	if (currentBgm >= 0)
 	{
 		//âπó í≤êÆ
-		ChangeVolumeSoundMem(50, currentBgm);
+		ChangeVolumeSoundMem(100, currentBgm);
 		PlaySoundMem(currentBgm, loop ? DX_PLAYTYPE_LOOP : DX_PLAYTYPE_BACK);
 	}
 }

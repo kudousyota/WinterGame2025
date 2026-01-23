@@ -30,6 +30,13 @@ private:
 	int m_cloudbgHandle;
 	int m_cloudmgWonHandle;
 	int m_cloudmgTwoHandle;
+	int m_cloudmgHandle;
+	int m_cloudHandle;
+	int m_glacialHandle;
+	int m_glacialWonHandle;
+	int m_skyHandle;
+	int m_skyTwoHandle;
+
 	
 	//”wŒi‚ÌˆÊ’u
 	Vec2 m_pos;

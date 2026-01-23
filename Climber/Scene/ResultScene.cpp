@@ -8,6 +8,7 @@
 #include "../System/Application.h"
 #include "../System/ResultData.h"
 #include "../System/Vec2.h"
+#include "../System/SoundManager.h"
 
 constexpr int fade_interval = 60;
 
@@ -117,6 +118,7 @@ void ResultScene::Init()
 	//F‚Í•`‰æ‚Éw’è
 	const int white = GetColor(255,255,255);
 	m_finalScore = ResultData:: GetScore();
+
 	m_displayScore = 0;
 	m_scoreAnimTime = 0.0f;
 }
