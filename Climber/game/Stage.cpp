@@ -240,4 +240,33 @@ void Stage::Draw(const Camera& camera, int originX, int originY) const
 #endif
 		}
 	}
+
+	
+}
+
+bool Stage::GetTileUV(int tileId, int& sx, int& sy, int& sw, int& sh) const
+{
+	if (m_chipHandle < 0 || m_chipPixelSize <= 0) return false;
+
+	int texW = 0, texH = 0;
+	GetGraphSize(m_chipHandle, &texW, &texH);
+	if (texW <= 0 || texH <= 0) return false;
+
+	const int tilePixel = m_chipPixelSize;     // 例：16
+	const int tilesPerRow = texW / tilePixel;  // 1行あたりのタイル枚数
+	if (tilesPerRow <= 0) return false;
+
+	// id == 0 は空タイルとして扱っているなら UV を返さない
+	if (tileId <= 0) return false;
+
+	// Draw と同じ ID → UV の計算
+	sx = tilePixel * (tileId % tilesPerRow);
+	sy = tilePixel * (tileId / tilesPerRow);
+	sw = tilePixel;
+	sh = tilePixel;
+
+	// 一応範囲チェック
+	if (sx < 0 || sy < 0 || (sx + sw) > texW || (sy + sh) > texH) return false;
+
+	return true;
 }

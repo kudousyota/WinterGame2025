@@ -21,7 +21,7 @@ PersonaEffect::PersonaEffect(const Position2& pos, int handle):
 	m_pos = pos;
 	//スライド位置初期化
 	//画面外からスライドインするようにする
-	m_SlideX = pos.x - 400.0f;
+	m_SlideX = pos.x - 350.0f;
 	m_SlideY = pos.y;
 }
 PersonaEffect::~PersonaEffect()
@@ -99,7 +99,7 @@ void PersonaEffect::Draw(const Vec2& cameraOffset)
 
     //  スケール/アルファをステート別に 
     // 基本は等倍
-    float scale = 1.4f;
+    float scale = 1.5f;
     // Entrance/Stay は不透明
     int alpha = 255;   
 

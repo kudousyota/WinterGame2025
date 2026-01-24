@@ -20,6 +20,12 @@
 #include <memory>
 #include <cassert>
 
+namespace
+{
+	int     kclockCenterX = 1200;         // 時計の描画中心（スクリーン座標）
+	int     kclockCenterY = 50;
+}
+
 SceneMain::SceneMain(SceneContoller& controller):
 Scene(controller),
 m_draw(0),
@@ -34,8 +40,6 @@ m_cloclNineHanlde(-1),
 m_frameCount(0)
 {
 	m_pPlayer	= std::make_shared<Player>();
-	//m_pRabbit	= std::make_shared<Rabbit>();
-	//m_pBat		= std::make_shared<Bat>();
 	m_pCamera	= std::make_shared<Camera>();
 	m_pRect		= std::make_shared<Rect>();
 	m_pBg		= std::make_shared<Bg>();
@@ -51,7 +55,6 @@ m_frameCount(0)
 	m_killCount = 0;
 	//ステージをロード
 	m_pStage->Load(2);
-//	m_pStageTwo->Load(3);
 }
 
 SceneMain::~SceneMain()
@@ -426,7 +429,7 @@ void SceneMain::Draw()
 
 
 
-	DrawStringToHandle(20, 50, TimeBuf, 0xffffff, m_fontHandle);
+	DrawStringToHandle(1040, 50, TimeBuf, 0xffffff, m_fontHandle);
 	DrawStringToHandle(20, 70, ScoreBuf, 0xffffff, m_fontHandle);
 	DrawStringToHandle(20, 90, KillBuf, 0xffffff, m_fontHandle);
 
@@ -481,7 +484,7 @@ void SceneMain::Draw()
 	if (handle > 0)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_clockAlpha);
-		DrawRotaGraph(m_clockCenterX, m_clockCenterY, m_clockScale, 0.0, handle, TRUE);
+		DrawRotaGraph(kclockCenterX, kclockCenterY, m_clockScale, 0.0, handle, TRUE);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 

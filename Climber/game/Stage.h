@@ -41,6 +41,18 @@ public:
 	
 	void Draw(const Camera& camera, int originX, int originY)const;
 
+
+	// タイルセット画像ハンドルを返す
+	int GetTilesetHandle() const { return m_chipHandle; }
+
+	// テクスチャ上の1タイルのピクセルサイズ（例：16）
+	int GetChipPixelSize() const { return m_chipPixelSize; }
+
+	// タイルID -> タイルセット上のUV（sx, sy, sw, sh）を返す
+	// 返り値: 取得成功なら true
+	bool GetTileUV(int tileId, int& sx, int& sy, int& sw, int& sh) const;
+
+
 private:
 	// FMFのマップサイズ
 	int m_width = 0;

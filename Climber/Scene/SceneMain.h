@@ -81,9 +81,8 @@ private:
 
 
 	float   m_clockElapsedSec = 0.0f;     // 秒カウント
-	int     m_clockCenterX = 120;         // 時計の描画中心（スクリーン座標）
-	int     m_clockCenterY = 120;
-	float   m_clockScale = 1.0f;          // 表示倍率
+	
+	float   m_clockScale = 3.0f;          // 表示倍率
 	int     m_clockAlpha = 255;           // アルファ（点滅用）
 	bool    m_clockBlinkUp = false;       // アルファ増減方向
 
