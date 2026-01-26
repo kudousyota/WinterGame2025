@@ -34,6 +34,7 @@ public:
     // 状態取得
     float Remaining() const { return m_remaining; }  // 残り秒
     float Elapsed()   const { return m_elapsed; }    // 経過秒
+    
     bool  IsTimeUp()  const { return m_remaining <= 0.0f; }
 
     // ポーズ制御

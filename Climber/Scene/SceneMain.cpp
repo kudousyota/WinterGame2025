@@ -68,6 +68,12 @@ SceneMain::~SceneMain()
 	if (m_clockSixHandle > 0) { DeleteGraph(m_clockSixHandle);    m_clockSixHandle = -1; }
 	if (m_cloclNineHanlde > 0) { DeleteGraph(m_cloclNineHanlde);   m_cloclNineHanlde = -1; }
 
+	/*if (m_clockUrgentHandle > 0)
+	{
+		DeleteGraph(m_clockUrgentHandle);
+		m_clockUrgentHandle = -1;
+	}*/
+
 }
 
 void SceneMain::Init()
@@ -209,9 +215,11 @@ void SceneMain::Init()
 	
 
 	m_ClockState = ClockState::Twelve;
-	m_clockElapsedSec = 0.0f;
+	
 	m_clockAlpha = 255;
 	m_clockBlinkUp = false;
+	m_clockSwitc = false;
+	m_clockElapsedSec = 0.0f;
 
 
 	//m_pRabbit->Init();
@@ -327,46 +335,18 @@ void SceneMain::Update(Input& input)
 
 	// タイマー更新
 
- // 経過時間(1/60秒)を積算
-	m_clockElapsedSec += 1.0f / 60.0f;
+	m_timer.Update();
 
-	// 1秒ごとに針（画像）を切り替え
+
+	m_clockElapsedSec += 1.0f / 60.0f;
 	if (m_clockElapsedSec >= 1.0f)
 	{
 		m_clockElapsedSec -= 1.0f;
-
-		switch (m_ClockState)
-		{
-		case ClockState::Twelve: m_ClockState = ClockState::Three;  break;
-		case ClockState::Three:  m_ClockState = ClockState::Six;    break;
-		case ClockState::Six:    m_ClockState = ClockState::Nine;   break;
-		case ClockState::Nine:   m_ClockState = ClockState::Twelve; break;
-		}
-
-		// 切替瞬間に明滅スタート
-		m_clockAlpha = 200;
-		m_clockBlinkUp = true;
-
-		
-		// m_clockScale = 1.06f;
-		// SoundManager::PlaySE("Tick");
+		AdvanceClock();
 	}
 
-	// 点滅は毎フレーム更新（200〜255あたりを行き来）
-	if (m_clockBlinkUp) {
-		m_clockAlpha += 5;
-		if (m_clockAlpha >= 255) { m_clockAlpha = 255; m_clockBlinkUp = false; }
-	}
-	else {
-		m_clockAlpha -= 2;                // ゆっくり安定
-		if (m_clockAlpha < 220) m_clockAlpha = 220;
-	}
-
-	// m_clockScale += (1.0f - m_clockScale) * 0.2f;
 
 
-	// タイマーは毎フレーム更新する
-	m_timer.Update();
 	if (m_timer.IsTimeUp())
 	{
 		ResultData::SetScore(m_score);
@@ -472,23 +452,35 @@ void SceneMain::Draw()
 	}
 
 
-	int handle = -1;
-	switch (m_ClockState)
-	{
-	case ClockState::Twelve: handle = m_clocktwelveHandle; break;
-	case ClockState::Three:  handle = m_clockThreeHandle;  break;
-	case ClockState::Six:    handle = m_clockSixHandle;    break;
-	case ClockState::Nine:   handle = m_cloclNineHanlde;   break;
-	}
 
+	int handle = -1;
+
+	if (m_timer.Elapsed() < 25.0f)
+	{
+		switch (m_ClockState)
+		{
+		case ClockState::Twelve: handle = m_clocktwelveHandle; break;
+		case ClockState::Three:  handle = m_clockThreeHandle;  break;
+		case ClockState::Six:    handle = m_clockSixHandle;    break;
+		case ClockState::Nine:   handle = m_cloclNineHanlde;   break;
+		}
+	}
 	if (handle > 0)
 	{
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_clockAlpha);
 		DrawRotaGraph(kclockCenterX, kclockCenterY, m_clockScale, 0.0, handle, TRUE);
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
 	}
+}
 
-
+void SceneMain::AdvanceClock()
+{
+	switch (m_ClockState)
+	{
+	case ClockState::Twelve: m_ClockState = ClockState::Three; break;
+	case ClockState::Three:  m_ClockState = ClockState::Six;   break;
+	case ClockState::Six:    m_ClockState = ClockState::Nine;  break;
+	case ClockState::Nine:   m_ClockState = ClockState::Twelve; break;
+	}
 }
 
 	

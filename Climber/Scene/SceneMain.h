@@ -78,7 +78,7 @@ private:
 
 	enum class ClockState{ Twelve ,Three,Six,Nine};
 	ClockState m_ClockState = ClockState::Twelve; //現在の状態
-
+	void AdvanceClock();
 
 	float   m_clockElapsedSec = 0.0f;     // 秒カウント
 	
@@ -86,6 +86,8 @@ private:
 	int     m_clockAlpha = 255;           // アルファ（点滅用）
 	bool    m_clockBlinkUp = false;       // アルファ増減方向
 
+	bool m_clockSwitc = false;
+	bool m_thirtyTriggered = false;
 
 
 	//ハンドル

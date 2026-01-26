@@ -170,12 +170,12 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
 
         if (push.y < 0.0f) // 上から着地
         {
-            float halfH = playerRect.GetH() * 0.5f;        // ← 0.5f
+            float halfH = playerRect.GetH() * 0.5f;
             playerRect.SetY(hitTileRect.GetTop() - halfH);
             m_pPlayer->SetVelY(0.0f);
             m_pPlayer->SetOnGround(true);
         }
-        else if (push.y > 0.0f) // 下から当たり（破壊）
+        else if (push.y > 0.0f) // 下から当たり破壊
         {
             int tx = static_cast<int>(hitTileRect.GetX()) / m_pStage->GetChipW();
             int ty = static_cast<int>(hitTileRect.GetY()) / m_pStage->GetChipH();
