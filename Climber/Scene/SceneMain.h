@@ -87,7 +87,11 @@ private:
 	bool    m_clockBlinkUp = false;       // アルファ増減方向
 
 	bool m_clockSwitc = false;
-	bool m_thirtyTriggered = false;
+
+	bool m_thirtyActive = false;   // 30秒演出中
+	bool m_thirtyTriggered = false; // 一度だけ出すため
+	int  m_thirtyFrame = 0;        // 経過フレーム
+	int  m_thirtyAlpha = 0;        // 透明度
 
 
 	//ハンドル

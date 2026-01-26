@@ -337,6 +337,17 @@ void SceneMain::Update(Input& input)
 
 	m_timer.Update();
 
+	const int remainSec = static_cast<int>(std::ceil(m_timer.Remaining()));
+
+	// 30秒を跨いだ瞬間に1回だけ
+	if (remainSec <= 30 && !m_thirtyTriggered)
+	{
+		m_thirtyTriggered = true;
+		m_thirtyActive = true;
+		m_thirtyFrame = 0;
+		m_thirtyAlpha = 180; // 薄めスタート
+	}
+
 
 	m_clockElapsedSec += 1.0f / 60.0f;
 	if (m_clockElapsedSec >= 1.0f)
@@ -354,6 +365,20 @@ void SceneMain::Update(Input& input)
 		auto result = std::make_shared<ResultScene>(m_controller);
 		m_controller.ChangeScene(result);
 		return;
+	}
+
+	//30秒エフェクトの更新
+	if (m_thirtyActive)
+	{
+		m_thirtyFrame++;
+
+		const int duration = 60; // 1秒
+		m_thirtyAlpha = 180 * (duration - m_thirtyFrame) / duration;
+
+		if (m_thirtyFrame >= duration)
+		{
+			m_thirtyActive = false;
+		}
 	}
 
 }
@@ -470,6 +495,33 @@ void SceneMain::Draw()
 		DrawRotaGraph(kclockCenterX, kclockCenterY, m_clockScale, 0.0, handle, TRUE);
 
 	}
+
+	//30秒演出
+	if (m_thirtyActive)
+	{
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_thirtyAlpha);
+
+		const int screenW = 1280;
+		const int screenH = 720;
+
+		const int fontSize = 240;
+		static int bigFont = -1;
+		if (bigFont < 0)
+		{
+			bigFont = CreateFontToHandle("x10y12pxDonguriDuel", fontSize, -1, -1);
+		}
+
+		const char* text = "30";
+		const int textW = GetDrawStringWidthToHandle(text, strlen(text), bigFont);
+
+		const int x = (screenW - textW) / 2;
+		const int y = (screenH - fontSize) / 2;
+
+		DrawStringToHandle(x, y, text, GetColor(255, 255, 255), bigFont);
+
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+
 }
 
 void SceneMain::AdvanceClock()
