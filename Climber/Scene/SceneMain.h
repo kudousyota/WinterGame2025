@@ -2,6 +2,7 @@
 #include <memory>
 #include "Scene.h"
 #include "../System/GameTimer.h"
+#include "../System/HitStopManager.h"
 #include <vector>
 //#include "Geometry.h"
 
@@ -48,6 +49,8 @@ private:
 	std::shared_ptr<ResultScene>m_pResultScene;
 	std::shared_ptr<EnemyFactory>m_pEnemyFactory;
 
+	HitStopManager m_hitStop;
+
 	void FadeInUpdate(Input&);
 	void NormalUpdate(Input& input);
 	void FadeOutUpdate(Input&);
@@ -87,6 +90,10 @@ private:
 	bool    m_clockBlinkUp = false;       // アルファ増減方向
 
 	bool m_clockSwitc = false;
+
+	//ヒットストップ
+	bool m_hitStopRequested;
+
 
 	bool m_thirtyActive = false;   // 30秒演出中
 	bool m_thirtyTriggered = false; // 一度だけ出すため

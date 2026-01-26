@@ -221,6 +221,7 @@ void SceneMain::Init()
 	m_clockSwitc = false;
 	m_clockElapsedSec = 0.0f;
 
+	m_hitStopRequested = true;
 
 	//m_pRabbit->Init();
 	//m_pBat->Init();
@@ -242,6 +243,24 @@ void SceneMain::Init()
 void SceneMain::Update(Input& input)
 {
 	m_frameCount++;
+	// タイマー更新
+	m_timer.Update();
+
+	//ヒットストップ中でもタイムは動く
+
+	m_clockElapsedSec += 1.0f / 60.0f;
+	if (m_clockElapsedSec >= 1.0f)
+	{
+		m_clockElapsedSec -= 1.0f;
+		AdvanceClock();
+	}
+
+	//ヒットストップ
+	if (m_hitStop.IsActive())
+	{
+		m_hitStop.Update();
+		return;
+	}
 
 	//前のスコアを保存
 	const int previousScore = m_score;
@@ -260,15 +279,28 @@ void SceneMain::Update(Input& input)
 	}
 
 	// 衝突チェックを呼ぶここで着地判定・押し出し・タイル破壊を行う
-
+	int killCount = 0;
 	if (m_pPlayer && m_pStage)
 	{
-		int killCount = 0;
-		m_score += CollisionManager::CheckCollisions(m_pPlayer, m_pRabbits, m_pBats, m_pStage,killCount);
-		m_killCount += killCount;
+		m_score += CollisionManager::CheckCollisions(
+			m_pPlayer, m_pRabbits, m_pBats, m_pStage, killCount
+		);
 	}
 
+	// 累計
+	m_killCount += killCount;
 
+	if (killCount > 0 && !m_hitStop.IsActive() && !m_hitStopRequested)
+	{
+		m_hitStop.Start(6);
+		m_hitStopRequested = true;
+	}
+
+	// ヒットストップ解除後
+	if (!m_hitStop.IsActive())
+	{
+		m_hitStopRequested = false;
+	}
 	// 敵が死亡していれば削除
 
 	m_pRabbits.erase(
@@ -286,33 +318,14 @@ void SceneMain::Update(Input& input)
 
 	// 破壊タイルによるスコア集計
 	const int brokeNow = m_pPlayer->GetBrokeCount();
-	const int tilepoint = m_pStage->GetTileBrokePoint();
+	const int tilePoint = m_pStage->GetTileBrokePoint();
 
 	const int delta = brokeNow - m_lastScore;
 	if (delta > 0)
 	{
-		m_score += delta * m_pStage->GetTileBrokePoint();
-		m_lastScore = brokeNow;
+		m_score += delta * tilePoint;
 	}
-	if (brokeNow >= m_lastScore)
-	{
-		//増えた分だけ加点
-		const int delta = brokeNow - m_lastScore;
-		if (delta > 0)
-		{
-			m_score += delta * tilepoint;
-		}
-		m_lastScore = brokeNow;
-	}
-	else
-	{
-		//リセット後に壊した分も加点する
-		if (brokeNow > 0)
-		{
-			m_score += brokeNow * tilepoint;
-		}
-		m_lastScore = brokeNow;
-	}
+	m_lastScore = brokeNow;
 
 	if (m_score < 0) { m_score = 0; }
 	// ここまでスコア計算
@@ -333,9 +346,7 @@ void SceneMain::Update(Input& input)
 	m_pCamera->UpdateCamera(m_pPlayer);
 	m_pBg->Update();
 
-	// タイマー更新
 
-	m_timer.Update();
 
 	const int remainSec = static_cast<int>(std::ceil(m_timer.Remaining()));
 
@@ -348,13 +359,6 @@ void SceneMain::Update(Input& input)
 		m_thirtyAlpha = 180; // 薄めスタート
 	}
 
-
-	m_clockElapsedSec += 1.0f / 60.0f;
-	if (m_clockElapsedSec >= 1.0f)
-	{
-		m_clockElapsedSec -= 1.0f;
-		AdvanceClock();
-	}
 
 
 

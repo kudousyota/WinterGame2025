@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="System\HitStopManager.cpp" />
     <ClCompile Include="System\Particle.cpp" />
     <ClCompile Include="System\SoundManager.cpp" />
     <ClCompile Include="System\PersonaEffect.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Scene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="System\HitStopManager.h" />
     <ClInclude Include="System\Particle.h" />
     <ClInclude Include="System\SoundManager.h" />
     <ClInclude Include="System\PersonaEffect.h" />
