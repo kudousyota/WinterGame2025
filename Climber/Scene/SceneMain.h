@@ -102,6 +102,13 @@ private:
 	bool m_thirtyTriggered = false; // 一度だけ出すため
 	int  m_thirtyFrame = 0;        // 経過フレーム
 	int  m_thirtyAlpha = 0;        // 透明度
+
+	//10秒演出
+	bool m_tenActive = false;
+	bool m_tenTriggered = false;
+	int  m_tenFrame = 0;
+	int  m_tenAlpha = 0;
+
 	
 	//ハンドル
 	int m_fontHandle;

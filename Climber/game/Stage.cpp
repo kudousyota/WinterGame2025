@@ -90,7 +90,6 @@ void Stage::Load(int stageNo)
 	m_data.clear();
 	m_data.resize(expectedCount);
 
-	// データは上から下になっているが、描画のために反転して格納（下→上）
 	for (int y = 0; y < header.height; ++y)
 	{
 		int reverseY = header.height - y - 1;

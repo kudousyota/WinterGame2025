@@ -6,6 +6,7 @@
 #include "../game/GameObject.h"
 #include "SoundManager.h"
 #include "DxLib.h"
+#include <cassert>
 
 namespace
 {
@@ -13,65 +14,113 @@ namespace
     constexpr int knockbackPowerY = -5;
 }
 
+
 void CollisionManager::Init()
 {
     m_effectHandle = LoadGraph("data/Effect.png");
+    
 
-    m_effectCutX = 0;
-    m_effectCutY = 0;
-    m_effectCutW = 16;
-    m_effectCutH = 16;
+    // 画像サイズから列・行を算出（16x16固定）
+    int w = 0, h = 0;
+    if (m_effectHandle >= 0 && GetGraphSize(m_effectHandle, &w, &h) == 0) {
+        m_sheetCols = (w / kCutW);
+        m_sheetRows = (h / kCutH);
+    }
+    else {
+        m_sheetCols = m_sheetRows = 0;
+    }
 
+    m_tileBreakEffects.clear();
 }
+
+
 void CollisionManager::Update()
 {
-    m_effectCutY = 0;
-    m_effectCutX = m_SwitchSpeed * m_effectCutW;
+    // 各インスタンスの経過フレーム更新と終了判定
+    for (auto& e : m_tileBreakEffects) {
+        if (e.finished) continue;
+        e.localFrame++;
 
-
-
-    //エフェクト
-    m_frameCount++;
-    if (m_frameCount >= 4)
-    {
-        m_frameCount = 0;
-        m_SwitchSpeed++;
-        if (m_SwitchSpeed >= m_effectFrameMax)
-        {
-            m_SwitchSpeed = 0;
+        int currentIndex = e.localFrame / e.frameStep; // 0,1,2...
+        if (currentIndex >= e.frames) {
+            e.finished = true;
         }
+    }
+
+    // 終わったものを削除
+    m_tileBreakEffects.erase(
+        std::remove_if(m_tileBreakEffects.begin(), m_tileBreakEffects.end(),
+                       [](const EffectInstance& e){ return e.finished; }),
+        m_tileBreakEffects.end()
+    );
+}
+
+
+void CollisionManager::Draw()
+{
+    if (m_effectHandle < 0) return;
+
+    for (const auto& e : m_tileBreakEffects) {
+        int idx = e.localFrame / e.frameStep; // 0..frames-1
+        if (idx < 0) idx = 0;
+        if (idx >= e.frames) idx = e.frames - 1;
+
+        // 現在コマの「列」を開始列から加算（横方向にアニメする前提）
+        int col = e.startCol + idx;
+        int row = e.startRow;
+
+        // はみ出し防止
+        if (col >= m_sheetCols) {
+            // 次の列に行けない場合は安全にクランプ（or finished=true にしてもOK）
+            col = m_sheetCols - 1;
+        }
+        if (row >= m_sheetRows) continue;
+
+        int cutX = col * kCutW;
+        int cutY = row * kCutH;
+
+        // タイル中央にきれいに置きたい場合はオフセット調整
+        int sx = static_cast<int>(e.x - m_cameraX - kCutW * 0.5f);
+        int sy = static_cast<int>(e.y - m_cameraY - kCutH * 0.5f);
+        // 透過ブレンド（他でブレンドが変わっていなければ不要）
+        // SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+        DrawRectGraph(sx, sy, cutX, cutY, kCutW, kCutH, m_effectHandle, true);
+        // SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
     }
 }
 
-void CollisionManager::Draw(std::shared_ptr<Player>& m_pPlayer,
-    std::shared_ptr<Stage>& m_pStage)
+void CollisionManager::AddTileBreakEffect(float px, float py,
+    int startCol, int startRow,
+    int frames,
+    int frameStep)
 {
-    Rect& playerRect = m_pPlayer->GetRect();
-    Rect hitTileRect;
-   // m_pPlayer->SetOnGround(false);
 
-    int iter = 0;
-    const int kMaxIter = 3;
-    Vec2 push = playerRect.FixPos(hitTileRect);
-    if (push.y > 0.0f)
-    {
-        int tx = static_cast<int>(hitTileRect.GetX()) / m_pStage->GetChipW();
-        int ty = static_cast<int>(hitTileRect.GetY()) / m_pStage->GetChipH();
-        //破壊された中心座標
-        m_pStage->NotifyTileBroken(tx, ty);
-        DrawRectGraph(tx, ty,
-            m_effectCutX, m_effectCutY,
-            m_effectCutW, m_effectCutH,
-            m_effectHandle,
-            true);
-    }
+    // シート範囲に収める
+    if (m_sheetCols <= 0 || m_sheetRows <= 0) return;
+    if (startCol < 0 || startCol >= m_sheetCols) return;
+    if (startRow < 0 || startRow >= m_sheetRows) return;
+    if (frames <= 0) return;
+
+    EffectInstance e;
+    e.x = px;
+    e.y = py;
+    e.startCol = startCol;
+    e.startRow = startRow;
+    e.frames = frames;
+    e.frameStep = std::max<int>(1, frameStep);
+    e.localFrame = 0;
+    e.finished = false;
+
+    m_tileBreakEffects.push_back(e);
+
 }
 
 int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
     std::vector<std::shared_ptr<Rabbit>>& m_pRabbits,
     std::vector<std::shared_ptr<Bat>>& m_pBats,
     std::shared_ptr<Stage>& m_pStage,
-    int& killCount)
+    int& killCount,
+    CollisionManager* effectSink)
 {
     int pointDelta = 0;
 	killCount = 0;
@@ -230,38 +279,42 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
             m_pPlayer->SetVelY(0.0f);
             m_pPlayer->SetOnGround(true);
         }
-        else if (push.y > 0.0f) // 下から当たり破壊
+        else if (push.y > 0.0f) // 下から当たり
         {
             int tx = static_cast<int>(hitTileRect.GetX()) / m_pStage->GetChipW();
             int ty = static_cast<int>(hitTileRect.GetY()) / m_pStage->GetChipH();
+            int tileId = m_pStage->GetData(tx, ty);
 
-			int tileId = m_pStage->GetData(tx, ty);
-            SoundManager::PlaySE("TileBreak");
-            if (tileId != 0 && tileId != 59 && tileId != 29 &&tileId != 81 && tileId != 51 && tileId != 73)
+        
+           
+            if (tileId != 0 && tileId != 59 && tileId != 29 && tileId != 81 && tileId != 51 && tileId != 73)
             {
-				m_pStage->SetTile(tx, ty, 0);
+                m_pStage->SetTile(tx, ty, 0);
+                SoundManager::PlaySE("TileBreak");
+                // ここで演出を積む
+                if (effectSink) {
+                    float px = tx * m_pStage->GetChipW() + m_pStage->GetChipW() * 0.5f;
+                    float py = ty * m_pStage->GetChipH() + m_pStage->GetChipH() * 0.5f;
 
-              
+                    effectSink->AddTileBreakEffect(
+                        px, py,
+                        /*startCol*/ 8,
+                        /*startRow*/ 1,
+                        /*frames*/   4,
+                        /*frameStep*/4
+                    );
+                }
 
-                int tx = (int)(hitTileRect.GetLeft()) / m_pStage->GetChipW();
-
-                int ty = (int)(hitTileRect.GetTop()) / m_pStage->GetChipH();
-
-                int px = tx * m_pStage->GetChipW();
-                int py = ty * m_pStage->GetChipH();
-
-
-                
                 if (!m_pPlayer->IsHighJumpActive())
                     m_pPlayer->SetVelY(0.0f);
 
                 m_pPlayer->TileBroke();
-				
-				//pointDelta += 10;
             }
 
             m_pPlayer->SetOnGround(false);
         }
+
+
 
         ++iter;
     }
