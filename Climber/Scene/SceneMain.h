@@ -4,6 +4,7 @@
 #include "../System/GameTimer.h"
 #include "../System/HitStopManager.h"
 #include <vector>
+#include <algorithm>
 //#include "Geometry.h"
 
 class Stage;
@@ -48,6 +49,8 @@ private:
 	std::shared_ptr<TitleScene> m_pTitleScene;
 	std::shared_ptr<ResultScene>m_pResultScene;
 	std::shared_ptr<EnemyFactory>m_pEnemyFactory;
+	std::shared_ptr<CollisionManager>m_pCollisionManager;
+	//std::vector<std::shared_ptr<CollisionManager>>m_pCollisionmanager;
 
 	HitStopManager m_hitStop;
 
@@ -99,14 +102,34 @@ private:
 	bool m_thirtyTriggered = false; // 一度だけ出すため
 	int  m_thirtyFrame = 0;        // 経過フレーム
 	int  m_thirtyAlpha = 0;        // 透明度
-
-
+	
 	//ハンドル
 	int m_fontHandle;
 	int m_clocktwelveHandle;
 	int m_clockThreeHandle;
 	int m_clockSixHandle;
 	int m_cloclNineHanlde;
+	
+
+ // 位置
+	std::vector<float> m_fxX;
+	std::vector<float> m_fxY;
+	// 進行・寿命
+	std::vector<int>   m_fxFrame;         // 経過フレーム
+	std::vector<int>   m_fxTotalFrames;   // 再生コマ数（例：8）
+	std::vector<int>   m_fxFramePerCell;  // 1コマ表示フレーム数（例：2）
+	// 見た目
+	std::vector<int>   m_fxAlpha;         // 必要ならフェード用（今は 255 固定でもOK）
+	// スプライトシート選択
+	std::vector<int>   m_fxStartCol;      // 再生開始コマの「列」
+	std::vector<int>   m_fxStartRow;      // 再生開始コマの「行」
+
+	
+	
+	// スプライトシートの横/縦のコマ数（画像サイズから算出）
+	int m_effectSheetCols = 0;
+	int m_effectSheetRows = 0;
+
 
 };
 

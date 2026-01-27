@@ -5,11 +5,66 @@
 #include "../game/Stage.h"
 #include "../game/GameObject.h"
 #include "SoundManager.h"
+#include "DxLib.h"
 
 namespace
 {
     constexpr int knockbackPowerX = 40;
     constexpr int knockbackPowerY = -5;
+}
+
+void CollisionManager::Init()
+{
+    m_effectHandle = LoadGraph("data/Effect.png");
+
+    m_effectCutX = 0;
+    m_effectCutY = 0;
+    m_effectCutW = 16;
+    m_effectCutH = 16;
+
+}
+void CollisionManager::Update()
+{
+    m_effectCutY = 0;
+    m_effectCutX = m_SwitchSpeed * m_effectCutW;
+
+
+
+    //エフェクト
+    m_frameCount++;
+    if (m_frameCount >= 4)
+    {
+        m_frameCount = 0;
+        m_SwitchSpeed++;
+        if (m_SwitchSpeed >= m_effectFrameMax)
+        {
+            m_SwitchSpeed = 0;
+        }
+    }
+}
+
+void CollisionManager::Draw(std::shared_ptr<Player>& m_pPlayer,
+    std::shared_ptr<Stage>& m_pStage)
+{
+    Rect& playerRect = m_pPlayer->GetRect();
+    Rect hitTileRect;
+   // m_pPlayer->SetOnGround(false);
+
+    int iter = 0;
+    const int kMaxIter = 3;
+    Vec2 push = playerRect.FixPos(hitTileRect);
+    if (push.y > 0.0f)
+    {
+        int tx = static_cast<int>(hitTileRect.GetX()) / m_pStage->GetChipW();
+        int ty = static_cast<int>(hitTileRect.GetY()) / m_pStage->GetChipH();
+        //破壊された中心座標
+        m_pStage->NotifyTileBroken(tx, ty);
+        DrawRectGraph(tx, ty,
+            m_effectCutX, m_effectCutY,
+            m_effectCutW, m_effectCutH,
+            m_effectHandle,
+            true);
+    }
 }
 
 int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
@@ -186,6 +241,17 @@ int CollisionManager::CheckCollisions(std::shared_ptr<Player>& m_pPlayer,
             {
 				m_pStage->SetTile(tx, ty, 0);
 
+              
+
+                int tx = (int)(hitTileRect.GetLeft()) / m_pStage->GetChipW();
+
+                int ty = (int)(hitTileRect.GetTop()) / m_pStage->GetChipH();
+
+                int px = tx * m_pStage->GetChipW();
+                int py = ty * m_pStage->GetChipH();
+
+
+                
                 if (!m_pPlayer->IsHighJumpActive())
                     m_pPlayer->SetVelY(0.0f);
 

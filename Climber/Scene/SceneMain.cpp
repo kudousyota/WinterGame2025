@@ -1,4 +1,5 @@
-﻿#include "SceneMain.h"
+﻿#include <algorithm>
+#include "SceneMain.h"
 #include "DxLib.h"
 #include "../System/Game.h"
 #include "../System/Bg.h"
@@ -47,6 +48,7 @@ m_frameCount(0)
 	m_pStageTwo = std::make_shared<Stage>();
 	m_pTitleScene = std::make_shared<TitleScene>(m_controller);
 	m_pResultScene = std::make_shared<ResultScene>(m_controller);
+	m_pCollisionManager = std::make_shared<CollisionManager>();
 	//m_pEnemyFactory = std::make_shared<EnemyFactory>();
 
 	//指定した秒数で終了
@@ -79,7 +81,7 @@ SceneMain::~SceneMain()
 void SceneMain::Init()
 {
 	//フォントの作成
-	m_fontHandle = CreateFontToHandle("x10y12pxDonguriDuel", 24, -1, -1);
+	m_fontHandle = CreateFontToHandle("x10y12pxDonguriDuel", 40, 6, DX_FONTTYPE_ANTIALIASING_EDGE);
 
 	m_pPlayer->Init();
 	// うさぎを複数配置
@@ -144,7 +146,7 @@ void SceneMain::Init()
 
 		auto b3 = std::make_shared<Bat>();
 		b3->Init();
-		b3->SetPos({ 320,157906});
+		b3->SetPos({ 320,157906 });
 		m_pBats.push_back(b3);
 
 		auto b4 = std::make_shared<Bat>();
@@ -212,7 +214,7 @@ void SceneMain::Init()
 	m_clockThreeHandle = LoadGraph("data/clockThree.png");
 	m_clockSixHandle = LoadGraph("data/clockSix.png");
 	m_cloclNineHanlde = LoadGraph("data/clockNine.png");
-	
+
 
 	m_ClockState = ClockState::Twelve;
 	
@@ -221,10 +223,10 @@ void SceneMain::Init()
 	m_clockSwitc = false;
 	m_clockElapsedSec = 0.0f;
 
-	m_hitStopRequested = true;
+	m_hitStopRequested = false;
 
-	//m_pRabbit->Init();
-	//m_pBat->Init();
+	
+
 	int chipHandle = LoadGraph("data/mapChip1.png");
 	//assert(chipHandle > 0);
 	int SchipHandle = LoadGraph("data/Enemy.png");
@@ -235,7 +237,6 @@ void SceneMain::Init()
 	
 	SoundManager::Load();
 
-
 	SoundManager::PlayBGM("Stage1");
 
 }
@@ -245,6 +246,8 @@ void SceneMain::Update(Input& input)
 	m_frameCount++;
 	// タイマー更新
 	m_timer.Update();
+
+	
 
 	//ヒットストップ中でもタイムは動く
 
@@ -259,7 +262,7 @@ void SceneMain::Update(Input& input)
 	if (m_hitStop.IsActive())
 	{
 		m_hitStop.Update();
-		return;
+		//return;
 	}
 
 	//前のスコアを保存
@@ -285,7 +288,14 @@ void SceneMain::Update(Input& input)
 		m_score += CollisionManager::CheckCollisions(
 			m_pPlayer, m_pRabbits, m_pBats, m_pStage, killCount
 		);
+
 	}
+	
+
+	std::vector<Vec2> brokeCenters;
+	m_pStage->GetAndClearBrokenCenters(brokeCenters);
+	//使用する絵柄
+	
 
 	// 累計
 	m_killCount += killCount;
@@ -358,8 +368,13 @@ void SceneMain::Update(Input& input)
 		m_thirtyFrame = 0;
 		m_thirtyAlpha = 180; // 薄めスタート
 	}
-
-
+	if (remainSec <= 10 && !m_thirtyTriggered)
+	{
+		m_thirtyTriggered = true;
+		m_thirtyActive = true;
+		m_thirtyFrame = 0;
+		m_thirtyAlpha = 180; // 薄め
+	}
 
 
 	if (m_timer.IsTimeUp())
@@ -394,6 +409,8 @@ void SceneMain::Draw()
 	m_pBg->Draw(*m_pCamera);
 	m_pStage->Draw(*m_pCamera, 0, 0);//ステージデータの描画
 	m_pRect->Draw();
+	m_pCollisionManager->Draw(m_pPlayer,m_pStage);
+	
 	
 
 	for (auto& rabbit: m_pRabbits)
@@ -427,7 +444,6 @@ void SceneMain::Draw()
 	//スコア
 	char ScoreBuf[64];
 	sprintf_s(ScoreBuf, sizeof(ScoreBuf), "SCORE:%d", m_score);
-	//sprintf_s(ScoreBuf, sizeof(ScoreBuf), "+%d", m_score);
 
 	//キルした数
 	char KillBuf[64];
@@ -438,9 +454,9 @@ void SceneMain::Draw()
 
 
 
-	DrawStringToHandle(1040, 50, TimeBuf, 0xffffff, m_fontHandle);
+	DrawStringToHandle(1040, 110, TimeBuf, 0xffffff, m_fontHandle);
 	DrawStringToHandle(20, 70, ScoreBuf, 0xffffff, m_fontHandle);
-	DrawStringToHandle(20, 90, KillBuf, 0xffffff, m_fontHandle);
+	DrawStringToHandle(20, 110, KillBuf, 0xffffff, m_fontHandle);
 
 
 	// ポップアップ表示
@@ -525,7 +541,7 @@ void SceneMain::Draw()
 
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
-
+	
 }
 
 void SceneMain::AdvanceClock()

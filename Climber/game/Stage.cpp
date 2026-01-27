@@ -270,3 +270,17 @@ bool Stage::GetTileUV(int tileId, int& sx, int& sy, int& sw, int& sh) const
 
 	return true;
 }
+
+void Stage::NotifyTileBroken(int tx, int ty)
+{
+	//タイルの中心
+	const float cx = (tx + 0.5f) * static_cast<float>(GetChipW());
+	const float cy = (ty + 0.5f) * static_cast<float>(GetChipH());
+	m_brokenCentersThisFrame.push_back({ cx,cy });
+}
+
+void Stage::GetAndClearBrokenCenters(std::vector<Vec2>& out)
+{
+	out.swap(m_brokenCentersThisFrame);
+	m_brokenCentersThisFrame.clear();
+}

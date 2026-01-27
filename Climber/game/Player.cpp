@@ -129,7 +129,9 @@ void Player::TileBroke()
 		m_pAnimationManager->Create({ m_rect.GetX(), m_rect.GetY() },
 			EffectType::persona
 		);
+		
 	}
+
 }
 
 bool Player::isHit(const Rabbit& enemy)

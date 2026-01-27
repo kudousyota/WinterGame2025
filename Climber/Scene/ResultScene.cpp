@@ -121,6 +121,8 @@ void ResultScene::Init()
 
 	m_displayScore = 0;
 	m_scoreAnimTime = 0.0f;
+
+	SoundManager::PlayBGM("Result", true);
 }
 void ResultScene::Update(Input& input)
 {

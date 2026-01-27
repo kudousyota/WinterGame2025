@@ -2,6 +2,7 @@
 #include "../System/Rect.h"
 #include <vector>
 #include "../System/Geometry.h"
+#include "../System/Vec2.h"
 
 
 /// <summary>
@@ -52,6 +53,11 @@ public:
 	// 返り値: 取得成功なら true
 	bool GetTileUV(int tileId, int& sx, int& sy, int& sw, int& sh) const;
 
+	//破壊されたブロックの座標を記録
+	void NotifyTileBroken(int tx, int ty);
+
+	void GetAndClearBrokenCenters(std::vector<Vec2>& out);
+
 
 private:
 	// FMFのマップサイズ
@@ -60,6 +66,8 @@ private:
 
 	//表示用のタイルID
 	//std::vector<uint8_t> m_data;
+	//1フレーム分の破壊中心座標
+	std::vector<Vec2> m_brokenCentersThisFrame;
 	//タイル壊した時のポイント
 	int m_tileBrokePoint = 10;
 
