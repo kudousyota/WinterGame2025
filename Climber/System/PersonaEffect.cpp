@@ -58,7 +58,7 @@ void PersonaEffect::Update()
     {
         // 完全停止
         // 調整ポイント
-        if (m_timer > 60)
+        if (m_timer > 50)
         {
             m_timer = 0;
             m_state = CutinState::Exit;
@@ -92,10 +92,10 @@ void PersonaEffect::Draw(const Vec2& cameraOffset)
 {
 
     if (m_handle == -1) return;
-
+    constexpr float kPersonaOffsetY = 80.0f; // 好きな量に調整
     // スクリーン座標
     const int sx = static_cast<int>(m_SlideX + cameraOffset.x);
-    const int sy = static_cast<int>(m_SlideY + cameraOffset.y);
+    const int sy = static_cast<int>(m_SlideY + kPersonaOffsetY + cameraOffset.y);
 
     //  スケール/アルファをステート別に 
     // 基本は等倍

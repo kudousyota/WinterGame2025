@@ -472,8 +472,8 @@ void SceneMain::Draw()
 
 
 	DrawStringToHandle(1040, 110, TimeBuf, 0xffffff, m_fontHandle);
-	DrawStringToHandle(20, 70, ScoreBuf, 0xffffff, m_fontHandle);
-	DrawStringToHandle(20, 110, KillBuf, 0xffffff, m_fontHandle);
+	DrawStringToHandle(20, 30, ScoreBuf, 0xffffff, m_fontHandle);
+	DrawStringToHandle(20, 60, KillBuf, 0xffffff, m_fontHandle);
 
 
 	// ポップアップ表示
